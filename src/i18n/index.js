@@ -12,7 +12,10 @@ const resources = {
         about: "自我介紹", 
         articles: "文章",
         portfolio: "作品集",
-        contact: "聯絡"
+        contact: "聯絡",
+        login: "登入",
+        register: "註冊",
+        account: "登入"
       },
       // 英雄區塊
       hero: {
@@ -59,6 +62,42 @@ const resources = {
           description: "有任何想法或合作機會？歡迎與我聯繫！",
           email: "tony200404242@gmail.com"
         }
+      },
+      // 認證
+      auth: {
+        login: {
+          title: "歡迎回來",
+          subtitle: "登入您的帳戶繼續使用",
+          submit: "登入",
+          switchText: "還沒有帳戶？",
+          switchAction: "立即註冊"
+        },
+        register: {
+          title: "加入我們",
+          subtitle: "創建您的帳戶開始體驗",
+          submit: "註冊",
+          switchText: "已經有帳戶了？",
+          switchAction: "立即登入"
+        },
+        fields: {
+          nickname: "暱稱",
+          email: "電子信箱",
+          password: "密碼",
+          confirmPassword: "確認密碼"
+        },
+        placeholders: {
+          nickname: "請輸入您的暱稱",
+          email: "請輸入電子信箱",
+          password: "請輸入密碼",
+          confirmPassword: "請再次輸入密碼"
+        },
+        or: "或",
+        social: {
+          google: "Google",
+          facebook: "Facebook",
+          github: "GitHub",
+          line: "LINE"
+        }
       }
     }
   },
@@ -70,7 +109,10 @@ const resources = {
         about: "About", 
         articles: "Articles",
         portfolio: "Portfolio",
-        contact: "Contact"
+        contact: "Contact",
+        login: "Login",
+        register: "Register",
+        account: "Login"
       },
       // Hero Section
       hero: {
@@ -116,6 +158,42 @@ const resources = {
           title: "Let's Start a Conversation",
           description: "Have any ideas or collaboration opportunities? Feel free to contact me!",
           email: "tony200404242@gmail.com"
+        }
+      },
+      // Authentication
+      auth: {
+        login: {
+          title: "Welcome Back",
+          subtitle: "Sign in to your account to continue",
+          submit: "Sign In",
+          switchText: "Don't have an account?",
+          switchAction: "Sign up now"
+        },
+        register: {
+          title: "Join Us",
+          subtitle: "Create your account to get started",
+          submit: "Sign Up",
+          switchText: "Already have an account?",
+          switchAction: "Sign in now"
+        },
+        fields: {
+          nickname: "Nickname",
+          email: "Email",
+          password: "Password",
+          confirmPassword: "Confirm Password"
+        },
+        placeholders: {
+          nickname: "Enter your nickname",
+          email: "Enter your email address",
+          password: "Enter your password",
+          confirmPassword: "Confirm your password"
+        },
+        or: "or",
+        social: {
+          google: "Google",
+          facebook: "Facebook",
+          github: "GitHub",
+          line: "LINE"
         }
       }
     }

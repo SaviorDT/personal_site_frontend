@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitch from 'Components/LanguageSwitch/LanguageSwitch';
+import LanguageDropdown from 'Components/LanguageDropdown/LanguageDropdown';
+import AuthModal from 'Components/AuthModal/AuthModal';
 import './Navigation.css';
 
 const Navigation = () => {
   const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +33,15 @@ const Navigation = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const openAuthModal = (mode) => {
+    setAuthMode(mode);
+    setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
+  };
+
   return (
     <nav className={`navigation ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
@@ -51,7 +63,14 @@ const Navigation = () => {
         </ul>
 
         <div className="nav-right">
-          <LanguageSwitch />
+          <LanguageDropdown />
+          <button 
+            className="auth-btn unified-auth-btn"
+            onClick={() => openAuthModal('login')}
+          >
+            <span className="auth-icon">👤</span>
+            <span className="auth-text">{t('nav.account')}</span>
+          </button>
           <div className="nav-toggle" onClick={toggleMenu}>
             <span></span>
             <span></span>
@@ -59,6 +78,12 @@ const Navigation = () => {
           </div>
         </div>
       </div>
+      
+      <AuthModal 
+        isOpen={authModalOpen}
+        onClose={closeAuthModal}
+        initialMode={authMode}
+      />
     </nav>
   );
 };
