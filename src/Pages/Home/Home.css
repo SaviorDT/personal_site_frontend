@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+.home {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* 全域樣式重置和基礎設定 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0c0c0c;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* 平滑滾動 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 選取文字的顏色 */
+::selection {
+  background: rgba(78, 205, 196, 0.3);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgba(78, 205, 196, 0.3);
+  color: #fff;
+}
+
+/* 滾動條樣式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(12, 12, 12, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #ff8e8e, #6ed5cc);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .home-content {
+    padding-top: 0;
+  }
+}
