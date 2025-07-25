@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageDropdown from 'Components/LanguageDropdown/LanguageDropdown';
-import AuthModal from 'Components/AuthModal/AuthModal';
+import LanguageDropdown from '@/Components/LanguageDropdown/LanguageDropdown';
+import AuthModal from '@/Components/AuthModal/AuthModal';
 import './Navigation.css';
 
 const Navigation = () => {

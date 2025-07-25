@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import SocialIcons from 'Components/SocialIcons/SocialIcons';
+import SocialIcons from '@/Components/SocialIcons/SocialIcons';
+import authService from '@/services/authService';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
