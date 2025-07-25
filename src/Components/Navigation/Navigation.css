@@ -27,6 +27,12 @@
   align-items: center;
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .nav-logo {
   position: relative;
   font-family: 'Orbitron', monospace;
@@ -68,6 +74,13 @@
   margin: 0;
   padding: 0;
   gap: 2rem;
+  transition: all 0.3s ease;
+}
+
+.nav-menu.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
 }
 
 .nav-item {
@@ -104,7 +117,8 @@
 }
 
 .nav-text {
-  font-size: 0.9rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
   position: relative;
   z-index: 2;
 }
@@ -128,7 +142,7 @@
 }
 
 .nav-toggle {
-  display: none;
+  display: flex;
   flex-direction: column;
   cursor: pointer;
   gap: 4px;
@@ -183,11 +197,6 @@
     transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .nav-toggle {
-    display: flex;
   }
   
   .nav-link {
@@ -198,5 +207,11 @@
   
   .nav-icon {
     font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .nav-toggle {
+    display: none;
   }
 }

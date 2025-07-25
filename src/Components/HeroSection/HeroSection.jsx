@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './HeroSection.css';
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   const [currentText, setCurrentText] = useState(0);
+  
   const textArray = [
-    "全端開發者",
-    "創意思考者", 
-    "技術愛好者",
-    "問題解決者"
+    t('hero.roles.web'),
+    t('hero.roles.tools'),
+    t('hero.roles.images'),
+    t('hero.roles.news')
   ];
 
   useEffect(() => {
@@ -30,12 +33,12 @@ const HeroSection = () => {
         <div className="hero-content">
           <div className="hero-text">
             <h1 className="hero-title">
-              <span className="greeting">Hello, 我是</span>
-              <span className="name">SaviorDT</span>
+              <span className="greeting">{t('hero.greeting')}</span>
+              <span className="name">{t('hero.name')}</span>
             </h1>
             
             <div className="hero-subtitle">
-              <span className="static-text">一位</span>
+              <span className="static-text">{t('hero.staticText')}</span>
               <span className="dynamic-text">
                 {textArray.map((text, index) => (
                   <span 
@@ -49,8 +52,7 @@ const HeroSection = () => {
             </div>
             
             <p className="hero-description">
-              熱衷於創造令人驚艷的數位體驗，專注於前端開發與使用者介面設計。
-              讓我們一起探索技術的無限可能！
+              {t('hero.description')}
             </p>
             
             <div className="hero-buttons">
@@ -58,7 +60,7 @@ const HeroSection = () => {
                 className="btn btn-primary"
                 onClick={() => scrollToSection('about')}
               >
-                <span>認識我</span>
+                <span>{t('hero.buttons.knowMe')}</span>
                 <div className="btn-effect"></div>
               </button>
               
@@ -66,7 +68,7 @@ const HeroSection = () => {
                 className="btn btn-secondary"
                 onClick={() => scrollToSection('portfolio')}
               >
-                <span>查看作品</span>
+                <span>{t('hero.buttons.viewWork')}</span>
                 <div className="btn-effect"></div>
               </button>
             </div>
@@ -78,7 +80,7 @@ const HeroSection = () => {
                 <div className="avatar-ring"></div>
                 <div className="avatar-ring-2"></div>
                 <div className="avatar-content">
-                  <span className="avatar-text">DT</span>
+                  <span className="avatar-text">DL</span>
                 </div>
               </div>
             </div>
@@ -94,7 +96,7 @@ const HeroSection = () => {
         
         <div className="scroll-indicator">
           <div className="scroll-arrow">
-            <span>往下滑動探索更多</span>
+            <span>{t('hero.scrollText')}</span>
             <div className="arrow-down"></div>
           </div>
         </div>

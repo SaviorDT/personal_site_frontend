@@ -1,31 +1,34 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './PreviewSections.css';
 
 const PreviewSections = () => {
+  const { t } = useTranslation();
+  
   const sections = [
     {
       id: 'about',
-      title: '關於我',
-      description: '了解我的背景、技能和經歷',
+      title: t('preview.sections.about.title'),
+      description: t('preview.sections.about.description'),
       icon: '👤',
       color: '#ff6b6b',
-      features: ['個人簡介', '技術技能', '工作經歷', '教育背景']
+      features: t('preview.sections.about.features', { returnObjects: true })
     },
     {
       id: 'articles',
-      title: '技術文章',
-      description: '分享程式開發心得與技術見解',
+      title: t('preview.sections.articles.title'),
+      description: t('preview.sections.articles.description'),
       icon: '📝',
       color: '#4ecdc4',
-      features: ['前端開發', 'React 教學', '最佳實踐', '新技術分享']
+      features: t('preview.sections.articles.features', { returnObjects: true })
     },
     {
       id: 'portfolio',
-      title: '作品集',
-      description: '展示我的專案作品與開發成果',
+      title: t('preview.sections.portfolio.title'),
+      description: t('preview.sections.portfolio.description'),
       icon: '💼',
       color: '#45b7d1',
-      features: ['網頁應用', '行動應用', '開源專案', '設計作品']
+      features: t('preview.sections.portfolio.features', { returnObjects: true })
     }
   ];
 
@@ -33,9 +36,9 @@ const PreviewSections = () => {
     <section className="preview-sections">
       <div className="preview-container">
         <div className="section-header">
-          <h2 className="section-title">探索更多內容</h2>
+          <h2 className="section-title">{t('preview.title')}</h2>
           <p className="section-subtitle">
-            深入了解我的專業技能、創作內容和精彩作品
+            {t('preview.subtitle')}
           </p>
         </div>
         
@@ -69,10 +72,10 @@ const PreviewSections = () => {
                     className="card-button"
                     onClick={() => {
                       // 這裡之後可以改為路由導航
-                      alert(`即將前往${section.title}頁面`);
+                      alert(`${t('preview.viewMore')} ${section.title}`);
                     }}
                   >
-                    <span>查看更多</span>
+                    <span>{t('preview.viewMore')}</span>
                     <div className="button-arrow">→</div>
                   </button>
                 </div>
@@ -86,23 +89,19 @@ const PreviewSections = () => {
         <div className="contact-preview">
           <div className="contact-card">
             <div className="contact-content">
-              <h3 className="contact-title">讓我們開始對話</h3>
+              <h3 className="contact-title">{t('preview.contact.title')}</h3>
               <p className="contact-description">
-                有任何想法或合作機會？歡迎與我聯繫！
+                {t('preview.contact.description')}
               </p>
               <div className="contact-info">
                 <div className="contact-item">
                   <span className="contact-icon">📧</span>
-                  <span>saviordt@example.com</span>
+                  <span>{t('preview.contact.email')}</span>
                 </div>
-                <div className="contact-item">
-                  <span className="contact-icon">💼</span>
-                  <span>LinkedIn</span>
-                </div>
-                <div className="contact-item">
+                <a href="https://github.com/SaviorDT" target="_blank" rel="noopener noreferrer" className="contact-item">
                   <span className="contact-icon">🐙</span>
                   <span>GitHub</span>
-                </div>
+                </a>
               </div>
             </div>
             <div className="contact-visual">

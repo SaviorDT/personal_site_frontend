@@ -1,0 +1,74 @@
+.language-switch {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.lang-btn:hover {
+  color: #fff;
+  border-color: #4ecdc4;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(78, 205, 196, 0.2);
+}
+
+.lang-btn.active {
+  background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(255, 107, 107, 0.2));
+  border-color: #4ecdc4;
+  color: #fff;
+}
+
+.lang-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(78, 205, 196, 0.1), rgba(255, 107, 107, 0.1));
+  border-radius: 20px;
+}
+
+.lang-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.lang-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .lang-btn {
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .lang-flag {
+    font-size: 0.9rem;
+  }
+  
+  .lang-name {
+    font-size: 0.6rem;
+  }
+}

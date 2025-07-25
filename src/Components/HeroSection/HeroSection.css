@@ -83,15 +83,17 @@
 
 .static-text {
   color: rgba(255, 255, 255, 0.9);
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .dynamic-text {
   position: relative;
   height: 2.2rem;
-  overflow: hidden;
   color: #4ecdc4;
   font-weight: 600;
   min-width: 150px;
+  flex-grow: 1; /* Take up remaining space */
+  overflow: hidden; /* Ensure text doesn't overflow */
 }
 
 .text-item {
