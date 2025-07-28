@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import SocialIcons from '@/Components/SocialIcons/SocialIcons';
 import authService from '@/services/authService';
@@ -7,6 +7,9 @@ import './AuthModal.css';
 const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState(initialMode);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -14,17 +17,96 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
     name: ''
   });
 
+  // 重置狀態當 modal 打開/關閉或模式切換時
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setError('');
+      setLoading(false);
+      setToast({ show: false, message: '', type: 'success' });
+    }
+  }, [isOpen, initialMode]);
+
+  // 當模式切換時清除錯誤
+  useEffect(() => {
+    setError('');
+  }, [mode]);
+
+  // Toast 自動隱藏
+  useEffect(() => {
+    if (toast.show) {
+      const timer = setTimeout(() => {
+        setToast({ show: false, message: '', type: 'success' });
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [toast.show]);
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    // 清除錯誤訊息當用戶開始輸入
+    if (error) {
+      setError('');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const showSuccessToast = (message) => {
+    setToast({
+      show: true,
+      message,
+      type: 'success'
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 這裡之後實現具體的登入/註冊邏輯
-    console.log(mode, formData);
+    setLoading(true);
+    setError('');
+    
+    try {
+      let result;
+      
+      if (mode === 'login') {
+        result = await authService.login({
+          email: formData.email,
+          password: formData.password
+        });
+      } else {
+        result = await authService.register({
+          nickname: formData.name, // 修正：使用 nickname 而不是 name
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword
+        });
+      }
+      
+      if (result.success) {
+        // 登入/註冊成功，關閉 modal
+        onClose();
+        // 顯示成功提示
+        showSuccessToast(result.message || t('auth.success.default'));
+        // 清空表單
+        setFormData({
+          email: '',
+          password: '',
+          confirmPassword: '',
+          name: ''
+        });
+        // 注意：不需要手動更新用戶狀態，AuthService 會觸發事件自動更新 AuthContext
+      } else {
+        // 顯示錯誤訊息，不關閉 modal
+        setError(result.error || t('auth.error.default'));
+      }
+    } catch (error) {
+      console.error('Auth error:', error);
+      setError(t('auth.error.network'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const socialProviders = [
@@ -37,8 +119,16 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+    <>
+      {/* Toast 通知 */}
+      {toast.show && (
+        <div className={`auth-toast ${toast.type}`}>
+          {toast.type === 'success' ? '✅' : '❌'} {toast.message}
+        </div>
+      )}
+
+      <div className="auth-modal-overlay" onClick={onClose}>
+        <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>×</button>
         
         <div className="auth-header">
@@ -51,6 +141,12 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {error && (
+            <div className="auth-error-message">
+              ❌ {error}
+            </div>
+          )}
+          
           {mode === 'register' && (
             <div className="form-group">
               <label htmlFor="name">{t('auth.fields.nickname')}</label>
@@ -107,8 +203,24 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
             </div>
           )}
 
-          <button type="submit" className="auth-submit-btn">
-            {mode === 'login' ? t('auth.login.submit') : t('auth.register.submit')}
+          <button 
+            type="submit" 
+            className="auth-submit-btn"
+            disabled={loading}
+            style={{
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              position: 'relative'
+            }}
+          >
+            {loading ? (
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="auth-spinner"></span>
+                {mode === 'login' ? t('auth.login.submitting') : t('auth.register.submitting')}
+              </span>
+            ) : (
+              mode === 'login' ? t('auth.login.submit') : t('auth.register.submit')
+            )}
           </button>
         </form>
 
@@ -124,6 +236,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
               style={{ '--provider-color': provider.color }}
               onClick={() => {
                 // 這裡之後實現社交登入邏輯
+                setError(t('auth.error.social_not_implemented'));
                 console.log(`${provider.name} auth`);
               }}
             >
@@ -155,8 +268,9 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
             </button>
           </p>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

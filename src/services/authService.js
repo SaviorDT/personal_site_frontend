@@ -1,28 +1,16 @@
 import axios from 'axios';
 import apiConfig from '@/config/api';
+import i18n from 'i18next';
 
 // 創建 axios 實例
 const apiClient = axios.create({
-  baseURL: apiConfig.API_BASE_URL || 'http://localhost:8000/api',
+  baseURL: apiConfig.API_BASE_URL,
   timeout: apiConfig.TIMEOUT || 10000,
+  withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
 });
-
-// 請求攔截器 - 添加認證 token
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // 響應攔截器 - 處理錯誤
 apiClient.interceptors.response.use(
@@ -31,10 +19,16 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Token 過期或無效，清除本地存儲並重定向到登入頁
-      localStorage.removeItem('authToken');
+      // Token 無效或過期，清除本地用戶信息
       localStorage.removeItem('user');
-      // 這裡可以添加重定向邏輯
+      
+      // 觸發登出事件來更新 AuthContext
+      window.dispatchEvent(new CustomEvent('auth-logout'));
+      
+      // 觸發顯示 AuthModal 的事件
+      window.dispatchEvent(new CustomEvent('show-auth-modal', {
+        detail: { mode: 'login' }
+      }));
     }
     return Promise.reject(error);
   }
@@ -42,7 +36,6 @@ apiClient.interceptors.response.use(
 
 // Auth Service 類
 class AuthService {
-  
   /**
    * 用戶登入
    * @param {Object} credentials - 登入憑證
@@ -52,200 +45,95 @@ class AuthService {
    */
   async login(credentials) {
     try {
-      const response = await apiClient.post('/auth/login', {
+      const response = await apiClient.post(apiConfig.ENDPOINTS.AUTH.LOGIN, {
         email: credentials.email,
         password: credentials.password,
       });
       
       // 登入成功後保存 token 和用戶信息
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.status == 200) {
+        const userData = {
+          id: response.data.user_id,
+          nickname: response.data.nickname,
+          role: response.data.role,
+        };
+        
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        // 觸發登入成功事件，通知 AuthContext 更新狀態
+        window.dispatchEvent(new CustomEvent('auth-login-success', {
+          detail: userData
+        }));
       }
       
       return {
         success: true,
         data: response.data,
-        message: '登入成功'
+        message: i18n.t('auth.api.login_success')
       };
     } catch (error) {
-      return this.handleError(error, '登入失敗');
+      return this.handleError(error, i18n.t('auth.api.login_fail'));
     }
   }
 
   /**
    * 用戶註冊
    * @param {Object} userData - 註冊資料
-   * @param {string} userData.name - 姓名/暱稱
+   * @param {string} userData.nickname - 暱稱
    * @param {string} userData.email - 電子郵件
    * @param {string} userData.password - 密碼
    * @param {string} userData.confirmPassword - 確認密碼
    * @returns {Promise} API 響應
    */
   async register(userData) {
+    if (userData.password !== userData.confirmPassword) {
+      return this.handleError({}, i18n.t('auth.api.confirm_password_wrong'))
+    }
     try {
-      const response = await apiClient.post('/auth/register', {
-        name: userData.name,
+      const response = await apiClient.post(apiConfig.ENDPOINTS.AUTH.REGISTER, {
+        nickname: userData.nickname,
         email: userData.email,
         password: userData.password,
-        confirmPassword: userData.confirmPassword,
       });
       
       // 註冊成功後可以自動登入或要求用戶登入
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.status == 200) {
+        // 自動登入用戶
+        const loginResult = await this.login({
+          email: userData.email,
+          password: userData.password
+        });
+        
+        if (loginResult.success) {
+          return {
+            success: true,
+            data: response.data,
+            message: i18n.t('auth.api.register_success')
+          };
+        }
       }
       
       return {
         success: true,
         data: response.data,
-        message: '註冊成功'
+        message: i18n.t('auth.api.register_success')
       };
     } catch (error) {
-      return this.handleError(error, '註冊失敗');
-    }
-  }
-
-  /**
-   * 用戶登出
-   * @returns {Promise} API 響應
-   */
-  async logout() {
-    try {
-      await apiClient.post('/auth/logout');
-      
-      // 清除本地存儲
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      
-      return {
-        success: true,
-        message: '登出成功'
-      };
-    } catch (error) {
-      // 即使 API 調用失敗，也要清除本地存儲
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      
-      return {
-        success: true,
-        message: '登出成功'
-      };
+      return this.handleError(error, i18n.t('auth.api.register_fail'));
     }
   }
 
   /**
    * 獲取當前用戶信息
-   * @returns {Promise} API 響應
+   * @returns {Object|null} 用戶信息
    */
-  async getCurrentUser() {
+  getCurrentUser() {
     try {
-      const response = await apiClient.get('/auth/me');
-      
-      return {
-        success: true,
-        data: response.data,
-      };
+      const userStr = localStorage.getItem('user');
+      return userStr ? JSON.parse(userStr) : null;
     } catch (error) {
-      return this.handleError(error, '獲取用戶信息失敗');
-    }
-  }
-
-  /**
-   * 刷新 Token
-   * @returns {Promise} API 響應
-   */
-  async refreshToken() {
-    try {
-      const response = await apiClient.post('/auth/refresh');
-      
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-      }
-      
-      return {
-        success: true,
-        data: response.data,
-      };
-    } catch (error) {
-      return this.handleError(error, 'Token 刷新失敗');
-    }
-  }
-
-  /**
-   * 社交登入
-   * @param {string} provider - 社交平台 (google, facebook, github, line)
-   * @param {Object} socialData - 社交平台返回的資料
-   * @returns {Promise} API 響應
-   */
-  async socialLogin(provider, socialData) {
-    try {
-      const response = await apiClient.post(`/auth/social/${provider}`, {
-        ...socialData,
-        provider: provider,
-      });
-      
-      // 登入成功後保存 token 和用戶信息
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
-      
-      return {
-        success: true,
-        data: response.data,
-        message: '登入成功'
-      };
-    } catch (error) {
-      return this.handleError(error, `${provider} 登入失敗`);
-    }
-  }
-
-  /**
-   * 忘記密碼
-   * @param {string} email - 電子郵件
-   * @returns {Promise} API 響應
-   */
-  async forgotPassword(email) {
-    try {
-      const response = await apiClient.post('/auth/forgot-password', {
-        email: email,
-      });
-      
-      return {
-        success: true,
-        data: response.data,
-        message: '重置密碼郵件已發送'
-      };
-    } catch (error) {
-      return this.handleError(error, '發送重置密碼郵件失敗');
-    }
-  }
-
-  /**
-   * 重置密碼
-   * @param {Object} resetData - 重置密碼資料
-   * @param {string} resetData.token - 重置 token
-   * @param {string} resetData.password - 新密碼
-   * @param {string} resetData.confirmPassword - 確認新密碼
-   * @returns {Promise} API 響應
-   */
-  async resetPassword(resetData) {
-    try {
-      const response = await apiClient.post('/auth/reset-password', {
-        token: resetData.token,
-        password: resetData.password,
-        confirmPassword: resetData.confirmPassword,
-      });
-      
-      return {
-        success: true,
-        data: response.data,
-        message: '密碼重置成功'
-      };
-    } catch (error) {
-      return this.handleError(error, '密碼重置失敗');
+      console.error('Error parsing user data:', error);
+      return null;
     }
   }
 
@@ -254,30 +142,44 @@ class AuthService {
    * @returns {boolean} 是否已登入
    */
   isAuthenticated() {
-    const token = localStorage.getItem('authToken');
-    const user = localStorage.getItem('user');
-    return !!(token && user);
+    const user = this.getCurrentUser();
+    return user !== null && user !== undefined;
   }
 
   /**
-   * 獲取本地存儲的用戶信息
-   * @returns {Object|null} 用戶信息
+   * 登出
+   * @returns {Promise} 登出結果
    */
-  getLocalUser() {
-    const userStr = localStorage.getItem('user');
+  async logout() {
     try {
-      return userStr ? JSON.parse(userStr) : null;
-    } catch {
-      return null;
+      // 調用後端登出 API 來清除 httpOnly cookie
+      await apiClient.post(apiConfig.ENDPOINTS.AUTH.LOGOUT, {}, {
+        withCredentials: true // 確保發送 cookies
+      });
+      
+      // 清除本地存儲的用戶信息
+      localStorage.removeItem('user');
+      
+      // 觸發登出事件
+      window.dispatchEvent(new CustomEvent('auth-logout'));
+      
+      return {
+        success: true,
+        message: i18n.t('auth.api.logout_success')
+      };
+    } catch (error) {
+      // 即使後端 API 調用失敗，也要清除本地狀態
+      localStorage.removeItem('user');
+      window.dispatchEvent(new CustomEvent('auth-logout'));
+      
+      console.warn('Logout API failed, but local state cleared:', error);
+      
+      return {
+        success: true, // 仍然返回成功，因為本地狀態已清除
+        message: i18n.t('auth.api.logout_success'),
+        warning: 'Backend logout failed, but local logout completed'
+      };
     }
-  }
-
-  /**
-   * 獲取本地存儲的 token
-   * @returns {string|null} Token
-   */
-  getLocalToken() {
-    return localStorage.getItem('authToken');
   }
 
   /**
@@ -298,7 +200,7 @@ class AuthService {
       message = error.response.data?.message || error.response.data?.error || defaultMessage;
     } else if (error.request) {
       // 請求發送但沒有響應
-      message = '網絡連接錯誤，請檢查您的網絡連接';
+      message = i18n.t('auth.api.network_error');
     } else {
       // 其他錯誤
       message = error.message || defaultMessage;

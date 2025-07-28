@@ -15,10 +15,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      // 設定 src 為基礎路徑，這樣可以直接從 src 開始 import
       '@': path.resolve(__dirname, './src'),
-      // 或者更簡潔的方式，直接設定 src 為根目錄
-      'src': path.resolve(__dirname, './src'),
     }
   },
   build: {
@@ -43,7 +40,6 @@ export default defineConfig({
   define: {
     // 只定義需要的環境變數，避免安全風險
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    'process.env.REACT_APP_API_URL': JSON.stringify(process.env.REACT_APP_API_URL),
   },
   test: {
     globals: true,

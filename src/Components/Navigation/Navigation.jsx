@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/contexts/AuthContext';
 import LanguageDropdown from '@/Components/LanguageDropdown/LanguageDropdown';
-import AuthModal from '@/Components/AuthModal/AuthModal';
 import './Navigation.css';
 
 const Navigation = () => {
   const { t } = useTranslation();
+  const { openAuthModal, user, isAuthenticated, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState('login');
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,14 +33,35 @@ const Navigation = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const openAuthModal = (mode) => {
-    setAuthMode(mode);
-    setAuthModalOpen(true);
+  const toggleUserMenu = () => {
+    setUserMenuOpen(!userMenuOpen);
   };
 
-  const closeAuthModal = () => {
-    setAuthModalOpen(false);
+  const handleLogout = async () => {
+    await logout();
+    setUserMenuOpen(false);
   };
+
+  // 縮短用戶名稱的函數
+  const getDisplayName = (nickname) => {
+    if (!nickname) return t('nav.account');
+    if (nickname.length <= 8) return nickname;
+    return nickname.substring(0, 6) + '...';
+  };
+
+  // 點擊外部關閉用戶選單
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuOpen && !event.target.closest('.user-menu-container')) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userMenuOpen]);
 
   return (
     <nav className={`navigation ${scrolled ? 'scrolled' : ''}`}>
@@ -64,13 +85,46 @@ const Navigation = () => {
 
         <div className="nav-right">
           <LanguageDropdown />
-          <button 
-            className="auth-btn unified-auth-btn"
-            onClick={() => openAuthModal('login')}
-          >
-            <span className="auth-icon">👤</span>
-            <span className="auth-text">{t('nav.account')}</span>
-          </button>
+          
+          {isAuthenticated ? (
+            <div className="user-menu-container">
+              <button 
+                className="auth-btn unified-auth-btn user-btn"
+                onClick={toggleUserMenu}
+                title={user?.nickname || t('nav.account')}
+              >
+                <span className="auth-icon">👤</span>
+                <span className="auth-text">{getDisplayName(user?.nickname)}</span>
+                <span className={`dropdown-arrow ${userMenuOpen ? 'open' : ''}`}>▼</span>
+              </button>
+              
+              {userMenuOpen && (
+                <div className="user-dropdown">
+                  <div className="user-info">
+                    <div className="user-name">{user?.nickname}</div>
+                    <div className="user-role">{user?.role || 'User'}</div>
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <button 
+                    className="dropdown-item logout-btn"
+                    onClick={handleLogout}
+                  >
+                    <span className="dropdown-icon">🚪</span>
+                    <span>{t('nav.logout')}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button 
+              className="auth-btn unified-auth-btn"
+              onClick={() => openAuthModal('login')}
+            >
+              <span className="auth-icon">👤</span>
+              <span className="auth-text">{t('nav.account')}</span>
+            </button>
+          )}
+          
           <div className="nav-toggle" onClick={toggleMenu}>
             <span></span>
             <span></span>
@@ -78,12 +132,6 @@ const Navigation = () => {
           </div>
         </div>
       </div>
-      
-      <AuthModal 
-        isOpen={authModalOpen}
-        onClose={closeAuthModal}
-        initialMode={authMode}
-      />
     </nav>
   );
 };

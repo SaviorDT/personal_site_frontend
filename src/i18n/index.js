@@ -15,7 +15,8 @@ const resources = {
         contact: "聯絡",
         login: "登入",
         register: "註冊",
-        account: "登入"
+        account: "登入",
+        logout: "登出"
       },
       // 英雄區塊
       hero: {
@@ -65,20 +66,6 @@ const resources = {
       },
       // 認證
       auth: {
-        login: {
-          title: "歡迎回來",
-          subtitle: "登入您的帳戶繼續使用",
-          submit: "登入",
-          switchText: "還沒有帳戶？",
-          switchAction: "立即註冊"
-        },
-        register: {
-          title: "加入我們",
-          subtitle: "創建您的帳戶開始體驗",
-          submit: "註冊",
-          switchText: "已經有帳戶了？",
-          switchAction: "立即登入"
-        },
         fields: {
           nickname: "暱稱",
           email: "電子信箱",
@@ -91,12 +78,45 @@ const resources = {
           password: "請輸入密碼",
           confirmPassword: "請再次輸入密碼"
         },
+        login: {
+          title: "歡迎回來",
+          subtitle: "登入您的帳戶繼續使用",
+          submit: "登入",
+          submitting: "登入中...",
+          switchText: "還沒有帳戶？",
+          switchAction: "立即註冊"
+        },
+        register: {
+          title: "加入我們",
+          subtitle: "創建您的帳戶開始體驗",
+          submit: "註冊",
+          submitting: "註冊中...",
+          switchText: "已經有帳戶了？",
+          switchAction: "立即登入"
+        },
+        success: {
+          default: "操作成功"
+        },
+        error: {
+          default: "操作失敗，請稍後再試",
+          network: "網絡連接錯誤，請檢查您的網絡連接",
+          social_not_implemented: "第三方平台登入功能尚未實現"
+        },
         or: "或",
         social: {
           google: "Google",
           facebook: "Facebook",
           github: "GitHub",
           line: "LINE"
+        },
+        api: {
+          login_success: "登入成功",
+          login_fail: "登入失敗",
+          confirm_password_wrong: "兩次輸入密碼不一致",
+          register_success: "註冊成功",
+          register_fail: "註冊失敗",
+          logout_success: "登出成功",
+          network_error: "網絡連接錯誤，請檢查您的網絡連接"
         }
       }
     }
@@ -112,7 +132,8 @@ const resources = {
         contact: "Contact",
         login: "Login",
         register: "Register",
-        account: "Login"
+        account: "Login",
+        logout: "Logout"
       },
       // Hero Section
       hero: {
@@ -162,20 +183,6 @@ const resources = {
       },
       // Authentication
       auth: {
-        login: {
-          title: "Welcome Back",
-          subtitle: "Sign in to your account to continue",
-          submit: "Sign In",
-          switchText: "Don't have an account?",
-          switchAction: "Sign up now"
-        },
-        register: {
-          title: "Join Us",
-          subtitle: "Create your account to get started",
-          submit: "Sign Up",
-          switchText: "Already have an account?",
-          switchAction: "Sign in now"
-        },
         fields: {
           nickname: "Nickname",
           email: "Email",
@@ -188,12 +195,45 @@ const resources = {
           password: "Enter your password",
           confirmPassword: "Confirm your password"
         },
+        login: {
+          title: "Welcome Back",
+          subtitle: "Sign in to your account to continue",
+          submit: "Sign In",
+          submitting: "Signing in...",
+          switchText: "Don't have an account?",
+          switchAction: "Sign up now"
+        },
+        register: {
+          title: "Join Us",
+          subtitle: "Create your account to get started",
+          submit: "Sign Up",
+          submitting: "Signing up...",
+          switchText: "Already have an account?",
+          switchAction: "Sign in now"
+        },
+        success: {
+          default: "Operation successful"
+        },
+        error: {
+          default: "Operation failed, please try again",
+          network: "Network connection error, please check your network",
+          social_not_implemented: "3rd party platform login feature is not implemented yet"
+        },
         or: "or",
         social: {
           google: "Google",
           facebook: "Facebook",
           github: "GitHub",
           line: "LINE"
+        },
+        api: {
+          login_success: "login successed!",
+          login_fail: "login failed!",
+          confirm_password_wrong: "confirm password not same as password!",
+          register_success: "register successed!",
+          register_fail: "register failed!",
+          logout_success: "logout successed!",
+          network_error: "connecting error. Please check your network!"
         }
       }
     }
@@ -206,7 +246,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'zh',
-    debug: process.env.NODE_ENV === 'development',
+    debug: import.meta.env.DEV,
     
     interpolation: {
       escapeValue: false, // React 已經做了 XSS 保護
