@@ -1,0 +1,36 @@
+/* ArticleFooter.css */
+.article-footer {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid #E5E7EB;
+}
+
+.article-meta-bottom {
+  text-align: center;
+  color: #6B7280;
+  font-size: 0.9rem;
+  margin-top: 20px;
+}
+
+.article-meta-bottom p {
+  margin: 0;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .article-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .article-footer {
+    border-color: #374151;
+  }
+  
+  .article-meta-bottom {
+    color: #9CA3AF;
+  }
+}

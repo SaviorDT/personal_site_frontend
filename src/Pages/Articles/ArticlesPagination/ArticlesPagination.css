@@ -1,0 +1,94 @@
+/* ArticlesPagination.css */
+.articles-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 0;
+}
+
+.pagination-btn {
+  background: white;
+  color: #4F46E5;
+  border: 2px solid #E2E8F0;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #4F46E5;
+  color: white;
+  border-color: #4F46E5;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 4px;
+  margin: 0 16px;
+}
+
+.pagination-number {
+  background: white;
+  color: #4F46E5;
+  border: 2px solid #E2E8F0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 44px;
+}
+
+.pagination-number:hover {
+  background: #F1F5F9;
+  border-color: #4F46E5;
+}
+
+.pagination-number.active {
+  background: #4F46E5;
+  color: white;
+  border-color: #4F46E5;
+}
+
+.pagination-ellipsis {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: #64748B;
+  font-weight: 600;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .articles-pagination {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .pagination-numbers {
+    margin: 0 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-btn {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .pagination-number {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-width: 40px;
+  }
+}

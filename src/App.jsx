@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
+import { RouterProvider } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import AuthModal from '@/Components/AuthModal/AuthModal';
-import Home from '@/Pages/Home/Home';
+import { router } from '@/router';
 import './App.css';
 
-// 內部組件來處理事件監聽
+// 內部組件來處理事件監聽和全局 AuthModal
 const AppContent = () => {
   const { authModalOpen, authMode, closeAuthModal, showAuthModalIfNotVisible } = useAuth();
 
@@ -23,15 +24,17 @@ const AppContent = () => {
   }, [showAuthModalIfNotVisible]);
 
   return (
-    <div className="App">
-      <Home />
+    <>
+      {/* React Router 路由 */}
+      <RouterProvider router={router} />
+      
       {/* 全局 AuthModal */}
       <AuthModal 
         isOpen={authModalOpen}
         onClose={closeAuthModal}
         initialMode={authMode}
       />
-    </div>
+    </>
   );
 };
 

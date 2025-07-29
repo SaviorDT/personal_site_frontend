@@ -188,6 +188,7 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  text-decoration: none; /* 移除 Link 的默認樣式 */
 }
 
 .card-button:hover {

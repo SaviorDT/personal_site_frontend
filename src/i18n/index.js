@@ -118,6 +118,38 @@ const resources = {
           logout_success: "登出成功",
           network_error: "網絡連接錯誤，請檢查您的網絡連接"
         }
+      },
+      // 文章相關翻譯
+      articles: {
+        title: "文章分享",
+        subtitle: "分享程式心得以及日常生活",
+        type: {
+          frontend: "本站原創",
+          backend: "精選文章"
+        },
+        readTime: "分鐘閱讀",
+        readMore: "閱讀更多",
+        search: {
+          placeholder: "搜尋文章..."
+        },
+        filter: {
+          category: "類別",
+          tags: "標籤",
+          all: "全部",
+          clear: "清除篩選"
+        },
+        loading: "載入中...",
+        found: "找到 {{count}} 篇文章",
+        retry: "重試",
+        empty: {
+          title: "暫無文章",
+          message: "目前沒有符合條件的文章，請嘗試調整篩選條件。"
+        }
+      },
+      // 分頁翻譯
+      pagination: {
+        prev: "上一頁",
+        next: "下一頁"
       }
     }
   },
@@ -235,6 +267,38 @@ const resources = {
           logout_success: "logout successed!",
           network_error: "connecting error. Please check your network!"
         }
+      },
+      // 文章相關翻譯
+      articles: {
+        title: "Articles sharing",
+        subtitle: "Share programing insights and daily life",
+        type: {
+          frontend: "本站原創",
+          backend: "精選文章"
+        },
+        readTime: "minutes read",
+        readMore: "Read More",
+        search: {
+          placeholder: "Search articles..."
+        },
+        filter: {
+          category: "Category",
+          tags: "Tags",
+          all: "All",
+          clear: "Clear Filter"
+        },
+        loading: "Loading...",
+        found: "Found {{count}} articles",
+        retry: "Retry",
+        empty: {
+          title: "No Articles",
+          message: "There are currently no articles that match your criteria. Please try adjusting your filters."
+        }
+      },
+      // 分頁翻譯
+      pagination: {
+        prev: "上一頁",
+        next: "下一頁"
       }
     }
   }

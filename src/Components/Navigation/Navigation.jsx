@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import LanguageDropdown from '@/Components/LanguageDropdown/LanguageDropdown';
+import { ROUTES } from '@/router';
 import './Navigation.css';
 
 const Navigation = () => {
   const { t } = useTranslation();
   const { openAuthModal, user, isAuthenticated, logout } = useAuth();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -22,11 +25,11 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { name: t('nav.home'), href: '#home', icon: '🏠' },
-    { name: t('nav.about'), href: '#about', icon: '👤' },
-    { name: t('nav.articles'), href: '#articles', icon: '📝' },
-    { name: t('nav.portfolio'), href: '#portfolio', icon: '💼' },
-    { name: t('nav.contact'), href: '#contact', icon: '📧' },
+    { name: t('nav.home'), path: ROUTES.HOME, icon: '🏠' },
+    { name: t('nav.about'), path: ROUTES.ABOUT, icon: '👤' },
+    { name: t('nav.articles'), path: ROUTES.ARTICLES, icon: '📝' },
+    { name: t('nav.portfolio'), path: ROUTES.PORTFOLIO, icon: '💼' },
+    { name: t('nav.contact'), path: ROUTES.CONTACT, icon: '📧' },
   ];
 
   const toggleMenu = () => {
@@ -74,11 +77,15 @@ const Navigation = () => {
         <ul className={`nav-menu ${menuOpen ? 'open' : ''}`}>
           {navItems.map((item, index) => (
             <li key={index} className="nav-item">
-              <a href={item.href} className="nav-link">
+              <Link 
+                to={item.path} 
+                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
                 <span className="nav-icon">{item.icon}</span>
                 <span className="nav-text">{item.name}</span>
                 <div className="nav-highlight"></div>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,0 +1,384 @@
+/* ArticleCard.css */
+.article-card {
+  background: rgba(255, 255, 255, 0.95); /* 增加透明度 */
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  backdrop-filter: blur(8px); /* 添加背景模糊效果 */
+  -webkit-backdrop-filter: blur(8px); /* Safari 支援 */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 添加細邊框 */
+  user-select: none; /* 防止意外選取文字 */
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(99, 102, 241, 0.05) 0%, 
+    rgba(168, 85, 247, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.article-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.article-card:hover::before {
+  opacity: 1;
+}
+
+/* 縮圖區域 */
+.article-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.article-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.article-card:hover .article-thumbnail img {
+  transform: scale(1.05);
+}
+
+.article-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px;
+}
+
+.article-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.article-type-badge {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  color: #374151;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.article-type-badge.frontend {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+  border: none;
+}
+
+.article-type-badge.backend {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: white;
+  border: none;
+}
+
+.article-category {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+/* 內容區域 */
+.article-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #6B7280;
+  font-size: 0.875rem;
+}
+
+.article-author {
+  font-weight: 600;
+  color: #4F46E5;
+}
+
+.article-date {
+  position: relative;
+}
+
+.article-date::before {
+  content: '•';
+  margin-right: 8px;
+  color: #D1D5DB;
+}
+
+.article-read-time {
+  position: relative;
+}
+
+.article-read-time::before {
+  content: '•';
+  margin-right: 8px;
+  color: #D1D5DB;
+}
+
+.article-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-excerpt {
+  color: #4B5563;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.article-tag {
+  background: #F3F4F6;
+  color: #6B7280;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.article-tag:hover {
+  background: #E5E7EB;
+  color: #374151;
+}
+
+.article-tag-more {
+  background: #4F46E5;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* 底部區域 */
+.article-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(243, 244, 246, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(250, 250, 250, 0.8); /* 增加透明度 */
+  position: relative;
+  z-index: 2;
+}
+
+.article-stats {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #6B7280;
+  font-size: 0.875rem;
+}
+
+.stat-icon {
+  font-size: 0.875rem;
+}
+
+.read-more-btn {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.read-more-btn:hover {
+  background: linear-gradient(135deg, #3730A3, #6D28D9);
+  transform: translateX(2px);
+}
+
+.btn-arrow {
+  font-size: 0.875rem;
+  transition: transform 0.2s ease;
+}
+
+.read-more-btn:hover .btn-arrow {
+  transform: translateX(3px);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .article-thumbnail {
+    height: 160px;
+  }
+  
+  .article-content {
+    padding: 16px;
+    gap: 10px;
+  }
+  
+  .article-title {
+    font-size: 1.1rem;
+  }
+  
+  .article-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .article-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .read-more-btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .article-thumbnail {
+    height: 140px;
+  }
+  
+  .article-overlay {
+    padding: 8px;
+  }
+  
+  .article-content {
+    padding: 12px;
+  }
+  
+  .article-title {
+    font-size: 1rem;
+  }
+  
+  .article-tags {
+    gap: 4px;
+  }
+  
+  .article-tag,
+  .article-tag-more {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .article-card {
+    background: rgba(31, 41, 55, 0.9); /* 深色模式也使用透明度 */
+    color: #F9FAFB;
+  }
+  
+  .article-title {
+    color: #F9FAFB;
+  }
+  
+  .article-excerpt {
+    color: #D1D5DB;
+  }
+  
+  .article-meta {
+    color: #9CA3AF;
+  }
+  
+  .article-tag {
+    background: #374151;
+    color: #D1D5DB;
+  }
+  
+  .article-tag:hover {
+    background: #4B5563;
+    color: #F9FAFB;
+  }
+  
+  .article-tag-more {
+    background: #8B5CF6;
+    color: white;
+  }
+  
+  .article-footer {
+    background: rgba(17, 24, 39, 0.8); /* 深色模式也使用透明度 */
+    border-top-color: rgba(55, 65, 81, 0.6);
+  }
+  
+  .stat-item {
+    color: #9CA3AF;
+  }
+}

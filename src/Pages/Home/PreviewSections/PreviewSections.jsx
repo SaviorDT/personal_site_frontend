@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '@/router';
 import './PreviewSections.css';
 
 const PreviewSections = () => {
@@ -12,7 +14,8 @@ const PreviewSections = () => {
       description: t('preview.sections.about.description'),
       icon: '👤',
       color: '#ff6b6b',
-      features: t('preview.sections.about.features', { returnObjects: true })
+      features: t('preview.sections.about.features', { returnObjects: true }),
+      path: ROUTES.ABOUT
     },
     {
       id: 'articles',
@@ -20,7 +23,8 @@ const PreviewSections = () => {
       description: t('preview.sections.articles.description'),
       icon: '📝',
       color: '#4ecdc4',
-      features: t('preview.sections.articles.features', { returnObjects: true })
+      features: t('preview.sections.articles.features', { returnObjects: true }),
+      path: ROUTES.ARTICLES
     },
     {
       id: 'portfolio',
@@ -28,7 +32,8 @@ const PreviewSections = () => {
       description: t('preview.sections.portfolio.description'),
       icon: '💼',
       color: '#45b7d1',
-      features: t('preview.sections.portfolio.features', { returnObjects: true })
+      features: t('preview.sections.portfolio.features', { returnObjects: true }),
+      path: ROUTES.PORTFOLIO
     }
   ];
 
@@ -68,16 +73,13 @@ const PreviewSections = () => {
                 </ul>
                 
                 <div className="card-actions">
-                  <button 
+                  <Link 
+                    to={section.path}
                     className="card-button"
-                    onClick={() => {
-                      // 這裡之後可以改為路由導航
-                      alert(`${t('preview.viewMore')} ${section.title}`);
-                    }}
                   >
                     <span>{t('preview.viewMore')}</span>
                     <div className="button-arrow">→</div>
-                  </button>
+                  </Link>
                 </div>
               </div>
               

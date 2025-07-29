@@ -1,0 +1,40 @@
+/* ArticlesHeader.css */
+.articles-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.articles-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.articles-subtitle {
+  font-size: 1.25rem;
+  color: #64748B;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .articles-title {
+    font-size: 2.5rem;
+  }
+  
+  .articles-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .articles-title {
+    font-size: 2rem;
+  }
+}

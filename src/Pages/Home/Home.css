@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
 
 .home {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   position: relative;
   overflow-x: hidden;
+  padding-top: 0; /* 移除頂部 padding，因為 Layout 已經處理了 */
 }
 
 .home-content {
