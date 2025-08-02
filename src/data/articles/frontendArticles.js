@@ -3,10 +3,12 @@
 
 // 動態導入文章組件和 metadata
 import { metadata as reactViteGuideMetadata } from './react-vite-guide/ReactViteGuide.jsx';
+import { metadata as siteHistoryMetadata } from './SiteHistory/SiteHistory.jsx';
 
 // 文章 metadata 陣列
 export const frontendArticles = [
   reactViteGuideMetadata,
+  siteHistoryMetadata,
   // 新增文章時，在此處加入對應的 metadata
 ];
 
@@ -17,6 +19,10 @@ export const loadArticleComponent = async (articleId) => {
       case 'react-vite-guide':
         const { default: ReactViteGuide } = await import('./react-vite-guide/ReactViteGuide.jsx');
         return ReactViteGuide;
+      
+      case '網站歷史':
+        const { default: SiteHistory } = await import('./SiteHistory/SiteHistory.jsx');
+        return SiteHistory;
       
       // 新增文章時，在此處加入對應的動態導入
       

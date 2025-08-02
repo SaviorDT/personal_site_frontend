@@ -125,10 +125,10 @@ const ArticleDetail = () => {
   }
 
   return (
-    <div className="article-detail-page">
+    <div className={`article-detail-page ${metadata?.layout?.containerWidth === 'full' ? 'full-width' : ''}`}>
       <ArticleNavigation onGoBack={handleGoBack} metadata={metadata} />
       
-      <main className="article-main">
+      <main className={`article-main ${metadata?.layout?.containerWidth === 'full' ? 'article-main-full' : ''}`}>
         <ArticleContainer metadata={metadata}>
           <ArticleComponent />
         </ArticleContainer>

@@ -60,9 +60,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 75rem; /* 使用 rem 單位 */
   margin: 0 auto;
   padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+/* 全寬模式的導航欄 */
+.full-width .article-nav {
+  max-width: 75rem; /* 與 wide 模式保持相同的最大寬度 */
+  margin: 0 auto; /* 置中顯示 */
+  padding: 0 20px 20px; /* 與標準模式保持相同的 padding */
+  /* 確保其他屬性與標準模式一致 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid rgba(229, 231, 235, 0.5);
   backdrop-filter: blur(10px);
 }
@@ -117,17 +130,30 @@
 
 /* 主要內容區域 */
 .article-main {
-  max-width: 1200px;
+  max-width: 75rem; /* 使用 rem 單位，約 1200px */
   margin: 0 auto;
   padding: 40px 20px;
 }
 
+/* 全寬模式的主要內容區域 */
+.article-main-full {
+  max-width: none;
+  padding: 40px 0; /* 移除左右 padding */
+  margin: 0;
+}
+
 /* 相關文章 */
 .related-articles {
-  max-width: 1200px;
+  max-width: 75rem; /* 使用 rem 單位 */
   margin: 0 auto;
   padding: 40px 20px;
   border-top: 2px solid rgba(229, 231, 235, 0.5);
+}
+
+/* 全寬模式的相關文章 */
+.full-width .related-articles {
+  max-width: none;
+  padding: 40px 2vw;
 }
 
 .related-articles h3 {
@@ -165,11 +191,26 @@
     padding: 10px 0 40px;
   }
   
+  /* 手機版全寬模式恢復邊距 */
+  .article-detail-page.full-width {
+    padding: 10px 0 40px;
+  }
+  
   .article-nav {
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
     padding: 0 16px 20px;
+  }
+  
+  /* 手機版全寬模式的導航欄 */
+  .full-width .article-nav {
+    max-width: 75rem; /* 保持最大寬度限制 */
+    margin: 0 auto; /* 置中 */
+    padding: 0 16px 20px; /* 與手機版標準模式一致 */
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
   }
   
   .article-nav-info {
@@ -181,6 +222,11 @@
   }
   
   .article-main {
+    padding: 20px 16px;
+  }
+  
+  /* 手機版全寬模式的主要內容 */
+  .article-main-full {
     padding: 20px 16px;
   }
   
