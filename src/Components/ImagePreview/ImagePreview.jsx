@@ -76,7 +76,6 @@ const ImagePreview = ({ src, alt, onImageClick }) => {
           }}
         >
           <img src={src} alt={`${alt} - 預覽`} />
-          <div className="preview-hint">點擊在新分頁開啟</div>
         </div>,
         document.body // 將預覽組件渲染到 body，避免父元素的 transform 影響
       )}

@@ -5,7 +5,7 @@ import dockerImage from './Images/docker.png';
 import domainImage from './Images/domain.png';
 import loginImage from './Images/login.png';
 import homeImage from './Images/home.png';
-import ImagePreview from './ImagePreview/ImagePreview';
+import ImagePreview from '@/Components/ImagePreview/ImagePreview';
 
 // 文章 metadata
 export const metadata = {
