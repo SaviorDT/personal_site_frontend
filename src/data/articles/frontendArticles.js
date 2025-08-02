@@ -2,12 +2,10 @@
 // 每篇文章都有對應的 JSX 組件在 @/data/articles/{article-name}/ 資料夾內
 
 // 動態導入文章組件和 metadata
-import { metadata as reactViteGuideMetadata } from './react-vite-guide/ReactViteGuide.jsx';
 import { metadata as siteHistoryMetadata } from './SiteHistory/SiteHistory.jsx';
 
 // 文章 metadata 陣列
 export const frontendArticles = [
-  reactViteGuideMetadata,
   siteHistoryMetadata,
   // 新增文章時，在此處加入對應的 metadata
 ];
@@ -16,10 +14,6 @@ export const frontendArticles = [
 export const loadArticleComponent = async (articleId) => {
   try {
     switch (articleId) {
-      case 'react-vite-guide':
-        const { default: ReactViteGuide } = await import('./react-vite-guide/ReactViteGuide.jsx');
-        return ReactViteGuide;
-      
       case '網站歷史':
         const { default: SiteHistory } = await import('./SiteHistory/SiteHistory.jsx');
         return SiteHistory;
