@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   padding: 80px 20px;
-  color: #64748B;
+  color: #F1F5F9; /* 深色模式文字顏色 */
   gap: 16px;
 }
 
@@ -87,12 +87,12 @@
 
 .articles-empty h3 {
   font-size: 1.5rem;
-  color: #374151;
+  color: #F1F5F9; /* 深色模式文字顏色 */
   margin: 0;
 }
 
 .articles-empty p {
-  color: #64748B;
+  color: #94A3B8; /* 深色模式文字顏色 */
   font-size: 1rem;
   margin: 0;
   max-width: 400px;
@@ -110,16 +110,5 @@
   .articles-grid {
     grid-template-columns: 1fr;
     gap: 20px;
-  }
-}
-
-/* 深色模式支援 */
-@media (prefers-color-scheme: dark) {
-  .articles-empty h3 {
-    color: #F1F5F9;
-  }
-  
-  .articles-empty p {
-    color: #94A3B8;
   }
 }

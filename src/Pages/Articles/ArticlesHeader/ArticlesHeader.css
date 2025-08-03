@@ -7,7 +7,7 @@
 .articles-title {
   font-size: 3rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  background: linear-gradient(135deg, #8B5CF6, #A855F7); /* 深色模式梯度 */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -17,7 +17,7 @@
 
 .articles-subtitle {
   font-size: 1.25rem;
-  color: #64748B;
+  color: #94A3B8; /* 深色模式文字顏色 */
   margin: 0;
   font-weight: 400;
 }

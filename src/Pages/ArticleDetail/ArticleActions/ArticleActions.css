@@ -8,8 +8,9 @@
 }
 
 .action-btn {
-  background: white;
-  border: 2px solid #E5E7EB;
+  background: #374151; /* 深色模式背景 */
+  border: 2px solid #4B5563; /* 深色模式邊框 */
+  color: #F1F5F9; /* 深色模式文字顏色 */
   padding: 12px 24px;
   border-radius: 25px;
   font-size: 0.95rem;
@@ -30,14 +31,14 @@
 
 .like-btn:hover {
   border-color: #EF4444;
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #7F1D1D; /* 深色模式hover背景 */
+  color: #FCA5A5; /* 深色模式hover文字顏色 */
 }
 
 .like-btn.liked {
-  background: #FEF2F2;
+  background: #7F1D1D; /* 深色模式已按讚背景 */
   border-color: #EF4444;
-  color: #DC2626;
+  color: #FCA5A5; /* 深色模式已按讚文字顏色 */
 }
 
 .like-btn:disabled {
@@ -53,14 +54,14 @@
 
 .share-btn:hover {
   border-color: #3B82F6;
-  background: #EFF6FF;
-  color: #1D4ED8;
+  background: #1E3A8A; /* 深色模式hover背景 */
+  color: #93C5FD; /* 深色模式hover文字顏色 */
 }
 
 .bookmark-btn:hover {
   border-color: #F59E0B;
-  background: #FFFBEB;
-  color: #D97706;
+  background: #92400E; /* 深色模式hover背景 */
+  color: #FCD34D; /* 深色模式hover文字顏色 */
 }
 
 /* 響應式設計 */
@@ -75,38 +76,5 @@
     width: 100%;
     max-width: 200px;
     justify-content: center;
-  }
-}
-
-/* 深色模式支援 */
-@media (prefers-color-scheme: dark) {
-  .action-btn {
-    background: #374151;
-    border-color: #4B5563;
-    color: #F1F5F9;
-  }
-  
-  .like-btn:hover {
-    border-color: #EF4444;
-    background: #7F1D1D;
-    color: #FCA5A5;
-  }
-  
-  .like-btn.liked {
-    background: #7F1D1D;
-    border-color: #EF4444;
-    color: #FCA5A5;
-  }
-  
-  .share-btn:hover {
-    border-color: #3B82F6;
-    background: #1E3A8A;
-    color: #93C5FD;
-  }
-  
-  .bookmark-btn:hover {
-    border-color: #F59E0B;
-    background: #92400E;
-    color: #FCD34D;
   }
 }

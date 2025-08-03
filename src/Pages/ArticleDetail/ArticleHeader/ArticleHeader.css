@@ -3,7 +3,7 @@
   text-align: center;
   margin-bottom: 40px;
   padding-bottom: 30px;
-  border-bottom: 2px solid #E5E7EB;
+  border-bottom: 2px solid #374151; /* 深色模式邊框 */
 }
 
 .article-meta-top {
@@ -31,13 +31,13 @@
 }
 
 .article-difficulty {
-  background: #FEF3C7;
-  color: #D97706;
+  background: #92400E; /* 深色模式背景 */
+  color: #FCD34D; /* 深色模式文字顏色 */
 }
 
 .article-featured {
-  background: #FECACA;
-  color: #DC2626;
+  background: #7F1D1D; /* 深色模式背景 */
+  color: #FCA5A5; /* 深色模式文字顏色 */
 }
 
 .article-title {
@@ -45,7 +45,7 @@
   font-weight: 800;
   margin: 20px 0;
   line-height: 1.2;
-  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  background: linear-gradient(135deg, #8B5CF6, #A855F7); /* 深色模式梯度 */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -57,7 +57,7 @@
   gap: 24px;
   margin: 20px 0;
   flex-wrap: wrap;
-  color: #6B7280;
+  color: #9CA3AF; /* 深色模式文字顏色 */
   font-size: 0.95rem;
 }
 
@@ -70,8 +70,8 @@
 }
 
 .article-tag {
-  background: #F3F4F6;
-  color: #374151;
+  background: #374151; /* 深色模式背景 */
+  color: #D1D5DB; /* 深色模式文字顏色 */
   padding: 6px 12px;
   border-radius: 16px;
   font-size: 0.875rem;
@@ -80,7 +80,8 @@
 }
 
 .article-tag:hover {
-  background: #E5E7EB;
+  background: #4B5563; /* 深色模式hover背景 */
+  color: #F9FAFB; /* 深色模式hover文字顏色 */
   transform: translateY(-1px);
 }
 
@@ -110,43 +111,5 @@
   .article-featured {
     font-size: 0.75rem;
     padding: 4px 12px;
-  }
-}
-
-/* 深色模式支援 */
-@media (prefers-color-scheme: dark) {
-  .article-header {
-    border-color: #374151;
-  }
-  
-  .article-title {
-    background: linear-gradient(135deg, #8B5CF6, #A855F7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .article-meta {
-    color: #9CA3AF;
-  }
-  
-  .article-tag {
-    background: #374151;
-    color: #D1D5DB;
-  }
-  
-  .article-tag:hover {
-    background: #4B5563;
-    color: #F9FAFB;
-  }
-  
-  .article-difficulty {
-    background: #92400E;
-    color: #FCD34D;
-  }
-  
-  .article-featured {
-    background: #7F1D1D;
-    color: #FCA5A5;
   }
 }

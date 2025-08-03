@@ -4,12 +4,12 @@
   margin: 0 auto;
   padding: 40px 20px;
   line-height: 1.7;
-  color: #374151;
-  background: rgba(255, 255, 255, 0.95);
+  color: #F1F5F9; /* 深色模式文字顏色 */
+  background: rgba(30, 41, 59, 0.95); /* 深色模式背景 */
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(51, 65, 81, 0.3); /* 深色模式邊框 */
 }
 
 /* 寬版文章容器 */
@@ -66,14 +66,5 @@
     max-width: 95vw;
     margin: 0 auto;
     padding: 40px 2.5vw;
-  }
-}
-
-/* 深色模式支援 */
-@media (prefers-color-scheme: dark) {
-  .article-container {
-    background: rgba(30, 41, 59, 0.95);
-    color: #F1F5F9;
-    border-color: rgba(51, 65, 81, 0.3);
   }
 }

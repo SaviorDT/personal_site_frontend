@@ -126,11 +126,13 @@ export { metadata as newArticleMetadata } from './new-article/NewArticle.jsx';
 ```
 
 ### 深色模式
-支援深色模式：
+所有樣式統一使用深色模式設計，不再需要使用 prefers-color-scheme 查詢：
 
 ```css
-@media (prefers-color-scheme: dark) {
-  /* 深色模式樣式 */
+/* 直接使用深色模式樣式 */
+.my-component {
+  background: #374151;
+  color: #F1F5F9;
 }
 ```
 

@@ -74,7 +74,10 @@ class ArticleInteractionService {
     notification.textContent = message;
     
     // 檢查深色模式
-    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isVisible = entry.isIntersecting;
+    
+    // 使用統一的深色模式設計，不再偵測系統設定
+    const isDarkMode = true; // 統一使用深色模式
     
     notification.style.cssText = `
       position: fixed;

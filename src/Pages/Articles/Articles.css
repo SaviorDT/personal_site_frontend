@@ -29,12 +29,12 @@
 
 /* 篩選器區域 */
 .articles-filters {
-  background: rgba(255, 255, 255, 0.9); /* 增加透明度 */
+  background: #1E293B; /* 深色模式背景 */
   border-radius: 20px;
   padding: 32px;
   margin-bottom: 40px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #334155; /* 深色模式邊框 */
   backdrop-filter: blur(15px); /* 增加模糊效果 */
   -webkit-backdrop-filter: blur(15px); /* Safari 支援 */
 }
@@ -47,17 +47,18 @@
 .search-input {
   width: 100%;
   padding: 16px 50px 16px 20px;
-  border: 2px solid #E2E8F0;
+  border: 2px solid #334155; /* 深色模式邊框 */
   border-radius: 12px;
   font-size: 1rem;
-  background: #F8FAFC;
+  background: #0F172A; /* 深色模式背景 */
+  color: #F1F5F9; /* 深色模式文字顏色 */
   transition: all 0.3s ease;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #4F46E5;
-  background: white;
+  border-color: #8B5CF6; /* 深色模式聚焦邊框 */
+  background: #1E293B; /* 深色模式聚焦背景 */
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
@@ -67,7 +68,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.25rem;
-  color: #64748B;
+  color: #F1F5F9; /* 深色模式圖示顏色 */
 }
 
 .filter-group {
@@ -81,7 +82,7 @@
 .filter-label {
   display: block;
   font-weight: 600;
-  color: #374151;
+  color: #F1F5F9; /* 深色模式文字顏色 */
   margin-bottom: 12px;
   font-size: 1rem;
 }
@@ -90,10 +91,11 @@
   width: 100%;
   max-width: 300px;
   padding: 12px 16px;
-  border: 2px solid #E2E8F0;
+  border: 2px solid #334155; /* 深色模式邊框 */
   border-radius: 8px;
   font-size: 0.875rem;
-  background: white;
+  background: #0F172A; /* 深色模式背景 */
+  color: #F1F5F9; /* 深色模式文字顏色 */
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -111,8 +113,8 @@
 }
 
 .tag-filter {
-  background: #F1F5F9;
-  color: #475569;
+  background: #334155; /* 深色模式背景 */
+  color: #CBD5E1; /* 深色模式文字顏色 */
   border: 2px solid transparent;
   padding: 8px 16px;
   border-radius: 20px;
@@ -123,8 +125,8 @@
 }
 
 .tag-filter:hover {
-  background: #E2E8F0;
-  color: #334155;
+  background: #475569; /* 深色模式hover背景 */
+  color: #F1F5F9; /* 深色模式hover文字顏色 */
 }
 
 .tag-filter.active {
@@ -166,7 +168,7 @@
 }
 
 .stats-text {
-  color: #64748B;
+  color: #94A3B8; /* 深色模式文字顏色 */
   font-size: 1rem;
   font-weight: 500;
 }
@@ -257,12 +259,12 @@
 
 .articles-empty h3 {
   font-size: 1.5rem;
-  color: #374151;
+  color: #F1F5F9; /* 深色模式文字顏色 */
   margin: 0;
 }
 
 .articles-empty p {
-  color: #64748B;
+  color: #94A3B8; /* 深色模式文字顏色 */
   font-size: 1rem;
   margin: 0;
   max-width: 400px;
@@ -430,67 +432,5 @@
     padding: 8px 12px;
     font-size: 0.8rem;
     min-width: 40px;
-  }
-}
-
-/* 深色模式支援 */
-@media (prefers-color-scheme: dark) {
-  .articles-title {
-    background: linear-gradient(135deg, #8B5CF6, #A855F7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .articles-subtitle {
-    color: #94A3B8;
-  }
-  
-  .articles-filters {
-    background: #1E293B;
-    border-color: #334155;
-  }
-  
-  .search-input {
-    background: #0F172A;
-    border-color: #334155;
-    color: #F1F5F9;
-  }
-  
-  .search-input:focus {
-    background: #1E293B;
-    border-color: #8B5CF6;
-  }
-  
-  .filter-label {
-    color: #F1F5F9;
-  }
-  
-  .filter-select {
-    background: #0F172A;
-    border-color: #334155;
-    color: #F1F5F9;
-  }
-  
-  .tag-filter {
-    background: #334155;
-    color: #CBD5E1;
-  }
-  
-  .tag-filter:hover {
-    background: #475569;
-    color: #F1F5F9;
-  }
-  
-  .stats-text {
-    color: #94A3B8;
-  }
-  
-  .articles-empty h3 {
-    color: #F1F5F9;
-  }
-  
-  .articles-empty p {
-    color: #94A3B8;
   }
 }
