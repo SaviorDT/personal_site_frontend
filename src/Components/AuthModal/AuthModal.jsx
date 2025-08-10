@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import SocialIcons from '@/Components/SocialIcons/SocialIcons';
+import ModalContainer from '@/Components/ModalContainer/ModalContainer';
 import authService from '@/services/authService';
 import './AuthModal.css';
 
@@ -38,7 +39,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
       const timer = setTimeout(() => {
         setToast({ show: false, message: '', type: 'success' });
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [toast.show]);
@@ -66,10 +67,10 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
+
     try {
       let result;
-      
+
       if (mode === 'login') {
         result = await authService.login({
           email: formData.email,
@@ -83,7 +84,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
           confirmPassword: formData.confirmPassword
         });
       }
-      
+
       if (result.success) {
         // 登入/註冊成功，關閉 modal
         onClose();
@@ -127,10 +128,14 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
         </div>
       )}
 
-      <div className="auth-modal-overlay" onClick={onClose}>
-        <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>×</button>
-        
+      <ModalContainer
+        isOpen={isOpen}
+        onClose={onClose}
+        size="medium"
+        className="auth-modal"
+        closeOnOverlayClick={true}
+        showCloseButton={true}
+      >
         <div className="auth-header">
           <h2 className="auth-title">
             {mode === 'login' ? t('auth.login.title') : t('auth.register.title')}
@@ -146,7 +151,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
               ❌ {error}
             </div>
           )}
-          
+
           {mode === 'register' && (
             <div className="form-group">
               <label htmlFor="name">{t('auth.fields.nickname')}</label>
@@ -203,8 +208,8 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
             </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="auth-submit-btn"
             disabled={loading}
             style={{
@@ -252,8 +257,8 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
 
         <div className="auth-switch">
           <p>
-            {mode === 'login' 
-              ? t('auth.login.switchText') 
+            {mode === 'login'
+              ? t('auth.login.switchText')
               : t('auth.register.switchText')
             }
             <button
@@ -261,15 +266,14 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
               className="switch-btn"
               onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
             >
-              {mode === 'login' 
-                ? t('auth.login.switchAction') 
+              {mode === 'login'
+                ? t('auth.login.switchAction')
                 : t('auth.register.switchAction')
               }
             </button>
           </p>
         </div>
-        </div>
-      </div>
+      </ModalContainer>
     </>
   );
 };

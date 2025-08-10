@@ -1,0 +1,200 @@
+/* PlaylistRandomize Modal 內容樣式 - 移除覆蓋層相關樣式，使用全域 ModalContainer */
+
+.playlist-modal {
+  /* 移除了 background, backdrop-filter, border, border-radius 等 
+     因為這些現在由 ModalContainer 處理 */
+  color: #b8c5d6;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.3rem;
+  color: #8fb3ff;
+}
+
+/* 移除關閉按鈕樣式，因為現在由 ModalContainer 處理 */
+
+.modal-content {
+  color: #b8c5d6;
+  line-height: 1.6;
+}
+
+/* 超連結樣式 - 適合暗色模式 */
+.modal-content a {
+  color: #8fb3ff;
+  /* 與主題色相符的亮藍色 */
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  /* 確保顯示手型游標 */
+  position: relative;
+  /* 確保連結可點擊 */
+  z-index: 1;
+  /* 確保在其他元素之上 */
+  display: inline;
+  /* 確保正常的行內顯示 */
+}
+
+.modal-content a:hover {
+  color: #a5c4ff;
+  /* hover 時更亮的藍色 */
+  border-bottom-color: #8fb3ff;
+  text-shadow: 0 0 8px rgba(143, 179, 255, 0.3);
+}
+
+.modal-content a:visited {
+  color: #9ba5ff;
+  /* 已訪問連結的顏色 */
+}
+
+.modal-content a:active {
+  color: #7ba3ff;
+  /* 點擊時的顏色 */
+}
+
+.question-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.question-group {
+  margin-bottom: 1rem;
+}
+
+.question-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* 按鈕樣式 */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4a90e2, #5ba0f2);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #357abd, #4a90e2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #8fb3ff, #a5c4ff);
+  color: #1a1a2e;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #7ba3ff, #8fb3ff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(143, 179, 255, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn:disabled:hover {
+  background: revert;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 輸入框樣式 */
+.input-field {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(12, 12, 12, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #8fb3ff;
+  box-shadow: 0 0 0 2px rgba(143, 179, 255, 0.2);
+}
+
+/* 成功訊息樣式 */
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.success-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: bounce 0.6s ease-in-out;
+}
+
+.success-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #b8c5d6;
+}
+
+.success-text div {
+  margin-bottom: 0.5rem;
+}
+
+.success-text div:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-10px);
+  }
+
+  60% {
+    transform: translateY(-5px);
+  }
+}

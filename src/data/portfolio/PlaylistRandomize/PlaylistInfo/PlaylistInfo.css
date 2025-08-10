@@ -1,0 +1,151 @@
+/* 播放列表信息面板 */
+.playlist-info {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.4));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  backdrop-filter: blur(15px);
+}
+
+.playlist-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.panel-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #8fb3ff;
+  text-align: center;
+}
+
+.playlist-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.playlist-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8fb3ff;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #b8c5d6;
+  margin-top: 0.25rem;
+}
+
+/* 當前播放 */
+.now-playing {
+  background: rgba(143, 179, 255, 0.1);
+  border: 1px solid rgba(143, 179, 255, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.now-playing-title {
+  font-size: 0.9rem;
+  color: #8fb3ff;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.video-title {
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .playlist-info {
+    padding: 1.5rem;
+  }
+
+  .panel-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .playlist-title {
+    font-size: 1.1rem;
+  }
+
+  .playlist-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .now-playing {
+    padding: 0.8rem;
+  }
+
+  .now-playing-title {
+    font-size: 0.85rem;
+  }
+
+  .video-title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .playlist-info {
+    padding: 1rem;
+  }
+
+  .panel-title {
+    font-size: 1.2rem;
+  }
+
+  .playlist-title {
+    font-size: 1rem;
+  }
+
+  .playlist-stats {
+    gap: 0.8rem;
+  }
+
+  .stat-number {
+    font-size: 1.1rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .now-playing {
+    padding: 0.7rem;
+    margin: 0.8rem 0;
+  }
+
+  .video-title {
+    font-size: 0.85rem;
+    line-height: 1.3;
+  }
+}

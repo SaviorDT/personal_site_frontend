@@ -1,0 +1,296 @@
+.youtube-player-wrapper {
+    width: 100%;
+    margin: 20px 0;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.youtube-player-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio (9/16 = 0.5625) */
+    height: 0;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.youtube-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+/* 載入狀態 */
+.player-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    z-index: 10;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.player-loading p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* 當前播放信息 */
+.current-video-info {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.video-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.video-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.video-channel {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.video-duration {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.player-status {
+    font-weight: 500;
+    color: var(--accent-color);
+}
+
+/* 沒有影片時的提示 */
+.no-video-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 2px dashed var(--border-color);
+}
+
+.no-video-message p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .youtube-player-wrapper {
+        margin: 15px 0;
+        padding: 15px;
+    }
+
+    .youtube-player-container {
+        padding-bottom: 56.25%;
+        /* 保持 16:9 比例 */
+    }
+
+    .video-title {
+        font-size: 16px;
+    }
+
+    .video-meta {
+        gap: 10px;
+        font-size: 13px;
+    }
+
+    .no-video-message {
+        padding: 40px 15px;
+    }
+
+    .no-video-message p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .youtube-player-wrapper {
+        margin: 10px 0;
+        padding: 12px;
+    }
+
+    .youtube-player-container {
+        padding-bottom: 60%;
+        /* 稍微調整比例適合小螢幕 */
+    }
+
+    .video-title {
+        font-size: 15px;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+    }
+
+    .video-meta {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .video-duration {
+        align-self: flex-start;
+    }
+
+    .current-video-info {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+}
+
+/* 深色模式優化 */
+@media (prefers-color-scheme: dark) {
+    .youtube-player-wrapper {
+        background: var(--card-bg);
+        border-color: var(--border-color);
+    }
+
+    .current-video-info {
+        border-top-color: var(--border-color);
+    }
+
+    .no-video-message {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+        color: var(--text-muted);
+    }
+}
+
+/* 播放器容器的高度適配 - 已整合到主要樣式中 */
+/* 如需要不同比例可以使用以下類別 */
+.youtube-player-container.aspect-4-3 {
+    padding-bottom: 75%;
+    /* 4:3 aspect ratio */
+}
+
+.youtube-player-container.aspect-21-9 {
+    padding-bottom: 42.86%;
+    /* 21:9 ultrawide aspect ratio */
+}
+
+/* 全螢幕播放時的樣式 */
+.youtube-player-wrapper.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: #000;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.youtube-player-wrapper.fullscreen .youtube-player-container {
+    height: 100vh;
+    border-radius: 0;
+}
+
+.youtube-player-wrapper.fullscreen .current-video-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-top: none;
+    margin-top: 0;
+    backdrop-filter: blur(10px);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.youtube-player-wrapper.fullscreen:hover .current-video-info {
+    transform: translateY(0);
+}
+
+/* 錯誤狀態 */
+.player-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 0, 0, 0.1);
+    color: var(--error-color);
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.player-error h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.player-error p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}

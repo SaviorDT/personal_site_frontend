@@ -4,6 +4,8 @@ import Layout from '@/Components/Layout/Layout';
 import Home from '@/Pages/Home/Home';
 import Articles from '@/Pages/Articles/Articles';
 import ArticleDetail from '@/Pages/ArticleDetail/ArticleDetail';
+import Portfolio from '@/Pages/Portfolio/Portfolio';
+import ProjectDetail from '@/Pages/ProjectDetail/ProjectDetail';
 
 // 路由配置
 export const router = createBrowserRouter([
@@ -33,7 +35,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "作品集",
-        element: <div className="page-placeholder">作品集頁面 - 開發中</div>
+        element: <Portfolio />
+      },
+      {
+        path: "作品集/:projectId",
+        element: <ProjectDetail />
       },
       {
         path: "聯絡",
@@ -55,5 +61,6 @@ export const ROUTES = {
   ARTICLE_DETAIL: '/文章/:articleId',
   ABOUT: '/關於',
   PORTFOLIO: '/作品集',
+  PROJECT_DETAIL: '/作品集/:projectId',
   CONTACT: '/聯絡'
 };

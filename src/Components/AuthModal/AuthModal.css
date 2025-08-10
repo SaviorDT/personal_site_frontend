@@ -1,53 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap');
 
-.auth-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  animation: fadeIn 0.3s ease;
-}
+/* AuthModal 內容樣式 - 移除覆蓋層相關樣式，使用全域 ModalContainer */
 
 .auth-modal {
-  background: rgba(12, 12, 12, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 450px;
-  max-height: 85vh;
-  overflow-y: auto;
-  position: relative;
-  animation: slideUp 0.3s ease;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  margin: 2rem 0;
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 0.5rem;
-  border-radius: 50%;
-}
-
-.modal-close:hover {
+  /* 移除了 background, backdrop-filter, border, border-radius, position 等 
+     因為這些現在由 ModalContainer 處理 */
   color: #fff;
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .auth-header {
@@ -261,44 +219,31 @@
   text-decoration: underline;
 }
 
-/* 動畫 */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* 動畫 - 保留一些動畫，但移除重複的覆蓋層動畫 */
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* 響應式設計 */
+/* 響應式設計 - 移除模態視窗的響應式樣式，因為由 ModalContainer 處理 */
 @media (max-width: 768px) {
-  .auth-modal {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
-  
   .auth-title {
     font-size: 1.5rem;
   }
-  
+
   .social-auth {
     grid-template-columns: 1fr;
   }
-  
+
   .social-btn {
     font-size: 0.9rem;
   }
@@ -336,6 +281,7 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -343,11 +289,12 @@
 }
 
 @keyframes spin {
-  0% { 
-    transform: rotate(0deg); 
+  0% {
+    transform: rotate(0deg);
   }
-  100% { 
-    transform: rotate(360deg); 
+
+  100% {
+    transform: rotate(360deg);
   }
 }
 

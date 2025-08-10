@@ -1,0 +1,301 @@
+/* Hero 區域組件樣式 - 頁面特有組件範例 */
+.hero-section {
+    position: relative;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg,
+            rgba(26, 26, 46, 0.4),
+            rgba(15, 52, 96, 0.2));
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+}
+
+/* 背景效果 */
+.hero-section__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.hero-section__glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle,
+            rgba(143, 179, 255, 0.1) 0%,
+            transparent 70%);
+    animation: heroGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+    0% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* 內容區域 */
+.hero-section__content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-section__header {
+    margin-bottom: 2rem;
+}
+
+/* 標題樣式 */
+.hero-section__title {
+    position: relative;
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg, #ffffff, #8fb3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.hero-section__title-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ffffff, #8fb3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: blur(10px);
+    opacity: 0.5;
+    z-index: -1;
+}
+
+.hero-section__subtitle {
+    font-size: 1.2rem;
+    color: #b8c5d6;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* 動作按鈕區域 */
+.hero-section__actions {
+    margin-top: 2rem;
+}
+
+.hero-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4a90e2, #5ba0f2);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent);
+    transition: left 0.5s;
+}
+
+.hero-action-btn:hover {
+    background: linear-gradient(135deg, #357abd, #4a90e2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+}
+
+.hero-action-btn:hover::before {
+    left: 100%;
+}
+
+.hero-action-btn:active {
+    transform: translateY(0);
+}
+
+/* 載入狀態 */
+.hero-action-btn--loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.hero-action-btn__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 裝飾性元素 */
+.hero-section__decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-decoration {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(143, 179, 255, 0.1);
+    animation: float 6s ease-in-out infinite;
+}
+
+.hero-decoration--1 {
+    width: 80px;
+    height: 80px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.hero-decoration--2 {
+    width: 60px;
+    height: 60px;
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.hero-decoration--3 {
+    width: 40px;
+    height: 40px;
+    top: 30%;
+    right: 30%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+    .hero-section__title {
+        font-size: 2.5rem;
+    }
+
+    .hero-section__subtitle {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 3rem 1.5rem;
+    }
+
+    .hero-section__title {
+        font-size: 2rem;
+    }
+
+    .hero-section__subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-action-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+
+    .hero-section__title {
+        font-size: 1.8rem;
+    }
+
+    .hero-section__header {
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* 可訪問性 */
+.hero-action-btn:focus {
+    outline: 2px solid #8fb3ff;
+    outline-offset: 2px;
+}
+
+/* 動畫偏好設定 */
+@media (prefers-reduced-motion: reduce) {
+
+    .hero-section__glow,
+    .hero-decoration,
+    .hero-action-btn__spinner {
+        animation: none;
+    }
+
+    .hero-action-btn {
+        transition: none;
+    }
+
+    .hero-action-btn:hover {
+        transform: none;
+    }
+}

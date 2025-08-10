@@ -1,0 +1,55 @@
+{
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": false,
+    "plaintext": false
+  },
+  "github.copilot.advanced": {
+    "length": 500,
+    "temperature": 0.1,
+    "top_p": 1,
+    "debug.overrideEngine": "copilot-codex"
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.editor.enableCodeActions": true,
+  "github.copilot.inlineSuggest.enable": true,
+  "github.copilot.conversation.localeOverride": "zh-TW",
+  
+  // 針對不同文件類型的 Copilot 設定
+  "[javascript]": {
+    "github.copilot.enable": true
+  },
+  "[javascriptreact]": {
+    "github.copilot.enable": true
+  },
+  "[css]": {
+    "github.copilot.enable": true
+  },
+  
+  // 代碼格式化設定
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  
+  // 自動完成設定
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.acceptSuggestionOnCommitCharacter": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  
+  // IntelliSense 設定
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  
+  // 文件關聯
+  "files.associations": {
+    "*.jsx": "javascriptreact",
+    "*.css": "css"
+  }
+}
