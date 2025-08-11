@@ -33,7 +33,7 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
   }, [playlistData?.videos, searchTerm]);
 
   // 計算可見範圍
-  const calculateVisibleRange = () => {
+  const calculateVisibleRange = (videoList = filteredVideos) => {
     if (!containerRef.current) return;
 
     const scrollTop = containerRef.current.scrollTop;
@@ -41,7 +41,7 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
 
     const newStartIndex = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - BUFFER_SIZE);
     const visibleCount = Math.ceil(containerHeight / ITEM_HEIGHT);
-    const newEndIndex = Math.min(filteredVideos.length, newStartIndex + visibleCount + BUFFER_SIZE * 2);
+    const newEndIndex = Math.min(videoList.length, newStartIndex + visibleCount + BUFFER_SIZE * 2);
 
     setStartIndex(newStartIndex);
     setEndIndex(newEndIndex);
@@ -49,7 +49,7 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
 
   // 處理滾動事件
   const handleScroll = () => {
-    calculateVisibleRange();
+    calculateVisibleRange(filteredVideos);
   };
 
   // 可見的影片項目
@@ -64,8 +64,7 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
   // 當篩選結果改變時重新計算可見範圍
   useEffect(() => {
     setStartIndex(0);
-    setEndIndex(50);
-    calculateVisibleRange();
+    calculateVisibleRange(filteredVideos);
   }, [filteredVideos]);
 
   // 綁定滾動事件
@@ -73,10 +72,10 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
     const container = containerRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
-      calculateVisibleRange();
+      calculateVisibleRange(filteredVideos);
       return () => container.removeEventListener('scroll', handleScroll);
     }
-  }, []);
+  }, [filteredVideos]);
 
   if (!playlistData || !playlistData.videos) {
     return (
@@ -263,16 +262,19 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
 
           {filteredVideos.length > 50 && (
             <div style={{
-              position: 'absolute',
+              position: 'fixed',
               bottom: '8px',
               left: '50%',
               transform: 'translateX(-50%)',
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              padding: '4px 8px',
-              borderRadius: '4px',
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              padding: '6px 12px',
+              borderRadius: '6px',
               fontSize: '12px',
-              color: '#999',
-              pointerEvents: 'none'
+              color: '#fff',
+              pointerEvents: 'none',
+              zIndex: 1000,
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(4px)'
             }}>
               顯示 {startIndex + 1}-{Math.min(endIndex, filteredVideos.length)} / {filteredVideos.length} 個影片
             </div>
