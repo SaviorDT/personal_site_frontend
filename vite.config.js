@@ -9,7 +9,6 @@ export default defineConfig({
     port: 80,
     host: true,
     allowedHosts: [
-      'localhost',
       'xn--kss.xn--kpry57d'
     ],
   },
