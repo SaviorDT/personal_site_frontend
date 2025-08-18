@@ -13,8 +13,23 @@ const YoutubePlayer = ({
 }) => {
     const playerRef = useRef(null);
     const playerInstanceRef = useRef(null);
+    // Keep latest props/state via refs to avoid stale closures inside YT event handlers
+    const callbacksRef = useRef({ onVideoEnd, onVideoReady, onVideoError, onPlayerStateChange });
+    const currentVideoRef = useRef(currentVideo);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [playerState, setPlayerState] = useState('unstarted'); // -1: unstarted, 0: ended, 1: playing, 2: paused, 3: buffering, 5: video cued
+
+    // Keep refs in sync with latest props
+    useEffect(() => {
+        callbacksRef.current.onVideoEnd = onVideoEnd;
+        callbacksRef.current.onVideoReady = onVideoReady;
+        callbacksRef.current.onVideoError = onVideoError;
+        callbacksRef.current.onPlayerStateChange = onPlayerStateChange;
+    }, [onVideoEnd, onVideoReady, onVideoError, onPlayerStateChange]);
+
+    useEffect(() => {
+        currentVideoRef.current = currentVideo;
+    }, [currentVideo]);
 
     // 載入 YouTube IFrame API
     useEffect(() => {
@@ -107,7 +122,7 @@ const YoutubePlayer = ({
     // 播放器準備就緒
     const handlePlayerReady = (event) => {
         setIsPlayerReady(true);
-        onVideoReady?.(event);
+        callbacksRef.current.onVideoReady?.(event);
 
         // 如果有當前影片，立即載入
         if (currentVideo && currentVideo.id) {
@@ -122,28 +137,29 @@ const YoutubePlayer = ({
         switch (state) {
             case window.YT.PlayerState.UNSTARTED:
                 setPlayerState('unstarted');
-                onPlayerStateChange?.('unstarted');
+                callbacksRef.current.onPlayerStateChange?.('unstarted');
                 break;
             case window.YT.PlayerState.ENDED:
                 setPlayerState('ended');
-                onPlayerStateChange?.('ended');
-                onVideoEnd?.(currentVideo);
+                callbacksRef.current.onPlayerStateChange?.('ended');
+                // Use ref to ensure we call latest callback with latest video
+                callbacksRef.current.onVideoEnd?.(currentVideoRef.current);
                 break;
             case window.YT.PlayerState.PLAYING:
                 setPlayerState('playing');
-                onPlayerStateChange?.('playing');
+                callbacksRef.current.onPlayerStateChange?.('playing');
                 break;
             case window.YT.PlayerState.PAUSED:
                 setPlayerState('paused');
-                onPlayerStateChange?.('paused');
+                callbacksRef.current.onPlayerStateChange?.('paused');
                 break;
             case window.YT.PlayerState.BUFFERING:
                 setPlayerState('buffering');
-                onPlayerStateChange?.('buffering');
+                callbacksRef.current.onPlayerStateChange?.('buffering');
                 break;
             case window.YT.PlayerState.CUED:
                 setPlayerState('cued');
-                onPlayerStateChange?.('cued');
+                callbacksRef.current.onPlayerStateChange?.('cued');
                 break;
             default:
                 setPlayerState('unknown');
@@ -174,7 +190,7 @@ const YoutubePlayer = ({
         }
 
         console.error('YouTube 播放器錯誤:', errorMessage, event);
-        onVideoError?.(new Error(errorMessage), currentVideo);
+        callbacksRef.current.onVideoError?.(new Error(errorMessage), currentVideoRef.current);
     };
 
     // 載入影片

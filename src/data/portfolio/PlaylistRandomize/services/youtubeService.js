@@ -1,3 +1,5 @@
+import { StorageUtils, STORAGE_KEYS } from '../utils/storageUtils';
+
 // YouTube API 服務
 export class YouTubeService {
     // 格式化影片持續時間 (從 ISO 8601 轉換為 M:SS 格式)
@@ -88,6 +90,17 @@ export class YouTubeService {
 
     // 處理和格式化播放清單數據
     static processPlaylistData(playlistInfo, playlistVideos, videoDetails, playlistId) {
+        // 一次性讀取本地播放清單資料並建立快取映射，避免在迭代中重複讀取 localStorage
+        const savedData = StorageUtils.getFromLocalStorage(STORAGE_KEYS.PLAYLIST_DATA, null);
+        const localTitleMap = new Map();
+        if (savedData && Array.isArray(savedData.videos)) {
+            for (const v of savedData.videos) {
+                if (v && v.id) {
+                    localTitleMap.set(v.id, v.title || null);
+                }
+            }
+        }
+
         // 合併數據並格式化
         const videos = playlistVideos.map((playlistItem, index) => {
             const videoId = playlistItem.contentDetails?.videoId || playlistItem.snippet?.resourceId?.videoId;
@@ -116,14 +129,23 @@ export class YouTubeService {
 
                 // 使用影片詳情中的標題
                 title = videoDetail.snippet?.title || title;
+                if (!videoDetail.snippet?.title) {
+                }
             } else {
-                // 如果無法獲取影片詳情，嘗試使用播放清單項目中的資訊
-                if (playlistItem.snippet?.title &&
+                // 如果無法獲取影片詳情，優先使用記憶體中的本地快取標題
+                const localTitle = videoId ? localTitleMap.get(videoId) : null;
+
+                if (localTitle) {
+                    title = localTitle;
+                } else if (
+                    playlistItem.snippet?.title &&
                     playlistItem.snippet.title !== 'Deleted video' &&
-                    playlistItem.snippet.title !== 'Private video') {
+                    playlistItem.snippet.title !== 'Private video'
+                ) {
+                    // 其次使用播放清單項目中的資訊（若非 Deleted/Private 標記）
                     title = playlistItem.snippet.title;
                 } else {
-                    // 根據播放清單項目的描述判斷狀態
+                    // 最後根據播放清單項目的標題判斷狀態
                     if (playlistItem.snippet?.title === 'Private video') {
                         title = '私人影片';
                         status = 'private';

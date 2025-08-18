@@ -153,9 +153,18 @@ export const usePlaylistManager = () => {
       return;
     }
 
-    // 純粹隨機選擇下一首
-    const randomIndex = Math.floor(Math.random() * playableVideos.length);
-    const selectedVideo = playableVideos[randomIndex];
+    // 避免選到與當前相同的影片
+    const filtered = currentPlaying
+      ? playableVideos.filter(v => v.id !== currentPlaying.id)
+      : playableVideos;
+
+    if (filtered.length === 0) {
+      // 只有一部可播放影片且就是當前影片，則不自動重播
+      return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * filtered.length);
+    const selectedVideo = filtered[randomIndex];
 
     // 延遲一秒播放下一首，避免太快切換
     setTimeout(() => {
