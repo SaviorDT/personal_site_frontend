@@ -1,0 +1,63 @@
+/* 標籤頁 */
+.tabs-container {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.4));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  backdrop-filter: blur(15px);
+}
+
+.tabs-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-button {
+  padding: 0.8rem 1.5rem;
+  background: none;
+  border: none;
+  color: #b8c5d6;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+  font-family: 'Inter', sans-serif;
+}
+
+.tab-button.active {
+  color: #8fb3ff;
+  border-bottom-color: #8fb3ff;
+}
+
+.tab-button:hover {
+  color: #ffffff;
+}
+
+.tab-count {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-left: 0.3rem;
+}
+
+.tab-content {
+  min-height: 300px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .tabs-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tab-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 120px;
+  }
+}

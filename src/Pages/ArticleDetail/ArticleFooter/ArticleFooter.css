@@ -1,0 +1,25 @@
+/* ArticleFooter.css */
+.article-footer {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid #374151; /* 深色模式邊框 */
+}
+
+.article-meta-bottom {
+  text-align: center;
+  color: #9CA3AF; /* 深色模式文字顏色 */
+  font-size: 0.9rem;
+  margin-top: 20px;
+}
+
+.article-meta-bottom p {
+  margin: 0;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .article-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+  }
+}

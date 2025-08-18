@@ -1,0 +1,115 @@
+/* ArticleHeader.css */
+.article-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #374151; /* 深色模式邊框 */
+}
+
+.article-meta-top {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.article-category,
+.article-difficulty,
+.article-featured {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.article-category {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: white;
+}
+
+.article-difficulty {
+  background: #92400E; /* 深色模式背景 */
+  color: #FCD34D; /* 深色模式文字顏色 */
+}
+
+.article-featured {
+  background: #7F1D1D; /* 深色模式背景 */
+  color: #FCA5A5; /* 深色模式文字顏色 */
+}
+
+.article-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 20px 0;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #8B5CF6, #A855F7); /* 深色模式梯度 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.article-meta {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  color: #9CA3AF; /* 深色模式文字顏色 */
+  font-size: 0.95rem;
+}
+
+.article-tags {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.article-tag {
+  background: #374151; /* 深色模式背景 */
+  color: #D1D5DB; /* 深色模式文字顏色 */
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.article-tag:hover {
+  background: #4B5563; /* 深色模式hover背景 */
+  color: #F9FAFB; /* 深色模式hover文字顏色 */
+  transform: translateY(-1px);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .article-title {
+    font-size: 2rem;
+  }
+  
+  .article-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .article-title {
+    font-size: 1.75rem;
+  }
+  
+  .article-meta-top {
+    gap: 8px;
+  }
+  
+  .article-category,
+  .article-difficulty,
+  .article-featured {
+    font-size: 0.75rem;
+    padding: 4px 12px;
+  }
+}

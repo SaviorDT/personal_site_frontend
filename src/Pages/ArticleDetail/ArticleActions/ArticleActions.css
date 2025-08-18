@@ -1,0 +1,80 @@
+/* ArticleActions.css */
+.article-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  background: #374151; /* 深色模式背景 */
+  border: 2px solid #4B5563; /* 深色模式邊框 */
+  color: #F1F5F9; /* 深色模式文字顏色 */
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.like-btn:hover {
+  border-color: #EF4444;
+  background: #7F1D1D; /* 深色模式hover背景 */
+  color: #FCA5A5; /* 深色模式hover文字顏色 */
+}
+
+.like-btn.liked {
+  background: #7F1D1D; /* 深色模式已按讚背景 */
+  border-color: #EF4444;
+  color: #FCA5A5; /* 深色模式已按讚文字顏色 */
+}
+
+.like-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.like-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.share-btn:hover {
+  border-color: #3B82F6;
+  background: #1E3A8A; /* 深色模式hover背景 */
+  color: #93C5FD; /* 深色模式hover文字顏色 */
+}
+
+.bookmark-btn:hover {
+  border-color: #F59E0B;
+  background: #92400E; /* 深色模式hover背景 */
+  color: #FCD34D; /* 深色模式hover文字顏色 */
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .article-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    width: 100%;
+    max-width: 200px;
+    justify-content: center;
+  }
+}

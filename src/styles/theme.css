@@ -1,0 +1,248 @@
+/* 星空主題全域 CSS 變數 */
+:root {
+    /* === 主要色彩系統 === */
+
+    /* 主色調 - 星光藍系列 */
+    --color-primary: #8fb3ff;
+    /* 星光藍 */
+    --color-primary-light: #a5c4ff;
+    /* 淺星光藍 */
+    --color-primary-dark: #7ba3ff;
+    /* 深星光藍 */
+
+    /* 次要色調 - 月光銀系列 */
+    --color-secondary: #b8c5d6;
+    /* 月光銀 */
+    --color-secondary-light: #e2e8f0;
+    /* 淺月光銀 */
+    --color-secondary-dark: #8b9bb3;
+    /* 深月光銀 */
+
+    /* 強調色 - 深空藍系列 */
+    --color-accent: #4a90e2;
+    /* 深空藍 */
+    --color-accent-light: #5ba0f2;
+    /* 淺深空藍 */
+    --color-accent-dark: #357abd;
+    /* 更深空藍 */
+
+    /* 中性色調 */
+    --color-white: #ffffff;
+    --color-gray-100: #f8fafc;
+    --color-gray-200: #e2e8f0;
+    --color-gray-300: #cbd5e1;
+    --color-gray-400: #94a3b8;
+    --color-gray-500: #64748b;
+    --color-gray-600: #475569;
+    --color-gray-700: #334155;
+    --color-gray-800: #1e293b;
+    --color-gray-900: #0f172a;
+
+    /* === 背景色系統 === */
+
+    /* 主背景 */
+    --bg-primary: rgba(12, 12, 12, 0.8);
+    --bg-secondary: rgba(26, 26, 46, 0.6);
+    --bg-tertiary: rgba(22, 33, 62, 0.4);
+
+    /* 卡片和容器背景 */
+    --bg-card: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.4));
+    --bg-card-hover: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6));
+    --bg-card-highlighted: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(15, 52, 96, 0.8));
+
+    /* 頁面背景漸變 */
+    --bg-page: radial-gradient(ellipse at center, rgba(15, 52, 96, 0.3) 0%, rgba(12, 12, 12, 0.8) 70%);
+    --bg-hero: linear-gradient(135deg, rgba(26, 26, 46, 0.4), rgba(15, 52, 96, 0.2));
+
+    /* === 邊框和陰影 === */
+
+    /* 邊框 */
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    --border-normal: rgba(255, 255, 255, 0.2);
+    --border-focus: rgba(143, 179, 255, 0.5);
+    --border-accent: rgba(143, 179, 255, 0.3);
+
+    /* 陰影效果 */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+    /* 發光效果 */
+    --shadow-glow: 0 4px 20px rgba(143, 179, 255, 0.2);
+    --shadow-glow-lg: 0 8px 30px rgba(143, 179, 255, 0.3);
+    --shadow-glow-focus: 0 0 0 2px rgba(143, 179, 255, 0.2);
+
+    /* === 字體系統 === */
+
+    /* 字體家族 */
+    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Orbitron', monospace;
+    --font-mono: 'Fira Code', 'Courier New', monospace;
+
+    /* 字體大小 */
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.875rem;
+    /* 14px */
+    --text-base: 1rem;
+    /* 16px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+    --text-3xl: 1.875rem;
+    /* 30px */
+    --text-4xl: 2.25rem;
+    /* 36px */
+    --text-5xl: 3rem;
+    /* 48px */
+
+    /* 字體粗細 */
+    --font-thin: 100;
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-extrabold: 800;
+
+    /* 行高 */
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+
+    /* === 間距系統 === */
+
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;
+    /* 4px */
+    --spacing-2: 0.5rem;
+    /* 8px */
+    --spacing-3: 0.75rem;
+    /* 12px */
+    --spacing-4: 1rem;
+    /* 16px */
+    --spacing-5: 1.25rem;
+    /* 20px */
+    --spacing-6: 1.5rem;
+    /* 24px */
+    --spacing-8: 2rem;
+    /* 32px */
+    --spacing-10: 2.5rem;
+    /* 40px */
+    --spacing-12: 3rem;
+    /* 48px */
+    --spacing-16: 4rem;
+    /* 64px */
+    --spacing-20: 5rem;
+    /* 80px */
+    --spacing-24: 6rem;
+    /* 96px */
+
+    /* === 圓角系統 === */
+
+    --radius-sm: 0.25rem;
+    /* 4px */
+    --radius-md: 0.5rem;
+    /* 8px */
+    --radius-lg: 0.75rem;
+    /* 12px */
+    --radius-xl: 1rem;
+    /* 16px */
+    --radius-2xl: 1.5rem;
+    /* 24px */
+    --radius-full: 9999px;
+
+    /* === 動畫和過渡 === */
+
+    /* 過渡時間 */
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+
+    /* 過渡函數 */
+    --ease-linear: linear;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* === Z-index 層級 === */
+
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+
+    /* === 斷點系統 === */
+
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+}
+
+/* === 狀態色彩 === */
+:root {
+    /* 成功狀態 */
+    --color-success: #22c55e;
+    --color-success-light: #4ade80;
+    --color-success-dark: #16a34a;
+    --bg-success: rgba(34, 197, 94, 0.1);
+
+    /* 警告狀態 */
+    --color-warning: #f59e0b;
+    --color-warning-light: #fbbf24;
+    --color-warning-dark: #d97706;
+    --bg-warning: rgba(245, 158, 11, 0.1);
+
+    /* 錯誤狀態 */
+    --color-error: #ef4444;
+    --color-error-light: #f87171;
+    --color-error-dark: #dc2626;
+    --bg-error: rgba(239, 68, 68, 0.1);
+
+    /* 資訊狀態 */
+    --color-info: var(--color-primary);
+    --color-info-light: var(--color-primary-light);
+    --color-info-dark: var(--color-primary-dark);
+    --bg-info: rgba(143, 179, 255, 0.1);
+}
+
+/* === 深色主題優化 === */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* 在深色主題偏好下增強對比度 */
+        --color-primary: #a5c4ff;
+        --border-subtle: rgba(255, 255, 255, 0.15);
+        --shadow-glow: 0 4px 20px rgba(143, 179, 255, 0.25);
+    }
+}
+
+/* === 高對比度模式 === */
+@media (prefers-contrast: high) {
+    :root {
+        --color-primary: #ffffff;
+        --color-secondary: #ffffff;
+        --border-subtle: rgba(255, 255, 255, 0.5);
+        --border-normal: rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* === 減少動畫偏好 === */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --duration-fast: 0ms;
+        --duration-normal: 0ms;
+        --duration-slow: 0ms;
+    }
+}

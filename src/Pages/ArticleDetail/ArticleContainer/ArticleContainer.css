@@ -1,0 +1,70 @@
+/* ArticleContainer.css */
+.article-container {
+  max-width: 50rem; /* 使用 rem 單位，約 800px */
+  margin: 0 auto;
+  padding: 40px 20px;
+  line-height: 1.7;
+  color: #F1F5F9; /* 深色模式文字顏色 */
+  background: rgba(30, 41, 59, 0.95); /* 深色模式背景 */
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(51, 65, 81, 0.3); /* 深色模式邊框 */
+}
+
+/* 寬版文章容器 */
+.article-container-wide {
+  max-width: 75rem; /* 約 1200px */
+}
+
+/* 全寬文章容器 */
+.article-container-full {
+  max-width: 100vw;
+  width: 100vw;
+}
+
+/* 當有自定義 maxWidth 時，覆蓋全寬設定 */
+.article-container-full[style*="--custom-max-width"] {
+  max-width: var(--custom-max-width);
+  width: auto;
+}
+
+/* 自定義寬度支援 */
+.article-container[style*="--custom-max-width"] {
+  max-width: var(--custom-max-width);
+}
+
+.article-content {
+  font-size: 1.1rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .article-container {
+    padding: 20px 16px;
+    margin: 0 16px;
+  }
+  
+  /* 手機版所有寬度類型都使用標準寬度 */
+  .article-container-wide,
+  .article-container-full {
+    max-width: none;
+    width: auto;
+    margin: 0 16px;
+    padding: 20px 16px;
+  }
+}
+
+/* 平板響應式 */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .article-container-wide {
+    max-width: 85vw;
+    margin: 0 auto;
+  }
+  
+  .article-container-full {
+    max-width: 95vw;
+    margin: 0 auto;
+    padding: 40px 2.5vw;
+  }
+}

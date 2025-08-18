@@ -1,0 +1,132 @@
+/* 範例頁面樣式 - 展示頁面級樣式模式 */
+.example-page {
+    position: relative;
+    min-height: 100vh;
+    padding: 2rem;
+    background: radial-gradient(ellipse at center,
+            rgba(15, 52, 96, 0.3) 0%,
+            rgba(12, 12, 12, 0.8) 70%);
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* 頁面背景星空效果 */
+.example-page__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.example-page__stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, #8fb3ff, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(143, 179, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(143, 179, 255, 0.6), transparent),
+        radial-gradient(1px 1px at 130px 80px, #8fb3ff, transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(143, 179, 255, 0.7), transparent),
+        radial-gradient(1px 1px at 300px 120px, #8fb3ff, transparent),
+        radial-gradient(2px 2px at 450px 60px, rgba(143, 179, 255, 0.5), transparent);
+    background-repeat: repeat;
+    background-size: 500px 300px;
+    animation: starryNight 20s linear infinite;
+}
+
+@keyframes starryNight {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-300px);
+    }
+}
+
+/* 頁面內容容器 */
+.example-page__content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* 卡片展示區域 */
+.example-page__cards {
+    margin-top: 2rem;
+}
+
+.example-page__cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+    .example-page {
+        padding: 1.5rem;
+    }
+
+    .example-page__content {
+        gap: 2rem;
+    }
+
+    .example-page__cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .example-page {
+        padding: 1rem;
+    }
+
+    .example-page__content {
+        gap: 1.5rem;
+    }
+
+    .example-page__cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .example-page {
+        padding: 0.5rem;
+    }
+
+    .example-page__cards-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+}
+
+/* 動畫偏好設定 */
+@media (prefers-reduced-motion: reduce) {
+    .example-page__stars {
+        animation: none;
+    }
+}
+
+/* 高對比度模式 */
+@media (prefers-contrast: high) {
+    .example-page {
+        background: #000000;
+    }
+
+    .example-page__stars {
+        opacity: 0.3;
+    }
+}

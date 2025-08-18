@@ -1,0 +1,40 @@
+/* Portfolio.css */
+.portfolio-page {
+  min-height: calc(100vh - 80px);
+  background: transparent;
+  padding: 40px 0 60px;
+}
+
+.portfolio-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 內容區域 */
+.portfolio-content {
+  position: relative;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .portfolio-page {
+    padding: 60px 0 40px;
+  }
+  
+  .portfolio-container {
+    padding: 0 16px;
+  }
+}
+
+/* 統計區域 */
+.portfolio-stats {
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.stats-text {
+  color: #94A3B8;
+  font-size: 1rem;
+  font-weight: 500;
+}

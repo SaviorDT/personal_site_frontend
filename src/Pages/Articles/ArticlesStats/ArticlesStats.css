@@ -1,0 +1,11 @@
+/* ArticlesStats.css */
+.articles-stats {
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.stats-text {
+  color: #94A3B8; /* 深色模式文字顏色 */
+  font-size: 1rem;
+  font-weight: 500;
+}

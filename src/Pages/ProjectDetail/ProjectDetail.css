@@ -1,0 +1,164 @@
+/* ProjectDetail.css */
+.project-detail-container {
+  min-height: 100vh;
+}
+
+.project-detail-header {
+  max-width: 800px;
+  margin: 2rem auto 2rem auto;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(31, 41, 55, 0.8);
+  color: #F9FAFB;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.back-button:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: #8B5CF6;
+  transform: translateY(-2px);
+}
+
+.project-detail-content {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* 載入狀態 */
+.project-detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: #F9FAFB;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(139, 92, 246, 0.3);
+  border-top: 3px solid #8B5CF6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.project-detail-loading p {
+  font-size: 1.1rem;
+  color: #D1D5DB;
+}
+
+/* 錯誤狀態 */
+.project-detail-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 2rem;
+}
+
+.error-content {
+  text-align: center;
+  background: rgba(31, 41, 55, 0.8);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  max-width: 500px;
+  width: 100%;
+}
+
+.error-content h2 {
+  color: #F87171;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.error-content p {
+  color: #D1D5DB;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.retry-btn,
+.back-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  color: white;
+}
+
+.retry-btn:hover {
+  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  transform: translateY(-2px);
+}
+
+.back-btn {
+  background: rgba(75, 85, 99, 0.8);
+  color: #F9FAFB;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.back-btn:hover {
+  background: rgba(107, 114, 128, 0.8);
+  border-color: #9CA3AF;
+  transform: translateY(-2px);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .project-detail-container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .back-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .error-content {
+    padding: 2rem 1rem;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+  }
+  
+  .retry-btn,
+  .back-btn {
+    width: 100%;
+  }
+}

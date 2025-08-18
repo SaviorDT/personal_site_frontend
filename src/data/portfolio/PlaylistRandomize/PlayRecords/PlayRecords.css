@@ -1,0 +1,429 @@
+/* 播放記錄 */
+.play-records {
+  padding: 1rem;
+}
+
+.record-section {
+  margin-bottom: 2rem;
+}
+
+.record-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #8fb3ff;
+  margin-bottom: 1rem;
+}
+
+.record-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.record-stat-card {
+  background: rgba(143, 179, 255, 0.1);
+  border: 1px solid rgba(143, 179, 255, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.record-stat-number {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #8fb3ff;
+}
+
+.record-stat-label {
+  font-size: 0.9rem;
+  color: #b8c5d6;
+  margin-top: 0.25rem;
+}
+
+/* 播放歷史控制項 */
+.history-controls {
+  background: rgba(12, 12, 12, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.history-search {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-input {
+  padding: 10px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  background: rgba(12, 12, 12, 0.6);
+  color: #e0e6ed;
+}
+
+.search-input::placeholder {
+  color: #8b9bb3;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #8fb3ff;
+  box-shadow: 0 0 0 3px rgba(143, 179, 255, 0.1);
+}
+
+.datetime-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(143, 179, 255, 0.1);
+  border-radius: 8px;
+}
+
+.datetime-label {
+  font-weight: 500;
+  color: #8fb3ff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.datetime-filter {
+  padding: 8px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 13px;
+  transition: border-color 0.2s ease;
+  background: rgba(12, 12, 12, 0.6);
+  color: #e0e6ed;
+  min-width: 180px;
+}
+
+.datetime-filter::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.7;
+}
+
+.datetime-filter:focus {
+  outline: none;
+  border-color: #8fb3ff;
+  box-shadow: 0 0 0 2px rgba(143, 179, 255, 0.1);
+}
+
+.clear-filters-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.clear-filters-btn:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+}
+
+.view-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(143, 179, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(143, 179, 255, 0.2);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e0e6ed;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #8fb3ff;
+}
+
+.results-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.results-count {
+  color: #b8c5d6;
+  font-weight: 500;
+}
+
+.filter-info {
+  color: #8fb3ff;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* 虛擬化歷史記錄 */
+.virtualized-history {
+  margin-top: 1rem;
+}
+
+.history-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.history-container::-webkit-scrollbar-thumb {
+  background: rgba(143, 179, 255, 0.5);
+  border-radius: 4px;
+}
+
+.history-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(143, 179, 255, 0.7);
+}
+
+.scroll-info {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #8b9bb3;
+  text-align: center;
+}
+
+/* 歷史記錄項目 */
+.history-item {
+  transition: background-color 0.2s ease;
+}
+
+.history-item:hover {
+  background-color: rgba(143, 179, 255, 0.1) !important;
+}
+
+.history-thumbnail img {
+  transition: transform 0.2s ease;
+}
+
+.history-item:hover .history-thumbnail img {
+  transform: scale(1.05);
+}
+
+/* 視頻列表樣式（在 PlayRecords 中使用） */
+.video-list {
+  display: grid;
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.video-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(12, 12, 12, 0.4);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.video-item:hover {
+  background: rgba(143, 179, 255, 0.1);
+  border-color: rgba(143, 179, 255, 0.3);
+}
+
+.video-thumbnail {
+  width: 80px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8fb3ff;
+  font-size: 0.8rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.video-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.thumbnail-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(143, 179, 255, 0.2);
+  color: #8fb3ff;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+.video-info {
+  flex: 1;
+}
+
+.video-info h4 {
+  color: #ffffff;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.video-meta {
+  font-size: 0.85rem;
+  color: #8b9bb3;
+}
+
+/* 圖表樣式 */
+.play-count-chart {
+  margin: 1rem 0;
+}
+
+/* 滾動條樣式 */
+.video-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.video-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.video-list::-webkit-scrollbar-thumb {
+  background: rgba(143, 179, 255, 0.5);
+  border-radius: 4px;
+}
+
+.video-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(143, 179, 255, 0.7);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .play-records {
+    padding: 12px;
+  }
+
+  .play-records-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .stats-overview {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .record-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .history-search {
+    gap: 8px;
+  }
+
+  .datetime-filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .datetime-label {
+    font-size: 13px;
+  }
+
+  .datetime-filter {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .search-input,
+  .date-filter {
+    min-width: auto;
+  }
+
+  .view-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .results-info {
+    align-items: center;
+  }
+
+  .chart-container {
+    padding: 12px;
+  }
+
+  .chart-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .history-section {
+    margin-top: 16px;
+  }
+
+  .history-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .play-records-title {
+    font-size: 16px;
+  }
+}

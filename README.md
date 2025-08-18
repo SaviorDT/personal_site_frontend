@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+# Personal Website Frontend
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## 開發規範
+
+請參考 [開發規範與偏好設定](./DEVELOPMENT_PREFERENCES.md) 了解項目的編碼標準和最佳實踐。
 
 ## Available Scripts
 
