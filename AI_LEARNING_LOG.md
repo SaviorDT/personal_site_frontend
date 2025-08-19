@@ -76,6 +76,14 @@
 
 <!-- AI_LEARNING_START -->
 
+#### 2025-08-18 10:00 - process (第 1 次)
+**修改前**: 在驗證變更時有執行 `npm run build` 的習慣。
+**修改後**: 明確規定「不要執行 `npm run build`」，僅使用開發模式驗證；已在 `DEVELOPMENT_PREFERENCES.md` 登記。
+**文件**: `/app/frontend/DEVELOPMENT_PREFERENCES.md`
+**上下文**: 專案目前不需正式建置流程，避免誤觸 CI/CD 或產生無用產物。
+**分析**: 這是明確的流程偏好，應視為高優先級學習信號，後續自動化與建議需遵循。
+**模式狀態**: 新發現 - 流程與工具使用偏好
+
 #### 2025-08-08 16:45 - structure (第 1 次)
 **修改前**: fetchPlaylistData 使用模擬數據，無法獲取真實的 YouTube 播放清單信息
 **修改後**: 實現完整的 YouTube API 集成，獲取播放清單和視頻的詳細信息

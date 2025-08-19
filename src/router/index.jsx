@@ -6,6 +6,7 @@ import Articles from '@/Pages/Articles/Articles';
 import ArticleDetail from '@/Pages/ArticleDetail/ArticleDetail';
 import Portfolio from '@/Pages/Portfolio/Portfolio';
 import ProjectDetail from '@/Pages/ProjectDetail/ProjectDetail';
+import OAuthCallback from '@/Pages/OAuthCallback/OAuthCallback';
 
 // 路由配置
 export const router = createBrowserRouter([
@@ -45,6 +46,11 @@ export const router = createBrowserRouter([
         path: "聯絡",
         element: <div className="page-placeholder">聯絡頁面 - 開發中</div>
       },
+      // OAuth 回呼頁
+      {
+        path: "oauth/callback",
+        element: <OAuthCallback />
+      },
       // 404 頁面
       {
         path: "*",
@@ -62,5 +68,6 @@ export const ROUTES = {
   ABOUT: '/關於',
   PORTFOLIO: '/作品集',
   PROJECT_DETAIL: '/作品集/:projectId',
-  CONTACT: '/聯絡'
+  CONTACT: '/聯絡',
+  OAUTH_CALLBACK: '/oauth/callback'
 };
