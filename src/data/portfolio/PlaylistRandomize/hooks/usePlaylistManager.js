@@ -185,10 +185,9 @@ export const usePlaylistManager = () => {
 
     // 如果是播放錯誤且開啟自動播放，嘗試播放下一首
     if (isAutoPlay) {
-      alert(`影片播放失敗: ${error.message}\n將自動播放下一首`);
       setTimeout(() => {
         playNextVideo();
-      }, 2000);
+      }, 1000);
     } else {
       alert(`影片播放失敗: ${error.message}`);
     }

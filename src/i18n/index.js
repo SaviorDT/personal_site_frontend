@@ -9,7 +9,7 @@ const resources = {
       // 導航
       nav: {
         home: "首頁",
-        about: "自我介紹", 
+        about: "自我介紹",
         articles: "文章",
         portfolio: "作品集",
         contact: "聯絡",
@@ -47,13 +47,13 @@ const resources = {
             features: ["個人簡介", "技術技能", "工作經歷", "教育背景"]
           },
           articles: {
-            title: "文章分享", 
+            title: "文章分享",
             description: "分享程式心得以及日常生活",
             features: ["資工科普", "議題反思", "動漫評論", "生活隨筆"]
           },
           portfolio: {
             title: "作品集",
-            description: "展示我的專案作品與開發成果", 
+            description: "展示我的專案作品與開發成果",
             features: ["網頁專案", "線上工具", "遊戲助手"]
           }
         },
@@ -100,7 +100,8 @@ const resources = {
         error: {
           default: "操作失敗，請稍後再試",
           network: "網絡連接錯誤，請檢查您的網絡連接",
-          social_not_implemented: "第三方平台登入功能尚未實現"
+          social_not_implemented: "第三方平台登入功能尚未實現",
+          popup_blocked: "無法開啟登入視窗，請允許彈出視窗"
         },
         or: "或",
         social: {
@@ -158,7 +159,7 @@ const resources = {
       // Navigation
       nav: {
         home: "Home",
-        about: "About", 
+        about: "About",
         articles: "Articles",
         portfolio: "Portfolio",
         contact: "Contact",
@@ -249,7 +250,8 @@ const resources = {
         error: {
           default: "Operation failed, please try again",
           network: "Network connection error, please check your network",
-          social_not_implemented: "3rd party platform login feature is not implemented yet"
+          social_not_implemented: "3rd party platform login feature is not implemented yet",
+          popup_blocked: "Cannot open login window. Please enable popup window."
         },
         or: "or",
         social: {
@@ -311,11 +313,11 @@ i18n
     resources,
     fallbackLng: 'zh',
     debug: import.meta.env.DEV,
-    
+
     interpolation: {
       escapeValue: false, // React 已經做了 XSS 保護
     },
-    
+
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],

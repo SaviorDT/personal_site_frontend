@@ -4,6 +4,8 @@ import SocialIcons from '@/Components/SocialIcons/SocialIcons';
 import ModalContainer from '@/Components/ModalContainer/ModalContainer';
 import authService from '@/services/authService';
 import './AuthModal.css';
+import { ROUTES } from '@/router/index';
+import apiConfig from '@/config/api';
 
 const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
   const { t } = useTranslation();
@@ -112,9 +114,9 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
 
   const socialProviders = [
     { name: 'google', icon: SocialIcons.google, color: '#4285f4' },
-    { name: 'facebook', icon: SocialIcons.facebook, color: '#1877f2' },
+    // { name: 'facebook', icon: SocialIcons.facebook, color: '#1877f2' },
     { name: 'github', icon: SocialIcons.github, color: '#333' },
-    { name: 'line', icon: SocialIcons.line, color: '#00c300' }
+    // { name: 'line', icon: SocialIcons.line, color: '#00c300' }
   ];
 
   if (!isOpen) return null;
@@ -240,9 +242,27 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
               className="social-btn"
               style={{ '--provider-color': provider.color }}
               onClick={() => {
-                // 這裡之後實現社交登入邏輯
-                setError(t('auth.error.social_not_implemented'));
-                console.log(`${provider.name} auth`);
+                const loginApiEndpoint =
+                  provider.name === 'github' ? apiConfig.ENDPOINTS.AUTH.GITHUB_OAUTH
+                    : apiConfig.ENDPOINTS.AUTH.GOOGLE_OAUTH;
+
+                if (provider.name === 'github' || provider.name === 'google') {
+                  // 帶上 redirect_uri 讓後端完成後導回本專案的回呼頁，該頁負責寫入 localStorage
+                  const redirectUri = `${window.location.origin}${ROUTES.OAUTH_CALLBACK}`;
+                  const oauthUrl = `${apiConfig.API_BASE_URL}${loginApiEndpoint}?redirect=${encodeURIComponent(redirectUri)}`;
+                  const w = 600;
+                  const h = 700;
+                  const left = Math.max(0, window.screen.width / 2 - w / 2);
+                  const top = Math.max(0, window.screen.height / 2 - h / 2);
+                  const popup = window.open(
+                    oauthUrl,
+                    '_blank',
+                    `noopener,width=${w},height=${h},left=${left},top=${top}`
+                  );
+                } else {
+                  setError(t('auth.error.social_not_implemented'));
+                  console.log(`${provider.name} auth not implemented`);
+                }
               }}
             >
               <span className="social-icon">
@@ -254,7 +274,6 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
             </button>
           ))}
         </div>
-
         <div className="auth-switch">
           <p>
             {mode === 'login'
