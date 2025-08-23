@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 const VirtualizedHistory = ({ records, getThumbnailByVideoId, showAllHistory }) => {
     const [startIndex, setStartIndex] = useState(0);
-    const [endIndex, setEndIndex] = useState(50); // 增加初始值以支持更多記錄
+    const [endIndex, setEndIndex] = useState(10); // 增加初始值以支持更多記錄
     const containerRef = useRef(null);
     const ITEM_HEIGHT = 80; // 每個項目的高度
     const BUFFER_SIZE = 5; // 緩衝區大小
@@ -20,8 +20,8 @@ const VirtualizedHistory = ({ records, getThumbnailByVideoId, showAllHistory }) 
         };
     };
 
-    // 計算可見範圍
-    const calculateVisibleRange = () => {
+    // 計算可見範圍 - 使用 useCallback 確保能獲取最新的 records
+    const calculateVisibleRange = useCallback(() => {
         if (!containerRef.current || !records.length) return;
 
         const scrollTop = containerRef.current.scrollTop;
@@ -33,9 +33,9 @@ const VirtualizedHistory = ({ records, getThumbnailByVideoId, showAllHistory }) 
 
         setStartIndex(newStartIndex);
         setEndIndex(newEndIndex);
-    };
+    }, [records]);
 
-    // 處理滾動事件
+    // 處理滾動事件 - 使用 useCallback 確保引用穩定性
     const handleScroll = () => {
         calculateVisibleRange();
     };
@@ -71,7 +71,7 @@ const VirtualizedHistory = ({ records, getThumbnailByVideoId, showAllHistory }) 
             container.addEventListener('scroll', handleScroll);
             return () => container.removeEventListener('scroll', handleScroll);
         }
-    }, []);
+    }, [handleScroll]);
 
     // 可見的記錄項目
     const visibleRecords = useMemo(() => {
