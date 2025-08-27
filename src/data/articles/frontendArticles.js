@@ -2,7 +2,7 @@
 // 每篇文章都有對應的 JSX 組件在 @/data/articles/{article-name}/ 資料夾內
 
 // 動態導入文章組件和 metadata
-import { metadata as siteHistoryMetadata } from './SiteHistory/SiteHistory.jsx';
+import { metadata as siteHistoryMetadata } from './SiteHistory/SiteHistoryMetadata.jsx';
 
 // 文章 metadata 陣列
 export const frontendArticles = [
@@ -17,9 +17,9 @@ export const loadArticleComponent = async (articleId) => {
       case '網站歷史':
         const { default: SiteHistory } = await import('./SiteHistory/SiteHistory.jsx');
         return SiteHistory;
-      
+
       // 新增文章時，在此處加入對應的動態導入
-      
+
       default:
         throw new Error(`Article component not found: ${articleId}`);
     }
@@ -48,8 +48,8 @@ export const getArticleCategories = () => {
 
 // 根據標籤獲取文章
 export const getArticlesByTag = (tag) => {
-  return frontendArticles.filter(article => 
-    article.tags.some(articleTag => 
+  return frontendArticles.filter(article =>
+    article.tags.some(articleTag =>
       articleTag.toLowerCase().includes(tag.toLowerCase())
     )
   );
@@ -58,7 +58,7 @@ export const getArticlesByTag = (tag) => {
 // 搜尋文章
 export const searchArticles = (keyword) => {
   const lowerKeyword = keyword.toLowerCase();
-  return frontendArticles.filter(article => 
+  return frontendArticles.filter(article =>
     article.title.toLowerCase().includes(lowerKeyword) ||
     article.excerpt.toLowerCase().includes(lowerKeyword) ||
     article.content.toLowerCase().includes(lowerKeyword) ||

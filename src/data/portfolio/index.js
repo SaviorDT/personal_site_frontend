@@ -2,8 +2,8 @@
 // 每個項目都有對應的 JSX 組件在 @/data/portfolio/{project-name}/ 資料夾內
 
 // 動態導入項目組件和 metadata
-import { metadata as playlistRandomizeMetadata } from './PlaylistRandomize/PlaylistRandomize.jsx';
-import { metadata as fileSystemMetadata } from './FileSystem/FileSystem.jsx';
+import { metadata as playlistRandomizeMetadata } from './PlaylistRandomize/PlaylistRandomizeMetadata.jsx';
+import { metadata as fileSystemMetadata } from './FileSystem/FileSystemMetadata.jsx';
 
 // 項目 metadata 陣列
 export const portfolioProjects = [

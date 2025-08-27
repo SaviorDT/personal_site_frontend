@@ -7,27 +7,6 @@ import loginImage from './Images/login.png';
 import homeImage from './Images/home.png';
 import ImagePreview from '@/Components/ImagePreview/ImagePreview';
 
-// 文章 metadata
-export const metadata = {
-  id: '網站歷史',
-  type: 'about',
-  title: '網站發展歷史',
-  thumbnail: '/images/articles/site-history-thumbnail.svg',
-  excerpt: '從第一行程式碼到現在的完整網站，記錄每一個重要的里程碑和技術決策。這是一個關於成長、學習和不斷改進的故事。',
-  author: 'Deeelol',
-  publishDate: '2025-07-31',
-  tags: ['生活', '觀點'],
-  category: '關於',
-  readTime: 6,
-  featured: true,
-  difficulty: 'beginner',
-  lastModified: '2025-08-03',
-  // 新增：文章容器配置
-  layout: {
-    containerWidth: 'wide', // 寬版模式最適合時間軸
-  }
-};
-
 // 文章組件
 const SiteHistory = () => {
   // 處理圖片點擊，在新分頁開啟
@@ -42,7 +21,7 @@ const SiteHistory = () => {
         <div className="aurora-layer-tertiary"></div>
         <div className="aurora-particles"></div>
       </div>
-      
+
       <section className="article-intro">
         <p className="lead-paragraph">
           每個網站背後都有屬於它的故事。從第一行程式碼的誕生，到如今的成果，
@@ -53,14 +32,14 @@ const SiteHistory = () => {
 
       <section className="journey-timeline">
         <div className="timeline-path">
-          
+
           {/* 節點 1 - 左側 */}
           <div className="milestone left">
             <div className="milestone-date">2021</div>
             <div className="milestone-content">
-              <ImagePreview 
-                src={uploadImage} 
-                alt="舊網站圖片" 
+              <ImagePreview
+                src={uploadImage}
+                alt="舊網站圖片"
                 onImageClick={handleImageClick}
               />
               <h3>🌱 萌芽起步</h3>
@@ -74,9 +53,9 @@ const SiteHistory = () => {
           <div className="milestone right">
             <div className="milestone-date">2025.02</div>
             <div className="milestone-content">
-              <ImagePreview 
+              <ImagePreview
                 src={dockerImage}
-                alt="docker 圖片" 
+                alt="docker 圖片"
                 onImageClick={handleImageClick}
               />
               <h3>🚀 開始有翻修個人網站的念頭</h3>
@@ -90,9 +69,9 @@ const SiteHistory = () => {
           <div className="milestone left offset-medium">
             <div className="milestone-date">2025.04</div>
             <div className="milestone-content">
-              <ImagePreview 
+              <ImagePreview
                 src={domainImage}
-                alt="域名圖片" 
+                alt="域名圖片"
                 onImageClick={handleImageClick}
               />
               <h3>🎨 夢.台灣</h3>
@@ -106,9 +85,9 @@ const SiteHistory = () => {
           <div className="milestone right offset-medium">
             <div className="milestone-date">2025.07.17</div>
             <div className="milestone-content">
-              <ImagePreview 
+              <ImagePreview
                 src={loginImage}
-                alt="登入畫面" 
+                alt="登入畫面"
                 onImageClick={handleImageClick}
               />
               <h3>⚙️ 後端-啟用</h3>
@@ -122,9 +101,9 @@ const SiteHistory = () => {
           <div className="milestone center special">
             <div className="milestone-date">現在</div>
             <div className="milestone-content">
-              <ImagePreview 
+              <ImagePreview
                 src={homeImage}
-                alt="主畫面" 
+                alt="主畫面"
                 onImageClick={handleImageClick}
               />
               <h3>🛠️ 持續進化</h3>
