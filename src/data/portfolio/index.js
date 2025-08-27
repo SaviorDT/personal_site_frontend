@@ -3,10 +3,12 @@
 
 // 動態導入項目組件和 metadata
 import { metadata as playlistRandomizeMetadata } from './PlaylistRandomize/PlaylistRandomize.jsx';
+import { metadata as fileSystemMetadata } from './FileSystem/FileSystem.jsx';
 
 // 項目 metadata 陣列
 export const portfolioProjects = [
   playlistRandomizeMetadata,
+  fileSystemMetadata,
   // 新增項目時，在此處加入對應的 metadata
 ];
 
@@ -18,8 +20,12 @@ export const loadProjectComponent = async (projectId) => {
         const { default: PlaylistRandomize } = await import('./PlaylistRandomize/PlaylistRandomize.jsx');
         return PlaylistRandomize;
 
+      case fileSystemMetadata.id:
+        const { default: FileSystem } = await import('./FileSystem/FileSystem.jsx');
+        return FileSystem;
+
       // 新增項目時，在此處加入對應的動態導入
-      
+
       default:
         throw new Error(`Project component not found: ${projectId}`);
     }
@@ -36,7 +42,7 @@ export const getProjectsByCategory = (category) => {
 
 // 根據標籤獲取項目
 export const getProjectsByTag = (tag) => {
-  return portfolioProjects.filter(project => 
+  return portfolioProjects.filter(project =>
     project.technologies && project.technologies.includes(tag)
   );
 };
@@ -47,7 +53,7 @@ export const searchProjects = (keyword) => {
   return portfolioProjects.filter(project =>
     project.title.toLowerCase().includes(lowerKeyword) ||
     project.description.toLowerCase().includes(lowerKeyword) ||
-    (project.technologies && project.technologies.some(tech => 
+    (project.technologies && project.technologies.some(tech =>
       tech.toLowerCase().includes(lowerKeyword)
     ))
   );

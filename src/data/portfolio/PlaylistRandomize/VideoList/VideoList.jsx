@@ -4,7 +4,7 @@ import './VideoList.css';
 const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(50);
+  const [endIndex, setEndIndex] = useState(20);
   const containerRef = useRef(null);
 
   const ITEM_HEIGHT = 120; // 每個項目的高度
@@ -54,6 +54,7 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
 
   // 可見的影片項目
   const visibleVideos = useMemo(() => {
+    console.log(filteredVideos.slice(startIndex, endIndex))
     return filteredVideos.slice(startIndex, endIndex).map((video, index) => ({
       ...video,
       virtualIndex: startIndex + index,

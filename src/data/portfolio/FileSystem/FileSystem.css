@@ -1,0 +1,520 @@
+.fs-root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 24px;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    /* 在父層為 flex 時允許收縮，避免水平溢出導致右側背景被裁切 */
+    /* 將 padding 改為 margin */
+    background:
+        /* 更顯眼但仍低調的主背景漸層 */
+        linear-gradient(135deg, #0c1022 0%, #121735 38%, #1a2f6b 72%, #0c1022 100%),
+        /* 柔和色彩暈光 */
+        radial-gradient(1000px 500px at 12% 12%, rgba(255, 255, 255, 0.06), transparent 60%),
+        radial-gradient(700px 360px at 85% 18%, rgba(90, 170, 255, 0.10), transparent 60%),
+        var(--bg, #0b0f17);
+    color: var(--fg, #e6e6e6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    /* 使用圓角裁切，但避免使用 contain 造成繪製異常 */
+    /* 強制建立合成層，避免在某些瀏覽器上出現背景未重繪（右側漸層消失） */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    isolation: isolate;
+}
+
+.project-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.4), rgba(15, 52, 96, 0.2));
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.project-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ffffff, #8fb3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.project-subtitle {
+    font-size: 1.1rem;
+    color: #b8c5d6;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.project-meta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.project-category,
+.project-year,
+.project-duration {
+    padding: 0.5rem 1rem;
+    background: rgba(143, 179, 255, 0.1);
+    border: 1px solid rgba(143, 179, 255, 0.3);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #8fb3ff;
+}
+
+/* subtle starry background */
+.fs-root::before,
+.fs-root::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+    /* 確保特效層遵循圓角，避免看起來被裁切 */
+}
+
+.fs-root::before {
+    background-image:
+        /* 提升星點密度與層次（仍低透明度） */
+        radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 40% 70%, rgba(255, 255, 255, 0.5), transparent 60%),
+        radial-gradient(1px 1px at 70% 40%, rgba(255, 255, 255, 0.6), transparent 60%),
+        radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.45), transparent 60%),
+        radial-gradient(1px 1px at 15% 85%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(1px 1px at 55% 15%, rgba(255, 255, 255, 0.5), transparent 60%),
+        radial-gradient(1px 1px at 30% 55%, rgba(255, 255, 255, 0.4), transparent 60%);
+    background-repeat: repeat;
+    background-size: 220px 220px;
+    opacity: 0.6;
+    animation: fs-stars 60s linear infinite;
+}
+
+.fs-root::after {
+    /* 柔和光束與高光層（極低不透明度） */
+    background:
+        /* 光束與高光（上層），不再包含主背景漸層，避免隨動畫位移影響右側視覺 */
+        linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.02) 30%, transparent 45%),
+        linear-gradient(245deg, rgba(45, 131, 255, 0.05) 0%, transparent 55%),
+        radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.08), transparent 60%);
+    /* 使用背景位置動畫，而不是移動整個偽元素，避免邊緣被拉伸或露出 */
+    background-repeat: no-repeat;
+    background-size: 120% 120%, 120% 120%, auto;
+    background-position: 0% 0%, 100% 0%, 50% -20%;
+    animation: fs-beams-pos 28s ease-in-out infinite alternate;
+}
+
+@keyframes fs-stars {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-150px);
+    }
+}
+
+/* 讓內容位於特效層之上 */
+.fs-root>* {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes fs-beams-pos {
+    0% {
+        background-position: 0% 0%, 100% 0%, 50% -20%;
+    }
+
+    100% {
+        background-position: -2% -1%, 98% -1%, 48% -22%;
+    }
+}
+
+.fs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 10px;
+    /* 讓上方的按鈕列（含上傳）稍微下移 */
+}
+
+.fs-path {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex: 1 1 auto;
+    /* 佔據剩餘空間，避免把右側擠出 */
+    min-width: 0;
+    /* 允許在 flex 中收縮，避免水平溢出 */
+    overflow: hidden;
+    /* 面包屑過長時隱藏，避免撐寬容器 */
+}
+
+.fs-breadcrumb {
+    background: transparent;
+    border: none;
+    color: var(--fg, #e6e6e6);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+    /* 避免單一 breadcrumb 內換行導致撐寬 */
+}
+
+.fs-breadcrumb:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.fs-breadcrumb-sep {
+    opacity: 0.5;
+}
+
+.fs-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.fs-btn {
+    display: inline-flex;
+    /* 確保有可點擊區域，並讓絕對定位 input 能覆蓋 */
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--fg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    /* 防止文字選取造成 I-beam 游標 */
+}
+
+.fs-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.fs-btn.primary {
+    background: #2d83ff;
+    border-color: #2d83ff;
+    color: white;
+}
+
+.fs-btn.primary:hover {
+    filter: brightness(1.05);
+}
+
+.fs-upload {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer !important;
+    /* 整個標籤視為按鈕，強制覆蓋任何預設樣式 */
+}
+
+.fs-upload input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+    /* 確保透明 input 覆蓋整個按鈕區域 */
+}
+
+/* 讓上傳文字與圖示也保持 pointer 游標 */
+.fs-upload,
+.fs-upload * {
+    cursor: pointer !important;
+}
+
+.fs-toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-top: 6px;
+    /* 與上方 header 視覺對齊，整體一起下移些微 */
+}
+
+.fs-input {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--fg);
+}
+
+.fs-spacer {
+    flex: 1;
+}
+
+.fs-error {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.08);
+    padding: 8px 10px;
+    border-radius: 8px;
+}
+
+.fs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 420px;
+    /* 在需要時提供 scrollbar */
+    overflow: auto;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    /* 避免橫向溢出導致父層產生額外寬度而影響背景繪製 */
+    overflow-x: hidden;
+}
+
+.fs-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.fs-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.fs-item-icon {
+    width: 28px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.fs-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    /* 允許在橫向空間不足時收縮，避免撐破容器 */
+}
+
+.fs-item-name {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* 長檔名以省略號表示，避免橫向溢出 */
+}
+
+.fs-item-meta {
+    opacity: 0.65;
+    font-size: 12px;
+}
+
+.fs-item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.fs-link {
+    background: transparent;
+    border: none;
+    color: #7bb1ff;
+    cursor: pointer;
+}
+
+.fs-link:hover {
+    text-decoration: underline;
+}
+
+.fs-link.danger {
+    color: #ff8585;
+}
+
+.fs-empty {
+    opacity: 0.7;
+    text-align: center;
+    padding: 16px 0;
+}
+
+.fs-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.fs-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fs-preview-title {
+    font-weight: 700;
+}
+
+.fs-preview-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fs-image {
+    max-width: 100%;
+    border-radius: 6px;
+}
+
+.fs-media {
+    width: 100%;
+}
+
+.fs-pdf {
+    width: 100%;
+    height: 420px;
+    background: #fff;
+}
+
+.fs-text-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fs-text-editor textarea {
+    width: 100%;
+    min-height: 240px;
+    resize: vertical;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--fg);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.fs-editor-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* 適度內縮：主要區塊左右內距，保持整體視覺留白 */
+.fs-header,
+.fs-toolbar,
+.fs-preview,
+.fs-container {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+/* 行動裝置微調，避免過度擁擠 */
+@media (max-width: 640px) {
+    .fs-root {
+        margin: 12px;
+    }
+
+    .fs-intro {
+        margin: 12px 12px 0 12px;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .fs-header,
+    .fs-toolbar,
+    .fs-preview,
+    .fs-container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .fs-header {
+        padding-top: 8px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .fs-toolbar {
+        padding-top: 4px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .fs-path {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+    }
+
+    .fs-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .fs-actions .fs-btn {
+        flex: 1 1 calc(50% - 8px);
+        min-height: 44px;
+        /* 輕觸目標大小 */
+    }
+
+    .fs-btn {
+        min-height: 44px;
+        font-size: 14px;
+    }
+
+    .fs-input {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .fs-container {
+        max-height: 60vh;
+        /* 讓列表在手機上更可用 */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .fs-item {
+        padding: 10px 8px;
+    }
+
+    .fs-item-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .fs-link {
+        padding: 6px 8px;
+        /* 增加可點擊區域 */
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .fs-pdf {
+        height: 60vh;
+    }
+}

@@ -19,6 +19,28 @@ const apiConfig = {
       GITHUB_OAUTH: '/auth/login-github',
       GOOGLE_OAUTH: '/auth/login-google',
     },
+    FILE_SYSTEM: {
+      FOLDERS: {
+        // GET    LIST   ?path=<folderPath>
+        LIST: '/storage/folder',
+        // POST   CREATE body: { path, name }
+        CREATE: '/storage/folder',
+        // PATCH  RENAME body: { path, oldName, newName }
+        RENAME: '/storage/folder',
+        // DELETE DELETE params: { path, name }
+        DELETE: '/storage/folder',
+      },
+      FILES: {
+        // POST   UPLOAD multipart/form-data: { path, file }
+        UPLOAD: '/storage/file',
+        // PATCH  RENAME body: { path, oldName, newName }
+        RENAME: '/storage/file',
+        // DELETE DELETE params: { path, name }
+        DELETE: '/storage/file',
+        // GET    DOWNLOAD ?path=&name=  responseType: blob
+        DOWNLOAD: '/storage/file',
+      }
+    },
   },
 
   // 社交登入提供者

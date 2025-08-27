@@ -11,6 +11,11 @@ export default defineConfig({
     allowedHosts: [
       'xn--kss.xn--kpry57d'
     ],
+    hmr: {
+      protocol: 'wss',
+      host: 'xn--ldrz59fv7cs48a.xn--kss.xn--kpry57d',
+      clientPort: 443
+    }
   },
   resolve: {
     alias: {
