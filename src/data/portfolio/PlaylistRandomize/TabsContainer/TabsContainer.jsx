@@ -2,6 +2,7 @@ import React from 'react';
 import VideoList from '../VideoList/VideoList';
 import PlayRecords from '../PlayRecords/PlayRecords';
 import UnavailableVideos from '../UnavailableVideos/UnavailableVideos';
+import DuplicatedVideos from '../DuplicatedVideos/DuplicatedVideos';
 import './TabsContainer.css';
 
 const TabsContainer = ({
@@ -41,6 +42,15 @@ const TabsContainer = ({
             </span>
           )}
         </button>
+        <button
+          className={`tab-button ${activeTab === 'duplicates' ? 'active' : ''}`}
+          onClick={() => setActiveTab('duplicates')}
+        >
+          重複的影片
+          {playlistData && (
+            <span className="tab-count">({playlistData.duplicatedVideos || 0})</span>
+          )}
+        </button>
       </div>
 
       <div className="tab-content">
@@ -62,6 +72,12 @@ const TabsContainer = ({
         )}
         {activeTab === 'unavailable' && (
           <UnavailableVideos
+            playlistData={playlistData}
+            onRemoveVideos={onRemoveVideos}
+          />
+        )}
+        {activeTab === 'duplicates' && (
+          <DuplicatedVideos
             playlistData={playlistData}
             onRemoveVideos={onRemoveVideos}
           />

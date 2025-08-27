@@ -6,8 +6,9 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(20);
   const containerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const ITEM_HEIGHT = 120; // 每個項目的高度
+  const ITEM_HEIGHT = isMobile ? 200 : 120; // 每個項目的高度（手機用較高避免擁擠）
   const BUFFER_SIZE = 10; // 緩衝區大小
 
   // 計算每個影片的播放次數
@@ -52,15 +53,15 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
     calculateVisibleRange(filteredVideos);
   };
 
-  // 可見的影片項目
+  // 可見的影片項目（僅桌機使用虛擬化）
   const visibleVideos = useMemo(() => {
-    console.log(filteredVideos.slice(startIndex, endIndex))
+    if (isMobile) return filteredVideos;
     return filteredVideos.slice(startIndex, endIndex).map((video, index) => ({
       ...video,
       virtualIndex: startIndex + index,
       originalIndex: playlistData?.videos.indexOf(video) || 0
     }));
-  }, [filteredVideos, startIndex, endIndex, playlistData?.videos]);
+  }, [filteredVideos, startIndex, endIndex, playlistData?.videos, isMobile]);
 
   // 當篩選結果改變時重新計算可見範圍
   useEffect(() => {
@@ -68,15 +69,32 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
     calculateVisibleRange(filteredVideos);
   }, [filteredVideos]);
 
-  // 綁定滾動事件
+  // 綁定滾動事件（桌機虛擬化）
   useEffect(() => {
     const container = containerRef.current;
-    if (container) {
+    if (container && !isMobile) {
       container.addEventListener('scroll', handleScroll);
       calculateVisibleRange(filteredVideos);
       return () => container.removeEventListener('scroll', handleScroll);
     }
-  }, [filteredVideos]);
+  }, [filteredVideos, isMobile]);
+
+  // 手機偵測（避免使用已被棄用的 addListener/removeListener）
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const onChange = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+
+    if (mq.addEventListener) {
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    }
+
+    // Fallback：使用非棄用的 window.resize 監聽（不再使用 addListener）
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   if (!playlistData || !playlistData.videos) {
     return (
@@ -86,7 +104,73 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
     );
   }
 
-  const totalHeight = filteredVideos.length * ITEM_HEIGHT;
+  const totalHeight = isMobile ? undefined : filteredVideos.length * ITEM_HEIGHT;
+
+  const renderRow = (video, rowIndex) => {
+    const originalIndex = playlistData?.videos.indexOf(video) ?? rowIndex;
+    const isCurrentlyPlaying = currentPlaying && currentPlaying.id === video.id;
+    const isPlayable = video.status === 'playable';
+    const playCount = playCountMap[video.id] || 0;
+
+    return (
+      <div
+        key={`${video.id}-${originalIndex}`}
+        className={`video-item ${isCurrentlyPlaying ? 'current-playing' : ''}`}
+        style={!isMobile ? {
+          height: ITEM_HEIGHT,
+          display: 'flex',
+          alignItems: 'center',
+          padding: '12px',
+          borderBottom: '1px solid #444',
+          backgroundColor: (rowIndex ?? 0) % 2 === 0 ? '#2a2a2a' : '#333'
+        } : undefined}
+      >
+        <div className="video-thumbnail">
+          {video.thumbnail ? (
+            <img src={video.thumbnail} alt={video.title} />
+          ) : (
+            <div className="thumbnail-placeholder">
+              {isCurrentlyPlaying ? '▶' : '🎵'}
+            </div>
+          )}
+          {isCurrentlyPlaying && (
+            <div className="playing-indicator">
+              <span className="playing-icon">▶</span>
+              播放中
+            </div>
+          )}
+        </div>
+
+        <div className="video-info" style={{ marginLeft: isMobile ? 0 : '16px', flex: 1 }}>
+          <h4>{video.title}</h4>
+          <div className="video-meta">
+            <span>時長: {video.duration}</span>
+            <span>序號: {originalIndex + 1}</span>
+            <span>頻道: {video.channelTitle}</span>
+            {playCount > 0 && (
+              <span className="meta-playcount">播放次數: {playCount}</span>
+            )}
+          </div>
+        </div>
+
+        <div className="video-actions">
+          <div className={`video-status ${isPlayable ? 'status-playable' : 'status-unavailable'}`}>
+            {isPlayable ? '可播放' : '無法播放'}
+          </div>
+          {isPlayable && (
+            <button
+              className="btn-action btn-play"
+              onClick={() => onPlayVideo?.(video)}
+              disabled={isCurrentlyPlaying}
+              title={isCurrentlyPlaying ? '正在播放' : '立即播放'}
+            >
+              {isCurrentlyPlaying ? '播放中' : '播放'}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="video-list-wrapper">
@@ -129,139 +213,29 @@ const VideoList = ({ playlistData, onPlayVideo, currentPlaying, playRecords = []
         <div
           ref={containerRef}
           className="video-container"
-          style={{
-            border: '1px solid #333',
-            borderRadius: '8px',
-            position: 'relative'
-          }}
+          style={{ border: '1px solid #333', borderRadius: '8px', position: 'relative' }}
         >
-          <div style={{ height: totalHeight, position: 'relative' }}>
-            <div
-              style={{
-                transform: `translateY(${startIndex * ITEM_HEIGHT}px)`,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0
-              }}
-            >
-              {visibleVideos.map((video) => {
-                const isCurrentlyPlaying = currentPlaying && currentPlaying.id === video.id;
-                const isPlayable = video.status === 'playable';
-                const playCount = playCountMap[video.id] || 0;
-
-                return (
-                  <div
-                    key={video.id}
-                    className={`video-item ${isCurrentlyPlaying ? 'current-playing' : ''}`}
-                    style={{
-                      height: ITEM_HEIGHT,
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '12px',
-                      borderBottom: '1px solid #444',
-                      backgroundColor: video.virtualIndex % 2 === 0 ? '#2a2a2a' : '#333'
-                    }}
-                  >
-                    <div className="video-thumbnail">
-                      {video.thumbnail ? (
-                        <img
-                          src={video.thumbnail}
-                          alt={video.title}
-                          style={{
-                            width: '120px',
-                            height: '68px',
-                            objectFit: 'cover',
-                            borderRadius: '4px'
-                          }}
-                        />
-                      ) : (
-                        <div style={{
-                          width: '120px',
-                          height: '68px',
-                          backgroundColor: '#555',
-                          borderRadius: '4px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '24px'
-                        }}>
-                          {isCurrentlyPlaying ? '▶' : '🎵'}
-                        </div>
-                      )}
-                      {isCurrentlyPlaying && (
-                        <div className="playing-indicator">
-                          <span className="playing-icon">▶</span>
-                          播放中
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="video-info" style={{ marginLeft: '16px', flex: 1 }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        fontSize: '16px',
-                        lineHeight: '1.3'
-                      }}>
-                        {video.title}
-                      </h4>
-                      <div className="video-meta" style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '12px',
-                        fontSize: '12px',
-                        color: '#999'
-                      }}>
-                        <span>時長: {video.duration}</span>
-                        <span>序號: {video.originalIndex + 1}</span>
-                        <span>頻道: {video.channelTitle}</span>
-                        {playCount > 0 && (
-                          <span style={{
-                            color: '#4A90E2',
-                            fontWeight: 'bold'
-                          }}>
-                            播放次數: {playCount}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="video-actions" style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-end',
-                      gap: '8px'
-                    }}>
-                      <div className={`video-status ${isPlayable ? 'status-playable' : 'status-unavailable'}`}>
-                        {isPlayable ? '可播放' : '無法播放'}
-                      </div>
-                      {isPlayable && (
-                        <button
-                          className="btn-action btn-play"
-                          onClick={() => onPlayVideo?.(video)}
-                          disabled={isCurrentlyPlaying}
-                          title={isCurrentlyPlaying ? '正在播放' : '立即播放'}
-                          style={{
-                            padding: '6px 12px',
-                            fontSize: '12px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            backgroundColor: isCurrentlyPlaying ? '#666' : '#4A90E2',
-                            color: 'white',
-                            cursor: isCurrentlyPlaying ? 'not-allowed' : 'pointer'
-                          }}
-                        >
-                          {isCurrentlyPlaying ? '播放中' : '播放'}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+          {isMobile ? (
+            <div className="video-list-nonvirtual">
+              {filteredVideos.map((video, idx) => renderRow(video, idx))}
             </div>
-          </div>
+          ) : (
+            <div style={{ height: totalHeight, position: 'relative' }}>
+              <div
+                style={{
+                  transform: `translateY(${startIndex * ITEM_HEIGHT}px)`,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0
+                }}
+              >
+                {visibleVideos.map((video, i) => renderRow(video, i))}
+              </div>
+            </div>
+          )}
 
-          {filteredVideos.length > 50 && (
+          {!isMobile && filteredVideos.length > 50 && (
             <div style={{
               position: 'fixed',
               bottom: '8px',

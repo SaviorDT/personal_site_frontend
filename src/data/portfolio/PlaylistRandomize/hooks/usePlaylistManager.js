@@ -270,12 +270,22 @@ export const usePlaylistManager = () => {
     // 過濾掉選中的影片
     const updatedVideos = playlistData.videos.filter(video => !videoIds.includes(video.id));
 
+    // 重新標記重複影片（移除後可能不再重複）
+    const idCount = new Map();
+    for (const v of updatedVideos) {
+      idCount.set(v.id, (idCount.get(v.id) || 0) + 1);
+    }
+    for (const v of updatedVideos) {
+      v.isDuplicate = (idCount.get(v.id) || 0) > 1;
+    }
+
     // 重新計算統計資訊
     const playableVideos = updatedVideos.filter(video => video.status === 'playable');
     const unavailableVideos = updatedVideos.filter(video => video.status !== 'playable');
     const privateVideos = updatedVideos.filter(video => video.status === 'private');
     const deletedVideos = updatedVideos.filter(video => video.status === 'deleted');
     const unlistedVideos = updatedVideos.filter(video => video.status === 'unlisted');
+    const duplicatedVideos = updatedVideos.filter(video => video.isDuplicate);
 
     const updatedPlaylistData = {
       ...playlistData,
@@ -285,7 +295,8 @@ export const usePlaylistManager = () => {
       unavailableVideos: unavailableVideos.length,
       privateVideos: privateVideos.length,
       deletedVideos: deletedVideos.length,
-      unlistedVideos: unlistedVideos.length
+      unlistedVideos: unlistedVideos.length,
+      duplicatedVideos: duplicatedVideos.length
     };
 
     setPlaylistData(updatedPlaylistData);

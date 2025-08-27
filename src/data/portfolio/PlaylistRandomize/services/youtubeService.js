@@ -171,12 +171,23 @@ export class YouTubeService {
             };
         });
 
+        // 標記重複影片（相同 id 出現超過一次）
+        const idCount = new Map();
+        for (const v of videos) {
+            const key = v.id;
+            idCount.set(key, (idCount.get(key) || 0) + 1);
+        }
+        for (const v of videos) {
+            v.isDuplicate = (idCount.get(v.id) || 0) > 1;
+        }
+
         // 統計信息
         const playableVideos = videos.filter(video => video.status === 'playable');
         const unavailableVideos = videos.filter(video => video.status !== 'playable');
         const privateVideos = videos.filter(video => video.status === 'private');
         const deletedVideos = videos.filter(video => video.status === 'deleted');
         const unlistedVideos = videos.filter(video => video.status === 'unlisted');
+        const duplicatedVideos = videos.filter(video => video.isDuplicate);
 
         return {
             id: playlistId,
@@ -191,6 +202,7 @@ export class YouTubeService {
             privateVideos: privateVideos.length,
             deletedVideos: deletedVideos.length,
             unlistedVideos: unlistedVideos.length,
+            duplicatedVideos: duplicatedVideos.length,
             videos: videos.sort((a, b) => a.position - b.position) // 按原始順序排序
         };
     }
