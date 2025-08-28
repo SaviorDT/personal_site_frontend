@@ -26,6 +26,21 @@ const buildUrl = (base, pathArr, name) => {
     return tail.length ? `${base}${tail.join('/')}` : base;
 };
 
+// 構造未編碼的路徑字串（用於 request body）
+// 例：makeBodyPath(["/","圖片","旅行"], "合照.png") -> "/圖片/旅行/合照.png"
+export const makeBodyPath = (pathArr, name) => {
+    const segs = toSegments(pathArr);
+    const all = name ? [...segs, name] : segs;
+    return '/' + all.join('/').replace(/\/+/g, '/');
+};
+
+// 由字串路徑轉成陣列（UI 需要） 例如："/A/B" -> ["/","A","B"]
+export const stringToPath = (pathStr) => {
+    if (!pathStr || typeof pathStr !== 'string') return ['/'];
+    const segs = pathStr.split('/').filter(Boolean);
+    return ['/', ...segs];
+};
+
 // 依後端回傳的檔案資訊推斷類型
 const guessKind = (mime, name) => {
     const lower = (mime || '').toLowerCase();
@@ -80,8 +95,8 @@ export const createFolder = async (pathArr, name) => {
 
 export const renameFolder = async (pathArr, oldName, newName) => {
     const url = buildUrl(EP.FOLDERS.RENAME, pathArr, oldName);
-    const path = buildUrl('', pathArr, newName);
-    await apiClient.patch(url, { path: path });
+    const path = makeBodyPath(pathArr, newName);
+    await apiClient.patch(url, { path });
 };
 
 export const deleteFolder = async (pathArr, name) => {
@@ -165,8 +180,8 @@ export const uploadFolder = async (pathArr, files) => {
 
 export const renameFile = async (pathArr, oldName, newName) => {
     const url = buildUrl(EP.FILES.RENAME, pathArr, oldName);
-    const path = buildUrl('', pathArr, newName);
-    await apiClient.patch(url, { path: path });
+    const path = makeBodyPath(pathArr, newName);
+    await apiClient.patch(url, { path });
 };
 
 export const deleteFile = async (pathArr, name) => {
@@ -207,4 +222,17 @@ export const saveTextContent = async (pathArr, name, text) => {
     const blob = new Blob([text], { type: 'text/plain' });
     const file = new File([blob], name, { type: 'text/plain' });
     await uploadFile(pathArr, file);
+};
+
+// 移動：同 RENAME 端點，path 指向新的父層與名稱
+export const moveFile = async (fromPathArr, name, toPathArr) => {
+    const url = buildUrl(EP.FILES.RENAME, fromPathArr, name);
+    const path = makeBodyPath(toPathArr, name);
+    await apiClient.patch(url, { path });
+};
+
+export const moveFolder = async (fromPathArr, name, toPathArr) => {
+    const url = buildUrl(EP.FOLDERS.RENAME, fromPathArr, name);
+    const path = makeBodyPath(toPathArr, name);
+    await apiClient.patch(url, { path });
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './FileSystem.css';
-import { listDirectory, createFolder, createEmptyFile, uploadFile, uploadFolder, deleteFile, deleteFolder, renameFile, renameFolder, downloadFile, getFileEntry, getTextContent, saveTextContent, pathToString } from './fileService';
+import { listDirectory, createFolder, createEmptyFile, uploadFile, uploadFolder, deleteFile, deleteFolder, renameFile, renameFolder, downloadFile, getFileEntry, getTextContent, saveTextContent, pathToString, stringToPath, moveFile, moveFolder } from './fileService';
 import FolderItem from './FolderItem';
 import FileItem from './FileItem';
 import { metadata } from './FileSystemMetadata';
@@ -147,6 +147,36 @@ const FileSystem = () => {
         }
     };
 
+    const isSubPath = (a, b) => {
+        // a 是否為 b 的子路徑（含等於） a/b 皆為陣列
+        if (b.length > a.length) return false;
+        for (let i = 0; i < b.length; i++) if (a[i] !== b[i]) return false;
+        return true;
+    };
+
+    const onMove = async (entry) => {
+        const currentFolderStr = pathToString(path);
+        const input = prompt(`移動到目標資料夾路徑（例如 / 或 /相簿/日本）`, currentFolderStr);
+        if (input == null) return;
+        const dest = stringToPath(input);
+        try {
+            // 防呆：資料夾不可移到自己或子層
+            if (entry.type === 'folder') {
+                const srcFolder = [...path, entry.name];
+                if (isSubPath(dest, srcFolder)) {
+                    alert('不可將資料夾移動到自己或其子路徑');
+                    return;
+                }
+                await moveFolder(path, entry.name, dest);
+            } else {
+                await moveFile(path, entry.name, dest);
+            }
+            await refresh();
+        } catch (e) {
+            setError(e.message || String(e));
+        }
+    };
+
     const onOpenFile = async (name) => {
         try {
             const entry = await getFileEntry(path, name);
@@ -287,6 +317,7 @@ const FileSystem = () => {
                                     onOpen={() => onOpenFolder(entry.name)}
                                     onDelete={() => onDelete(entry)}
                                     onRename={() => onRename({ type: 'folder', name: entry.name })}
+                                    onMove={() => onMove({ type: 'folder', name: entry.name })}
                                 />
                             ) : (
                                 <FileItem
@@ -299,6 +330,7 @@ const FileSystem = () => {
                                     onDelete={() => onDelete(entry)}
                                     onRename={() => onRename({ type: 'file', name: entry.name })}
                                     onDownload={() => onDownload(entry)}
+                                    onMove={() => onMove({ type: 'file', name: entry.name })}
                                 />
                             )
                         ))

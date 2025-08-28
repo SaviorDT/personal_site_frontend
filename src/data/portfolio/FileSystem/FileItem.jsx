@@ -19,7 +19,7 @@ const kindEmoji = (kind) => {
     }
 };
 
-const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, kind }) => {
+const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, onMove, kind }) => {
     return (
         <div className="fs-item" role="button" tabIndex={0} onDoubleClick={onOpen} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
             <div className="fs-item-icon">{kindEmoji(kind)}</div>
@@ -31,6 +31,7 @@ const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, kind }) 
                 <button className="fs-link" onClick={onOpen}>預覽</button>
                 <button className="fs-link" onClick={onDownload}>下載</button>
                 {onRename && <button className="fs-link" onClick={onRename}>重新命名</button>}
+                {onMove && <button className="fs-link" onClick={onMove}>移動</button>}
                 <button className="fs-link danger" onClick={onDelete}>刪除</button>
             </div>
         </div>
