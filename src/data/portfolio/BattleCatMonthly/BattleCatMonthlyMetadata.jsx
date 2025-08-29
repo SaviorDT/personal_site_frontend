@@ -7,7 +7,7 @@ export const metadata = {
     technologies: ['API'],
     year: '2025',
     duration: '1天',
-    status: 'developing',
+    status: 'completed',
     featured: true,
     publishDate: '2025-08-29',
     lastModified: '2025-08-29'
