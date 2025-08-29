@@ -1,0 +1,323 @@
+.bc-search-page {
+    padding: 2rem 0;
+    color: var(--color-gray-100);
+}
+
+.bc-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.bc-title {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    margin: 0 0 .5rem 0;
+}
+
+.bc-subtitle {
+    color: var(--color-secondary);
+    opacity: .9;
+}
+
+.bc-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.bc-fieldset {
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.bc-fieldset legend {
+    padding: 0 .5rem;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.bc-radio-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: .5rem;
+    margin-top: .5rem;
+}
+
+.bc-radio {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.bc-radio input {
+    /* 讓 input 可被 label 觸發，但視覺上隱藏 */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.bc-radio:hover {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-glow);
+}
+
+.bc-radio.active {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-glow-lg);
+    /* 讓選中章節更亮一些 */
+    background:
+        radial-gradient(120px 80px at 10% 10%, rgba(143, 179, 255, 0.18), transparent 90%);
+    color: var(--color-gray-100);
+    font-weight: var(--font-semibold);
+}
+
+/* 更可靠的選取樣式：根據 radio:checked 改變兄弟 span 的樣式 */
+.bc-radio input:checked+span {
+    color: var(--color-white);
+}
+
+.bc-radio input:checked+span::before {
+    background: var(--color-primary);
+    box-shadow: 0 0 8px rgba(143, 179, 255, .6);
+}
+
+/* 被按下時的視覺反饋（不需要 hover） */
+.bc-radio:active {
+    transform: scale(0.98);
+    filter: brightness(0.98);
+}
+
+.bc-enemies {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .75rem;
+}
+
+.bc-input {
+    padding: .6rem .8rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--color-gray-100);
+}
+
+.bc-input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-glow-focus);
+}
+
+.bc-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bc-btn {
+    padding: .6rem 1rem;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform .1s ease, filter .2s ease;
+}
+
+.bc-btn:hover {
+    filter: brightness(1.1);
+}
+
+.bc-btn:active {
+    transform: scale(0.98);
+}
+
+.bc-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.bc-error {
+    margin-top: .5rem;
+    color: var(--color-error-light);
+}
+
+.bc-results {
+    margin-top: 1.5rem;
+}
+
+.bc-table-wrapper {
+    overflow-x: auto;
+}
+
+.bc-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bc-table th,
+.bc-table td {
+    border-bottom: 1px solid var(--border-subtle);
+    padding: .75rem;
+    text-align: left;
+}
+
+/* 拉開不同敵人組合之間的距離 */
+.bc-table tbody tr {
+    border-bottom: 2px solid rgba(143, 179, 255, 0.12);
+}
+
+.bc-table tbody tr+tr td {
+    padding-top: 1.1rem;
+}
+
+.bc-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+
+.bc-badge {
+    padding: .2rem .5rem;
+    border: 1px solid var(--border-accent);
+    color: var(--color-primary);
+    border-radius: 999px;
+    background: rgba(143, 179, 255, 0.08);
+}
+
+.bc-levels {
+    display: grid;
+    gap: .5rem;
+}
+
+/* 對齊用的內嵌表格樣式 */
+.bc-levels-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+    /* 每列之間留間距 */
+}
+
+.bc-levels-table td {
+    vertical-align: middle;
+}
+
+.lv-chip-col {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: .5rem;
+}
+
+.lv-name-col {
+    width: 100%;
+    padding-right: .5rem;
+}
+
+.lv-hp-col {
+    width: 1%;
+    white-space: nowrap;
+    padding: 0 .5rem;
+    text-align: right;
+}
+
+.lv-enemies-col {
+    width: 1%;
+    white-space: nowrap;
+    padding-left: .5rem;
+}
+
+.bc-level-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    /* 增加欄位間距，特別是 HP 與 enemies */
+    gap: 1rem;
+    align-items: center;
+    background: var(--bg-secondary);
+    padding: .5rem .6rem;
+    border-radius: 8px;
+}
+
+.lv-chip {
+    font-family: var(--font-mono);
+    color: var(--color-primary);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: .1rem .4rem;
+}
+
+.lv-name {
+    color: var(--color-gray-100);
+}
+
+.lv-name a {
+    color: var(--color-primary-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.lv-name a:hover {
+    color: var(--color-white);
+}
+
+.lv-name a:visited {
+    color: var(--color-secondary);
+}
+
+.lv-hp {
+    color: var(--color-secondary);
+    /* 對齊 HP 欄位，固定寬度並靠右對齊，讓各列對齊一致 */
+    min-width: 88px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.lv-enemies {
+    color: var(--color-secondary);
+    opacity: .9;
+}
+
+@media (max-width: 768px) {
+    .bc-enemies {
+        grid-template-columns: 1fr;
+    }
+
+    .bc-radio-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bc-level-item {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+}
+
+/* 無 hover 的自訂面板容器 */
+.bc-panel {
+    position: relative;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(15, 52, 96, 0.6));
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.bc-panel__header {
+    margin-bottom: .75rem;
+}
+
+.bc-panel__title {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.bc-panel__subtitle {
+    color: var(--color-secondary);
+    margin: .25rem 0 0 0;
+}

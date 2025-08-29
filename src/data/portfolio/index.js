@@ -4,11 +4,13 @@
 // 動態導入項目組件和 metadata
 import { metadata as playlistRandomizeMetadata } from './PlaylistRandomize/PlaylistRandomizeMetadata.jsx';
 import { metadata as fileSystemMetadata } from './FileSystem/FileSystemMetadata.jsx';
+import { metadata as battleCatMonthlyMetadata } from './BattleCatMonthly/BattleCatMonthlyMetadata.jsx';
 
 // 項目 metadata 陣列
 export const portfolioProjects = [
   playlistRandomizeMetadata,
   fileSystemMetadata,
+  battleCatMonthlyMetadata
   // 新增項目時，在此處加入對應的 metadata
 ];
 
@@ -23,6 +25,10 @@ export const loadProjectComponent = async (projectId) => {
       case fileSystemMetadata.id:
         const { default: FileSystem } = await import('./FileSystem/FileSystem.jsx');
         return FileSystem;
+
+      case battleCatMonthlyMetadata.id:
+        const { default: BattleCatMonthly } = await import('./BattleCatMonthly/BattleCatMonthly.jsx');
+        return BattleCatMonthly;
 
       // 新增項目時，在此處加入對應的動態導入
 

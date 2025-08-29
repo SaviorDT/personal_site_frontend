@@ -19,6 +19,11 @@ const apiConfig = {
       GITHUB_OAUTH: '/auth/login-github',
       GOOGLE_OAUTH: '/auth/login-google',
     },
+    // 戰貓（Battle Cat）相關端點
+    BATTLE_CAT: {
+      // 依章節與敵人組合查詢關卡
+      FIND_LEVEL: '/battle-cat/levels',
+    },
     FILE_SYSTEM: {
       FOLDERS: {
         // GET    LIST   ?path=<folderPath>

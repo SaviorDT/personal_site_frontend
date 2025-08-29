@@ -6,9 +6,9 @@ export const metadata = {
     category: '線上工具',
     technologies: ['API'],
     year: '2025',
-    duration: '3天',
-    status: 'developing',
+    duration: '2天',
+    status: 'completed',
     featured: true,
-    publishDate: '2025-08-26',
-    lastModified: '2025-08-26'
+    publishDate: '2025-08-27',
+    lastModified: '2025-08-27'
 };
