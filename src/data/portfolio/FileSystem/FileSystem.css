@@ -276,6 +276,43 @@
     border-radius: 8px;
 }
 
+/* 上傳進度條 */
+.fs-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 16px;
+}
+
+.fs-progress-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 12px;
+    color: #c8d6f0;
+    opacity: 0.9;
+}
+
+.fs-progress-bar {
+    position: relative;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.fs-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.45);
+    transition: width 180ms ease;
+}
+
 .fs-container {
     display: flex;
     flex-direction: column;

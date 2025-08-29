@@ -21,6 +21,13 @@ const FileSystem = () => {
     const uploadRef = useRef(null);
     const folderUploadRef = useRef(null);
 
+    // 上傳進度（全域彙總）：bytesTransferred / totalBytes
+    const [uploading, setUploading] = useState(false);
+    const [uploadBytesDone, setUploadBytesDone] = useState(0);
+    const [uploadBytesTotal, setUploadBytesTotal] = useState(0);
+    const [uploadLabel, setUploadLabel] = useState('');
+    const abortRef = useRef(null);
+
     const refresh = async () => {
         setLoading(true);
         setError('');
@@ -81,14 +88,32 @@ const FileSystem = () => {
         setLoading(true);
         setError('');
         try {
+            // 設定總大小與狀態
+            const total = files.reduce((sum, f) => sum + (f.size || 0), 0);
+            setUploadBytesDone(0);
+            setUploadBytesTotal(total);
+            setUploading(true);
+            setUploadLabel(`上傳 ${files.length} 個檔案…`);
+            const progressCb = ({ chunkBytes }) => {
+                setUploadBytesDone((v) => v + (chunkBytes || 0));
+            };
+            // 建立 AbortController 以便取消
+            abortRef.current = new AbortController();
             for (const f of files) {
-                await uploadFile(path, f);
+                await uploadFile(path, f, { onProgress: progressCb, signal: abortRef.current.signal });
             }
+            setUploading(false);
             await refresh();
         } catch (e) {
-            setError(e.message || String(e));
+            // 若為主動取消，忽略錯誤
+            if (e?.name === 'CanceledError' || e?.name === 'AbortError') {
+                // no-op
+            } else {
+                setError(e.message || String(e));
+            }
         } finally {
             setLoading(false);
+            abortRef.current = null;
             ev.target.value = '';
         }
     };
@@ -99,12 +124,28 @@ const FileSystem = () => {
         setLoading(true);
         setError('');
         try {
-            await uploadFolder(path, files);
+            // 彙總總大小
+            const total = files.reduce((sum, f) => sum + (f.size || 0), 0);
+            setUploadBytesDone(0);
+            setUploadBytesTotal(total);
+            setUploading(true);
+            setUploadLabel('上傳資料夾…');
+            const progressCb = ({ chunkBytes }) => {
+                setUploadBytesDone((v) => v + (chunkBytes || 0));
+            };
+            abortRef.current = new AbortController();
+            await uploadFolder(path, files, { onProgress: progressCb, signal: abortRef.current.signal });
+            setUploading(false);
             await refresh();
         } catch (e) {
-            setError(e.message || String(e));
+            if (e?.name === 'CanceledError' || e?.name === 'AbortError') {
+                // no-op
+            } else {
+                setError(e.message || String(e));
+            }
         } finally {
             setLoading(false);
+            abortRef.current = null;
             ev.target.value = '';
         }
     };
@@ -303,6 +344,36 @@ const FileSystem = () => {
 
                 {error && <div className="fs-error">{error}</div>}
 
+                {uploading && (
+                    <div className="fs-progress">
+                        <div className="fs-progress-head">
+                            <span className="fs-progress-label">{uploadLabel}</span>
+                            <span className="fs-progress-bytes">
+                                {formatBytes(uploadBytesDone)} / {formatBytes(uploadBytesTotal)}
+                            </span>
+                        </div>
+                        <div className="fs-progress-bar" role="progressbar" aria-valuemin={0} aria-valuemax={uploadBytesTotal || 1} aria-valuenow={uploadBytesDone}>
+                            <div className="fs-progress-fill" style={{ width: `${Math.min(100, (uploadBytesTotal ? (uploadBytesDone / uploadBytesTotal) * 100 : 0)).toFixed(2)}%` }} />
+                        </div>
+                        <div>
+                            <button
+                                className="fs-btn"
+                                onClick={() => {
+                                    if (abortRef.current) {
+                                        abortRef.current.abort();
+                                    }
+                                    setUploading(false);
+                                    setUploadBytesDone(0);
+                                    setUploadBytesTotal(0);
+                                    setUploadLabel('');
+                                }}
+                            >
+                                取消上傳
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 <div className="fs-container" aria-busy={loading}>
                     {loading ? (
                         <div className="fs-empty">讀取中…</div>
@@ -386,3 +457,12 @@ const FileSystem = () => {
 };
 
 export default FileSystem;
+
+// 顯示人性化容量
+function formatBytes(bytes) {
+    if (!bytes || bytes <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const idx = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+    const val = bytes / Math.pow(1024, idx);
+    return `${val.toFixed(val >= 100 || idx === 0 ? 0 : 1)} ${units[idx]}`;
+}

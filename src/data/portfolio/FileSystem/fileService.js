@@ -105,22 +105,84 @@ export const deleteFolder = async (pathArr, name) => {
 };
 
 // 檔案：upload / rename / delete / download
-export const uploadFile = async (pathArr, file) => {
+export const uploadFile = async (pathArr, file, options = {}) => {
     const url = buildUrl(EP.FILES.UPLOAD, pathArr, file.name);
-    const chunkSize = 10 * 1024 * 1024; // 10 MB
-    const total_chuncks = Math.max(1, Math.ceil(file.size / chunkSize));
+    const CHUNK_SIZE = 10 * 1024 * 1024; // 10 MB
+    const TARGET_WINDOW_MS = 3000; // 以 3 秒為預估窗口
+    const MAX_PARALLEL = 50; // 並行上限，避免壓力過大
+
+    const onProgress = typeof options.onProgress === 'function' ? options.onProgress : null;
+
+    const total_chunks = Math.max(1, Math.ceil(file.size / CHUNK_SIZE));
     const file_id = (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`);
-    for (let chunck_index = 0; chunck_index < total_chuncks; chunck_index++) {
-        const start = chunck_index * chunkSize;
-        const end = Math.min(file.size, start + chunkSize);
+    const fileTotalBytes = file.size;
+    let fileBytesUploaded = 0;
+
+    // 單一 chunk 上傳
+    const uploadChunk = async (chunk_index) => {
+        const start = chunk_index * CHUNK_SIZE;
+        const end = Math.min(file.size, start + CHUNK_SIZE);
         const slice = file.slice(start, end, file.type || 'application/octet-stream');
+        const chunkSize = end - start;
         const form = new FormData();
         form.append('file_id', file_id);
-        form.append('chunk_index', String(chunck_index));
-        form.append('total_chunks', String(total_chuncks));
+        form.append('chunk_index', String(chunk_index));
+        form.append('total_chunks', String(total_chunks));
         form.append('chunk_data', slice, file.name);
-        await apiClient.post(url, form, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const t0 = (globalThis.performance?.now?.() || Date.now());
+        await apiClient.post(url, form, { headers: { 'Content-Type': 'multipart/form-data' }, signal: options.signal });
+        const t1 = (globalThis.performance?.now?.() || Date.now());
+        // 進度回報（於每個 chunk 完成後遞增）
+        fileBytesUploaded += chunkSize;
+        if (onProgress) {
+            try {
+                onProgress({
+                    type: 'file',
+                    fileName: file.name,
+                    chunkBytes: chunkSize,
+                    fileBytesUploaded,
+                    fileTotalBytes,
+                });
+            } catch (_) { /* ignore progress handler errors */ }
+        }
+        return t1 - t0;
+    };
+
+    // 僅一塊時，直接上傳
+    if (total_chunks === 1) {
+        await uploadChunk(0);
+        return;
     }
+
+    // 將最後一個 chunk 保留到最末上傳
+    const lastIndex = total_chunks - 1;
+    const indices = Array.from({ length: lastIndex }, (_, i) => i); // 0..lastIndex-1
+
+    // 以回合（round）方式執行：每回合估算 3 秒能完成的 chunk 數量並行啟動
+    let parallel = 1;
+    let nextPtr = 0;
+    let avgDtMs = 0; // 平均單塊時間（毫秒）
+
+    while (nextPtr < indices.length) {
+        const remaining = indices.length - nextPtr;
+        // 初次沒有資料，先保守用 1；有平均值則估計 3 秒可完成多少塊
+        const predicted = avgDtMs > 0 ? TARGET_WINDOW_MS / Math.max(1, avgDtMs) : 1;
+        parallel = Math.round(Math.max(1, Math.min(MAX_PARALLEL, Math.min(remaining, (predicted * parallel) || 1))));
+
+        const batch = [];
+        for (let i = 0; i < parallel; i++) {
+            const chunkIndex = indices[nextPtr++];
+            batch.push(uploadChunk(chunkIndex));
+        }
+
+        const dts = await Promise.all(batch); // 完整一回合
+        // 更新平均時間（加權平均）
+        const sum = dts.reduce((a, b) => a + b, 0);
+        avgDtMs = sum / dts.length;
+    }
+
+    // 上傳最後一個 chunk
+    await uploadChunk(lastIndex);
 };
 
 // 新增空白檔案：以 0-byte 檔案上傳達成，與資料夾新增方式概念相同
@@ -132,7 +194,7 @@ export const createEmptyFile = async (pathArr, name) => {
 
 // 上傳資料夾：讀取目錄內的所有層級，逐一建立資料夾並上傳檔案
 // files 需為使用 <input type="file" webkitdirectory /> 所取得的 FileList 或 File[]
-export const uploadFolder = async (pathArr, files) => {
+export const uploadFolder = async (pathArr, files, options = {}) => {
     const list = Array.from(files || []);
     if (!list.length) return;
 
@@ -174,7 +236,7 @@ export const uploadFolder = async (pathArr, files) => {
         const parts = rel.split('/').filter(Boolean);
         const dirs = parts.slice(0, -1);
         const targetPath = [...pathArr, ...dirs];
-        await uploadFile(targetPath, f);
+        await uploadFile(targetPath, f, options);
     }
 };
 
