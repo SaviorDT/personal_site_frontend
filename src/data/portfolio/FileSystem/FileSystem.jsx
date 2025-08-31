@@ -28,6 +28,12 @@ const FileSystem = () => {
     const [uploadLabel, setUploadLabel] = useState('');
     const abortRef = useRef(null);
 
+    // 下載進度（預覽用）
+    const [downloading, setDownloading] = useState(false);
+    const [downloadBytesDone, setDownloadBytesDone] = useState(0);
+    const [downloadBytesTotal, setDownloadBytesTotal] = useState(0);
+    const [downloadLabel, setDownloadLabel] = useState('');
+
     const refresh = async () => {
         setLoading(true);
         setError('');
@@ -220,7 +226,17 @@ const FileSystem = () => {
 
     const onOpenFile = async (name) => {
         try {
-            const entry = await getFileEntry(path, name);
+            // 顯示下載進度
+            setDownloading(true);
+            setDownloadBytesDone(0);
+            setDownloadBytesTotal(0);
+            setDownloadLabel('下載預覽…');
+            const entry = await getFileEntry(path, name, {
+                onProgress: ({ loaded, total }) => {
+                    setDownloadBytesDone(loaded || 0);
+                    setDownloadBytesTotal(total || 0);
+                }
+            });
             setPreviewEntry(entry);
             if (entry.kind === 'text') {
                 const txt = await getTextContent(path, name);
@@ -228,8 +244,10 @@ const FileSystem = () => {
             } else {
                 setTextDraft('');
             }
+            setDownloading(false);
         } catch (e) {
             setError(e.message || String(e));
+            setDownloading(false);
         }
     };
 
@@ -370,6 +388,20 @@ const FileSystem = () => {
                             >
                                 取消上傳
                             </button>
+                        </div>
+                    </div>
+                )}
+
+                {downloading && (
+                    <div className="fs-progress">
+                        <div className="fs-progress-head">
+                            <span className="fs-progress-label">{downloadLabel}</span>
+                            <span className="fs-progress-bytes">
+                                {formatBytes(downloadBytesDone)} / {formatBytes(downloadBytesTotal)}
+                            </span>
+                        </div>
+                        <div className="fs-progress-bar" role="progressbar" aria-valuemin={0} aria-valuemax={downloadBytesTotal || 1} aria-valuenow={downloadBytesDone}>
+                            <div className="fs-progress-fill" style={{ width: `${Math.min(100, (downloadBytesTotal ? (downloadBytesDone / downloadBytesTotal) * 100 : 0)).toFixed(2)}%` }} />
                         </div>
                     </div>
                 )}

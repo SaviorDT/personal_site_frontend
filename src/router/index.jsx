@@ -51,6 +51,27 @@ export const router = createBrowserRouter([
         path: "oauth/callback",
         element: <OAuthCallback />
       },
+      // some shortcuts
+      {
+        path: "倉庫",
+        element: <Navigate to="/作品集/簡易儲存倉庫" replace />
+      },
+      {
+        path: "歪踢",
+        element: <Navigate to="/作品集/歪踢隨機播放" replace />
+      },
+      {
+        path: "歪梯",
+        element: <Navigate to="/作品集/歪踢隨機播放" replace />
+      },
+      {
+        path: "貓戰",
+        element: <Navigate to="/作品集/貓戰月間任務" replace />
+      },
+      {
+        path: "貓站",
+        element: <Navigate to="/作品集/貓戰月間任務" replace />
+      },
       // 404 頁面
       {
         path: "*",

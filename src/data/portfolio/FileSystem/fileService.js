@@ -4,6 +4,7 @@
 
 import apiClient from '@/services/apiClient';
 import apiConfig from '@/config/api';
+//
 
 const EP = apiConfig.ENDPOINTS.FILE_SYSTEM;
 
@@ -252,18 +253,34 @@ export const deleteFile = async (pathArr, name) => {
 };
 
 export const downloadFile = async (pathArr, name) => {
+    // 直接導向後端下載端點，不預先下載 blob
     const endpointUrl = buildUrl(EP.FILES.DOWNLOAD, pathArr, name);
-    const res = await apiClient.get(endpointUrl, { responseType: 'blob' });
-    const blobUrl = URL.createObjectURL(res.data);
     const a = document.createElement('a');
-    a.href = blobUrl; a.download = name; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+    a.href = apiConfig.API_BASE_URL + endpointUrl;
+    a.download = name; // 提示檔名（實際以後端 Content-Disposition 為準）
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
 };
 
 // 預覽/文字內容：若需預覽，下載 blob 並建立 URL
-export const getFileEntry = async (pathArr, name) => {
-    const endpointUrl = buildUrl(EP.FILES.DOWNLOAD, pathArr, name);
-    const res = await apiClient.get(endpointUrl, { responseType: 'blob' });
+export const getFileEntry = async (pathArr, name, options = {}) => {
+    const endpointPath = buildUrl(EP.FILES.DOWNLOAD, pathArr, name);
+    const onProgress = typeof options.onProgress === 'function' ? options.onProgress : null;
+
+    const res = await apiClient.get(endpointPath, {
+        responseType: 'blob',
+        timeout: 0,
+        onDownloadProgress: (evt) => {
+            if (!onProgress) return;
+            try {
+                const loaded = evt.loaded ?? 0;
+                const total = evt.total ?? 0;
+                const percent = total > 0 ? (loaded / total) * 100 : undefined;
+                onProgress({ loaded, total, percent });
+            } catch (_) { /* ignore */ }
+        }
+    });
     const blob = res.data;
     const mime = blob.type || 'application/octet-stream';
     const objectUrl = URL.createObjectURL(blob);
