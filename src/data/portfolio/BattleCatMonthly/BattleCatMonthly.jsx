@@ -44,6 +44,19 @@ const BattleCatSearch = () => {
         }
     };
 
+    // 將給定字串中的關鍵詞加上醒目標註（不分大小寫，中文不使用字界）
+    const highlightHtml = (input, keys) => {
+        const html = String(input ?? '');
+        const keywords = (keys || []).map(s => String(s || '').trim()).filter(Boolean);
+        if (!html || keywords.length === 0) return html;
+        // 關鍵字長度由長到短，避免子字串破壞較長匹配
+        const sorted = Array.from(new Set(keywords)).sort((a, b) => b.length - a.length);
+        const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = sorted.map(escapeRegExp).join('|');
+        const re = new RegExp(`(${pattern})`, 'gi');
+        return html.replace(re, '<span class="bc-highlight">$1</span>');
+    };
+
     return (
         <div className="bc-search-page">
             <header className="bc-header">
@@ -143,22 +156,26 @@ const BattleCatSearch = () => {
                                             <td>
                                                 <table className="bc-levels-table">
                                                     <tbody>
-                                                        {(row?.levels || []).map((lv, i) => (
-                                                            <tr key={i}>
-                                                                <td className="lv-chip-col">
-                                                                    <span className="lv-chip">{lv.level}</span>
-                                                                </td>
-                                                                <td className="lv-name-col">
-                                                                    <span className="lv-name" dangerouslySetInnerHTML={{ __html: lv.name }} />
-                                                                </td>
-                                                                <td className="lv-hp-col">
-                                                                    <span className="lv-hp">HP: {lv.hp}</span>
-                                                                </td>
-                                                                <td className="lv-enemies-col">
-                                                                    <span className="lv-enemies">{lv.enemies}</span>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
+                                                        {(row?.levels || []).map((lv, i) => {
+                                                            const keys = (row?.enemies || []).filter(Boolean);
+                                                            const enemiesHtml = highlightHtml(lv.enemies, keys);
+                                                            return (
+                                                                <tr key={i}>
+                                                                    <td className="lv-chip-col">
+                                                                        <span className="lv-chip">{lv.level}</span>
+                                                                    </td>
+                                                                    <td className="lv-name-col">
+                                                                        <span className="lv-name" dangerouslySetInnerHTML={{ __html: lv.name }} />
+                                                                    </td>
+                                                                    <td className="lv-hp-col">
+                                                                        <span className="lv-hp">HP: {lv.hp}</span>
+                                                                    </td>
+                                                                    <td className="lv-enemies-col">
+                                                                        <span className="lv-enemies" dangerouslySetInnerHTML={{ __html: enemiesHtml }} />
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
                                                     </tbody>
                                                 </table>
                                             </td>
