@@ -2,6 +2,42 @@ import { StorageUtils, STORAGE_KEYS } from '../utils/storageUtils';
 
 // YouTube API 服務
 export class YouTubeService {
+    // 取得使用者推測地區（以瀏覽器語系為主，無法判斷時預設 US）
+    static getUserRegion() {
+        try {
+            const lang = (navigator?.language || navigator?.languages?.[0] || 'zh_tw');
+            const parts = lang.split('-');
+            if (parts.length > 1) {
+                return parts[1].toUpperCase();
+            }
+            // 常見語系到國碼的回退對應
+            const map = {
+                'zh': 'TW',
+                'zh_tw': 'TW',
+                'zh-hant': 'TW',
+                'zh_hant': 'TW',
+                'zh-cn': 'CN',
+                'zh_cn': 'CN',
+                'en': 'US',
+                'ja': 'JP'
+            };
+            const key = lang.toLowerCase().replace(/\s+/g, '_');
+            return map[key] || 'TW';
+        } catch (_) {
+            return 'TW';
+        }
+    }
+
+    // 判斷影片是否因地區限制而無法播放
+    static isRegionBlocked(regionRestriction, regionCode) {
+        if (!regionRestriction || !regionCode) return false;
+        const region = regionCode.toUpperCase();
+        const blocked = Array.isArray(regionRestriction.blocked) ? regionRestriction.blocked : [];
+        const allowed = Array.isArray(regionRestriction.allowed) ? regionRestriction.allowed : [];
+        if (blocked.length > 0 && blocked.includes(region)) return true;
+        if (allowed.length > 0 && !allowed.includes(region)) return true;
+        return false;
+    }
     // 格式化影片持續時間 (從 ISO 8601 轉換為 M:SS 格式)
     static formatDuration(duration) {
         if (!duration) return '0:00';
@@ -90,6 +126,7 @@ export class YouTubeService {
 
     // 處理和格式化播放清單數據
     static processPlaylistData(playlistInfo, playlistVideos, videoDetails, playlistId) {
+        const regionUsed = this.getUserRegion();
         // 一次性讀取本地播放清單資料並建立快取映射，避免在迭代中重複讀取 localStorage
         const savedData = StorageUtils.getFromLocalStorage(STORAGE_KEYS.PLAYLIST_DATA, null);
         const localTitleMap = new Map();
@@ -109,6 +146,7 @@ export class YouTubeService {
             // 判斷影片狀態
             let status = 'unavailable';
             let title = '已刪除的影片';
+            let regionBlocked = false;
 
             if (videoDetail) {
                 // 檢查影片是否可播放
@@ -116,7 +154,10 @@ export class YouTubeService {
                 const uploadStatus = videoDetail.status?.uploadStatus;
 
                 if (privacy === 'public' && uploadStatus === 'processed') {
-                    status = 'playable';
+                    // 檢查地區限制
+                    const rr = videoDetail.contentDetails?.regionRestriction;
+                    regionBlocked = this.isRegionBlocked(rr, regionUsed);
+                    status = regionBlocked ? 'region-blocked' : 'playable';
                 } else if (privacy === 'private') {
                     status = 'private';
                     title = '私人影片';
@@ -161,6 +202,7 @@ export class YouTubeService {
                 title: title,
                 duration: videoDetail ? this.formatDuration(videoDetail.contentDetails?.duration) : '0:00',
                 status: status,
+                regionBlocked,
                 thumbnail: videoDetail?.snippet?.thumbnails?.medium?.url ||
                     playlistItem.snippet?.thumbnails?.medium?.url ||
                     null,
@@ -183,6 +225,7 @@ export class YouTubeService {
 
         // 統計信息
         const playableVideos = videos.filter(video => video.status === 'playable');
+        const regionBlockedVideos = videos.filter(video => video.status === 'region-blocked');
         const unavailableVideos = videos.filter(video => video.status !== 'playable');
         const privateVideos = videos.filter(video => video.status === 'private');
         const deletedVideos = videos.filter(video => video.status === 'deleted');
@@ -198,11 +241,13 @@ export class YouTubeService {
             thumbnail: playlistInfo.snippet?.thumbnails?.high?.url || null,
             totalVideos: videos.length,
             playableVideos: playableVideos.length,
+            regionBlockedVideos: regionBlockedVideos.length,
             unavailableVideos: unavailableVideos.length,
             privateVideos: privateVideos.length,
             deletedVideos: deletedVideos.length,
             unlistedVideos: unlistedVideos.length,
             duplicatedVideos: duplicatedVideos.length,
+            regionUsed,
             videos: videos.sort((a, b) => a.position - b.position) // 按原始順序排序
         };
     }

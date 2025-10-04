@@ -56,9 +56,11 @@ export const usePlaylistManager = () => {
         `標題: ${formattedData.title}\n` +
         `總影片: ${formattedData.totalVideos}\n` +
         `可播放: ${formattedData.playableVideos}\n` +
+        `地區限制 (${formattedData.regionUsed}): ${formattedData.regionBlockedVideos}\n` +
         `私人/未列出: ${formattedData.privateVideos + formattedData.unlistedVideos}\n` +
         `已刪除: ${formattedData.deletedVideos}\n` +
-        `不可用: ${formattedData.unavailableVideos}`);
+        `不可用: ${formattedData.unavailableVideos}\n` +
+        `重複: ${formattedData.duplicatedVideos}`);
 
     } catch (error) {
       console.error('載入播放清單失敗:', error);

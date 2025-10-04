@@ -11,7 +11,7 @@ export const metadata = {
     readTime: 6,
     featured: true,
     difficulty: 'beginner',
-    lastModified: '2025-08-03',
+    lastModified: '2025-08-29',
     // 新增：文章容器配置
     layout: {
         containerWidth: 'wide', // 寬版模式最適合時間軸

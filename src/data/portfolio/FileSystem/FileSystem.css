@@ -488,11 +488,43 @@
         padding-right: 12px;
     }
 
-    .fs-header {
-        padding-top: 8px;
-        flex-direction: column;
-        align-items: stretch;
+    .fs-item {
+        padding: 10px 8px;
+        align-items: flex-start;
+        /* 讓內容向上對齊，名稱可占滿剩餘寬度 */
+        flex-wrap: wrap;
+        /* 允許下一行出現動作列 */
         gap: 8px;
+    }
+
+    /* 手機上允許檔名多行顯示，最多 2 行，避免過長被完全擠掉 */
+    .fs-item-main {
+        min-width: 0;
+    }
+
+    .fs-item-name {
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        /* add standard property for compatibility */
+        overflow-wrap: anywhere;
+        /* 長無空白字串也能換行 */
+        line-height: 1.2;
+        max-height: calc(1.2em * 2);
+    }
+
+    .fs-item-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        flex-basis: 100%;
+        /* 動作列換到下一行，避免擠壓名稱 */
+        justify-content: flex-start;
+        margin-top: 6px;
     }
 
     .fs-toolbar {
@@ -534,15 +566,6 @@
         max-height: 60vh;
         /* 讓列表在手機上更可用 */
         -webkit-overflow-scrolling: touch;
-    }
-
-    .fs-item {
-        padding: 10px 8px;
-    }
-
-    .fs-item-actions {
-        flex-wrap: wrap;
-        gap: 6px;
     }
 
     .fs-link {

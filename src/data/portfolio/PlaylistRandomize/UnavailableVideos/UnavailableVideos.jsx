@@ -69,6 +69,8 @@ const UnavailableVideos = ({ playlistData, onRemoveVideos }) => {
                 return '未列出';
             case 'deleted':
                 return '已刪除';
+            case 'region-blocked':
+                return '地區限制';
             case 'unavailable':
             default:
                 return '無法播放';
