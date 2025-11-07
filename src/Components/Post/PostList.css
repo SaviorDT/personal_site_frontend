@@ -1,0 +1,185 @@
+/* Post List 容器 */
+.post-list-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* List Header */
+.post-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.post-list-header h2 {
+  font-size: 1.75rem;
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+/* 新增文章按鈕 */
+.btn-new-post,
+.btn-create-post {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-new-post:hover:not(:disabled),
+.btn-create-post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-new-post:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-create-post {
+  margin-top: 24px;
+}
+
+/* Grid 佈局 */
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* 載入狀態 */
+.post-loading,
+.post-error,
+.post-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9CA3AF;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(99, 102, 241, 0.1);
+  border-top-color: #6366F1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.post-error h3,
+.post-empty h3 {
+  color: #F9FAFB;
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+}
+
+.btn-retry {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-retry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* 分頁 */
+.post-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  padding: 20px;
+}
+
+.pagination-btn {
+  padding: 10px 20px;
+  background: rgba(31, 41, 55, 0.8);
+  color: #F9FAFB;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  border-color: #6366F1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  color: #D1D5DB;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* 響應式 */
+@media (max-width: 1024px) {
+  .post-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-list-container {
+    padding: 16px;
+  }
+
+  .post-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .post-pagination {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pagination-btn {
+    width: 100%;
+  }
+}

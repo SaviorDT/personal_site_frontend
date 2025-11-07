@@ -242,3 +242,17 @@
     font-size: 1rem;
   }
 }
+
+/* 留言系統區域 */
+.article-comments-section {
+  margin-top: 48px;
+  padding-top: 48px;
+  border-top: 2px solid rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 768px) {
+  .article-comments-section {
+    margin-top: 32px;
+    padding-top: 32px;
+  }
+}
