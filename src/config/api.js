@@ -46,6 +46,19 @@ const apiConfig = {
         DOWNLOAD: '/storage/file',
       }
     },
+    // 短網址管理相關端點
+    URL_SHORTENER: {
+      // GET    LIST    列出所有短網址
+      // POST   CREATE  創建新短網址 body: { key?, target_url, expires_in? }
+      LIST: '/reurl',
+      CREATE: '/reurl',
+      // GET    DETAIL  獲取單個短網址詳情
+      // PATCH  UPDATE  更新短網址 body: { key?, target_url?, expires_in? }
+      // DELETE DELETE  刪除短網址
+      DETAIL: '/reurl/{id}',
+      // GET    REDIRECT 重定向短網址（返回 302 或 404）
+      REDIRECT: '/reurl/redirect/{path}',
+    },
   },
 
   // 社交登入提供者

@@ -5,12 +5,14 @@
 import { metadata as playlistRandomizeMetadata } from './PlaylistRandomize/PlaylistRandomizeMetadata.jsx';
 import { metadata as fileSystemMetadata } from './FileSystem/FileSystemMetadata.jsx';
 import { metadata as battleCatMonthlyMetadata } from './BattleCatMonthly/BattleCatMonthlyMetadata.jsx';
+import { metadata as urlShortenerMetadata } from './UrlShortener/UrlShortenerMetadata.jsx';
 
 // 項目 metadata 陣列
 export const portfolioProjects = [
   playlistRandomizeMetadata,
   fileSystemMetadata,
-  battleCatMonthlyMetadata
+  battleCatMonthlyMetadata,
+  urlShortenerMetadata
   // 新增項目時，在此處加入對應的 metadata
 ];
 
@@ -29,6 +31,10 @@ export const loadProjectComponent = async (projectId) => {
       case battleCatMonthlyMetadata.id:
         const { default: BattleCatMonthly } = await import('./BattleCatMonthly/BattleCatMonthly.jsx');
         return BattleCatMonthly;
+
+      case urlShortenerMetadata.id:
+        const { default: UrlShortener } = await import('./UrlShortener/UrlShortener.jsx');
+        return UrlShortener;
 
       // 新增項目時，在此處加入對應的動態導入
 
