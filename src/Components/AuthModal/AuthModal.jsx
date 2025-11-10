@@ -185,13 +185,14 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
           <div className="form-group">
             <label htmlFor="password">{t('auth.fields.password')}</label>
             <input
-              type="password"
+              type="text"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
               placeholder={t('auth.placeholders.password')}
               required
+              style={{ WebkitTextSecurity: 'disc', MozTextSecurity: 'disc' }}
             />
           </div>
 
@@ -199,13 +200,14 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
             <div className="form-group">
               <label htmlFor="confirmPassword">{t('auth.fields.confirmPassword')}</label>
               <input
-                type="password"
+                type="text"
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder={t('auth.placeholders.confirmPassword')}
                 required
+                style={{ WebkitTextSecurity: 'disc', MozTextSecurity: 'disc' }}
               />
             </div>
           )}
