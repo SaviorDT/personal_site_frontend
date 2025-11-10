@@ -151,6 +151,26 @@ const resources = {
       pagination: {
         prev: "上一頁",
         next: "下一頁"
+      },
+      // 短網址重定向
+      redirect: {
+        checking: {
+          title: "檢查中...",
+          message: "正在驗證短網址，請稍候"
+        },
+        redirecting: {
+          title: "重定向中",
+          message: "即將跳轉到目標頁面..."
+        },
+        notFound: {
+          title: "404 - 頁面未找到",
+          message: "抱歉，您訪問的頁面不存在或短網址已過期",
+          backHome: "返回首頁"
+        },
+        error: {
+          noTarget: "短網址配置錯誤，無法獲取目標網址",
+          network: "網絡連接錯誤，請檢查您的網絡"
+        }
       }
     }
   },
@@ -299,8 +319,28 @@ const resources = {
       },
       // 分頁翻譯
       pagination: {
-        prev: "上一頁",
-        next: "下一頁"
+        prev: "Previous",
+        next: "Next"
+      },
+      // URL Redirect
+      redirect: {
+        checking: {
+          title: "Checking...",
+          message: "Verifying short URL, please wait"
+        },
+        redirecting: {
+          title: "Redirecting",
+          message: "Redirecting to target page..."
+        },
+        notFound: {
+          title: "404 - Page Not Found",
+          message: "Sorry, the page you're looking for doesn't exist or the short URL has expired",
+          backHome: "Back to Home"
+        },
+        error: {
+          noTarget: "Short URL configuration error, unable to get target URL",
+          network: "Network connection error, please check your network"
+        }
       }
     }
   }
