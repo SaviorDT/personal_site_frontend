@@ -1,6 +1,7 @@
 /* ArticleCard.css */
 .article-card {
-  background: rgba(31, 41, 55, 0.9); /* 使用深色模式背景 */
+  background: rgba(31, 41, 55, 0.9);
+  /* 使用深色模式背景 */
   color: #F9FAFB;
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -11,10 +12,14 @@
   flex-direction: column;
   height: 100%;
   position: relative;
-  backdrop-filter: blur(8px); /* 添加背景模糊效果 */
-  -webkit-backdrop-filter: blur(8px); /* Safari 支援 */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* 添加細邊框 */
-  user-select: none; /* 防止意外選取文字 */
+  backdrop-filter: blur(8px);
+  /* 添加背景模糊效果 */
+  -webkit-backdrop-filter: blur(8px);
+  /* Safari 支援 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* 添加細邊框 */
+  user-select: none;
+  /* 防止意外選取文字 */
 }
 
 .article-card::before {
@@ -24,9 +29,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, 
-    rgba(99, 102, 241, 0.05) 0%, 
-    rgba(168, 85, 247, 0.05) 100%);
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.05) 0%,
+      rgba(168, 85, 247, 0.05) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -67,12 +72,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.3) 0%,
-    transparent 50%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.4) 100%);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -132,7 +135,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #9CA3AF; /* 深色模式文字顏色 */
+  color: #9CA3AF;
+  /* 深色模式文字顏色 */
   font-size: 0.875rem;
 }
 
@@ -164,7 +168,8 @@
 .article-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #F9FAFB; /* 深色模式文字顏色 */
+  color: #F9FAFB;
+  /* 深色模式文字顏色 */
   line-height: 1.4;
   margin: 0;
   display: -webkit-box;
@@ -176,7 +181,8 @@
 }
 
 .article-excerpt {
-  color: #D1D5DB; /* 深色模式文字顏色 */
+  color: #D1D5DB;
+  /* 深色模式文字顏色 */
   line-height: 1.6;
   margin: 0;
   flex: 1;
@@ -196,8 +202,10 @@
 }
 
 .article-tag {
-  background: #374151; /* 深色模式背景 */
-  color: #D1D5DB; /* 深色模式文字顏色 */
+  background: #374151;
+  /* 深色模式背景 */
+  color: #D1D5DB;
+  /* 深色模式文字顏色 */
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -206,12 +214,15 @@
 }
 
 .article-tag:hover {
-  background: #4B5563; /* 深色模式hover背景 */
-  color: #F9FAFB; /* 深色模式hover文字顏色 */
+  background: #4B5563;
+  /* 深色模式hover背景 */
+  color: #F9FAFB;
+  /* 深色模式hover文字顏色 */
 }
 
 .article-tag-more {
-  background: #8B5CF6; /* 深色模式背景 */
+  background: #8B5CF6;
+  /* 深色模式背景 */
   color: white;
   padding: 4px 8px;
   border-radius: 6px;
@@ -226,25 +237,36 @@
 /* 底部區域 */
 .article-footer {
   padding: 16px 20px;
-  border-top: 1px solid rgba(55, 65, 81, 0.6); /* 深色模式邊框 */
+  border-top: 1px solid rgba(55, 65, 81, 0.6);
+  /* 深色模式邊框 */
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   align-items: center;
-  background: rgba(17, 24, 39, 0.8); /* 深色模式背景 */
+  background: rgba(17, 24, 39, 0.8);
+  /* 深色模式背景 */
   position: relative;
   z-index: 2;
+}
+
+/* 反應按鈕區域 */
+.article-reactions {
+  flex: 1;
+  min-width: 200px;
 }
 
 .article-stats {
   display: flex;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .stat-item {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #9CA3AF; /* 深色模式文字顏色 */
+  color: #9CA3AF;
+  /* 深色模式文字顏色 */
   font-size: 0.875rem;
 }
 
@@ -286,27 +308,27 @@
   .article-thumbnail {
     height: 160px;
   }
-  
+
   .article-content {
     padding: 16px;
     gap: 10px;
   }
-  
+
   .article-title {
     font-size: 1.1rem;
   }
-  
+
   .article-meta {
     flex-wrap: wrap;
     gap: 8px;
   }
-  
+
   .article-footer {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
   }
-  
+
   .read-more-btn {
     justify-content: center;
   }
@@ -316,23 +338,23 @@
   .article-thumbnail {
     height: 140px;
   }
-  
+
   .article-overlay {
     padding: 8px;
   }
-  
+
   .article-content {
     padding: 12px;
   }
-  
+
   .article-title {
     font-size: 1rem;
   }
-  
+
   .article-tags {
     gap: 4px;
   }
-  
+
   .article-tag,
   .article-tag-more {
     font-size: 0.7rem;

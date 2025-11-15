@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './FileSystem.css';
-import { listDirectory, createFolder, createEmptyFile, uploadFile, uploadFolder, deleteFile, deleteFolder, renameFile, renameFolder, downloadFile, getFileEntry, getTextContent, saveTextContent, pathToString, stringToPath, moveFile, moveFolder } from './fileService';
+import { listDirectory, createFolder, createEmptyFile, uploadFile, uploadFolder, deleteFile, deleteFolder, renameFile, renameFolder, downloadFile, getFileEntry, getTextContent, saveTextContent, pathToString, stringToPath, moveFile, moveFolder, getDownloadUrl } from './fileService';
 import FolderItem from './FolderItem';
 import FileItem from './FileItem';
 import { metadata } from './FileSystemMetadata';
@@ -226,7 +226,16 @@ const FileSystem = () => {
 
     const onOpenFile = async (name) => {
         try {
-            // 顯示下載進度
+            // 若為影片，直接使用後端的串流/下載 URL 並嵌入瀏覽器播放器（避免先 fetch blob）
+            const local = items.find(i => i.name === name && i.type === 'file');
+            if (local && local.kind === 'video') {
+                const url = getDownloadUrl(path, name);
+                setPreviewEntry({ type: 'file', name, mime: local.mime, kind: 'video', objectUrl: url });
+                setTextDraft('');
+                return;
+            }
+
+            // 其他類型：下載 blob 並建立 object URL（原本行為）
             setDownloading(true);
             setDownloadBytesDone(0);
             setDownloadBytesTotal(0);

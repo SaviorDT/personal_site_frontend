@@ -5,6 +5,7 @@ import ArticlesFilters from './ArticlesFilters/ArticlesFilters';
 import ArticlesStats from './ArticlesStats/ArticlesStats';
 import ArticlesGrid from './ArticlesGrid/ArticlesGrid';
 import ArticlesPagination from './ArticlesPagination/ArticlesPagination';
+import PostList from '@/Components/Post/PostList';
 import articleService from '@/services/articleService';
 import './Articles.css';
 
@@ -15,6 +16,7 @@ const Articles = () => {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [popularTags, setPopularTags] = useState([]);
+  const [articleSource, setArticleSource] = useState('local'); // 'local' 或 'backend'
   const [filters, setFilters] = useState({
     category: '',
     tag: '',
@@ -43,7 +45,7 @@ const Articles = () => {
         articleService.getAllCategories(),
         articleService.getPopularTags(15)
       ]);
-      
+
       setCategories(categoriesData);
       setPopularTags(tagsData);
     } catch (err) {
@@ -63,12 +65,12 @@ const Articles = () => {
       };
 
       // 如果有搜尋關鍵字，使用搜尋功能
-      const result = filters.search 
+      const result = filters.search
         ? await articleService.searchArticles(filters.search, options)
         : await articleService.getAllArticles(options);
 
       setArticles(result.articles);
-      
+
       if (result.pagination) {
         setPagination(prev => ({
           ...prev,
@@ -112,7 +114,7 @@ const Articles = () => {
   // 處理文章點擊
   const handleArticleClick = (article, event) => {
     const articleUrl = `/文章/${article.id}`;
-    
+
     // 檢查是否為中鍵點擊或 Ctrl+點擊
     if (event && (event.button === 1 || event.ctrlKey || event.metaKey)) {
       // 在新分頁中開啟
@@ -149,43 +151,66 @@ const Articles = () => {
   return (
     <section id="文章" className="articles-page">
       <div className="articles-container">
-        
+
         {/* 頁面標題 */}
         <ArticlesHeader />
 
-        {/* 篩選器 */}
-        <ArticlesFilters
-          filters={filters}
-          categories={categories}
-          popularTags={popularTags}
-          onFilterChange={handleFilterChange}
-          onSearch={handleSearch}
-          onClearFilters={clearFilters}
-        />
-
-        {/* 結果統計 */}
-        <ArticlesStats 
-          loading={loading}
-          total={pagination.total}
-        />
-
-        {/* 文章列表 */}
-        <div className="articles-content">
-          <ArticlesGrid
-            loading={loading}
-            error={error}
-            articles={articles}
-            onArticleClick={handleArticleClick}
-            onRetry={loadArticles}
-          />
-
-          {/* 分頁器 */}
-          <ArticlesPagination
-            currentPage={pagination.current}
-            totalPages={pagination.totalPages}
-            onPageChange={handlePageChange}
-          />
+        {/* 文章來源切換 */}
+        <div className="article-source-toggle">
+          <button
+            className={`toggle-btn ${articleSource === 'local' ? 'active' : ''}`}
+            onClick={() => setArticleSource('local')}
+          >
+            📝 本地文章
+          </button>
+          <button
+            className={`toggle-btn ${articleSource === 'backend' ? 'active' : ''}`}
+            onClick={() => setArticleSource('backend')}
+          >
+            🌐 社群文章
+          </button>
         </div>
+
+        {articleSource === 'local' ? (
+          <>
+            {/* 篩選器 */}
+            <ArticlesFilters
+              filters={filters}
+              categories={categories}
+              popularTags={popularTags}
+              onFilterChange={handleFilterChange}
+              onSearch={handleSearch}
+              onClearFilters={clearFilters}
+            />
+
+            {/* 結果統計 */}
+            <ArticlesStats
+              loading={loading}
+              total={pagination.total}
+            />
+
+            {/* 本地文章列表 */}
+            <div className="articles-content">
+              <ArticlesGrid
+                loading={loading}
+                error={error}
+                articles={articles}
+                onArticleClick={handleArticleClick}
+                onRetry={loadArticles}
+              />
+
+              {/* 分頁器 */}
+              <ArticlesPagination
+                currentPage={pagination.current}
+                totalPages={pagination.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </>
+        ) : (
+          /* 後端文章列表 */
+          <PostList />
+        )}
       </div>
     </section>
   );

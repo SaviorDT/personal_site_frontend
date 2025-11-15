@@ -1,0 +1,129 @@
+/* 單個留言項目 */
+.comment-item {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 留言頭部 */
+.comment-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #F1F5F9;
+  font-size: 0.95rem;
+}
+
+.comment-date {
+  color: #9CA3AF;
+  font-size: 0.85rem;
+}
+
+/* 留言內容 */
+.comment-content {
+  color: #E5E7EB;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+/* 留言操作按鈕 */
+.comment-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.comment-actions button {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: #D1D5DB;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comment-actions button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-reply {
+  color: #8B5CF6;
+}
+
+.btn-edit {
+  color: #3B82F6;
+}
+
+.btn-delete {
+  color: #EF4444;
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* 回覆表單 */
+.comment-reply-form {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 巢狀留言 */
+.comment-replies {
+  margin-top: 16px;
+  margin-left: 24px;
+  padding-left: 16px;
+  border-left: 2px solid rgba(139, 92, 246, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 載入中狀態 */
+.comment-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .comment-item {
+    padding: 12px;
+  }
+
+  .comment-replies {
+    margin-left: 12px;
+    padding-left: 12px;
+  }
+
+  .comment-actions {
+    flex-wrap: wrap;
+  }
+
+  .comment-actions button {
+    font-size: 0.8rem;
+    padding: 5px 12px;
+  }
+}

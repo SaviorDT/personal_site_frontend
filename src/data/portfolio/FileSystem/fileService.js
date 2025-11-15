@@ -263,6 +263,12 @@ export const downloadFile = async (pathArr, name) => {
     a.remove();
 };
 
+// 取得下載/串流的完整 URL（可用於直接放在 <video> / <audio> src）
+export const getDownloadUrl = (pathArr, name) => {
+    const endpointUrl = buildUrl(EP.FILES.DOWNLOAD, pathArr, name);
+    return apiConfig.API_BASE_URL + endpointUrl;
+};
+
 // 預覽/文字內容：若需預覽，下載 blob 並建立 URL
 export const getFileEntry = async (pathArr, name, options = {}) => {
     const endpointPath = buildUrl(EP.FILES.DOWNLOAD, pathArr, name);

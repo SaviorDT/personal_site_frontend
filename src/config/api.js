@@ -19,6 +19,28 @@ const apiConfig = {
       GITHUB_OAUTH: '/auth/login-github',
       GOOGLE_OAUTH: '/auth/login-google',
     },
+    // 文章系統
+    POSTS: {
+      LIST: '/posts',
+      GET: '/posts/:id',
+      CREATE: '/posts',
+      UPDATE: '/posts/:id',
+      DELETE: '/posts/:id',
+    },
+    // 留言系統
+    COMMENTS: {
+      LIST: '/posts/:id/comments',
+      CREATE: '/posts/:id/comments',
+      UPDATE: '/comments/:id',
+      DELETE: '/comments/:id',
+    },
+    // 反應系統
+    REACTIONS: {
+      ADD_TO_POST: '/posts/:id/reactions',
+      ADD_TO_COMMENT: '/comments/:id/reactions',
+      GET_POST_REACTIONS: '/posts/:id/reactions',
+      GET_COMMENT_REACTIONS: '/comments/:id/reactions',
+    },
     // 戰貓（Battle Cat）相關端點
     BATTLE_CAT: {
       // 依章節與敵人組合查詢關卡
