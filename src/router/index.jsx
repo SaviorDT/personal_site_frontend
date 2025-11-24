@@ -7,6 +7,7 @@ import ArticleDetail from '@/Pages/ArticleDetail/ArticleDetail';
 import Portfolio from '@/Pages/Portfolio/Portfolio';
 import ProjectDetail from '@/Pages/ProjectDetail/ProjectDetail';
 import OAuthCallback from '@/Pages/OAuthCallback/OAuthCallback';
+import UrlRedirect from '@/Pages/UrlRedirect/UrlRedirect';
 
 // 路由配置
 export const router = createBrowserRouter([
@@ -72,10 +73,11 @@ export const router = createBrowserRouter([
         path: "貓站",
         element: <Navigate to="/作品集/貓戰月間任務" replace />
       },
-      // 404 頁面
+      // 404 頁面 / 短網址重定向
+      // 此路由會檢查是否為短網址，若是則重定向，否則顯示 404
       {
         path: "*",
-        element: <div className="page-placeholder">404 - 頁面未找到</div>
+        element: <UrlRedirect />
       }
     ]
   }
