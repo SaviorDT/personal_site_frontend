@@ -75,7 +75,7 @@ const resources = {
         placeholders: {
           nickname: "請輸入您的暱稱",
           email: "請輸入電子信箱",
-          password: "請輸入密碼",
+          password: "請輸入密碼（可輸入中文）",
           confirmPassword: "請再次輸入密碼"
         },
         login: {

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { loadArticleComponent, getArticleMetadata } from '@/data/articles/frontendArticles.js';
 import { ROUTES } from '@/router/index.jsx';
 import ArticleContainer from './ArticleContainer/ArticleContainer';
+import CommentList from '@/Components/Comment/CommentList';
 import './ArticleDetail.css';
 
 // 載入狀態組件
@@ -127,11 +128,16 @@ const ArticleDetail = () => {
   return (
     <div className={`article-detail-page ${metadata?.layout?.containerWidth === 'full' ? 'full-width' : ''}`}>
       <ArticleNavigation onGoBack={handleGoBack} metadata={metadata} />
-      
+
       <main className={`article-main ${metadata?.layout?.containerWidth === 'full' ? 'article-main-full' : ''}`}>
         <ArticleContainer metadata={metadata}>
           <ArticleComponent />
         </ArticleContainer>
+
+        {/* 留言系統 */}
+        <section className="article-comments-section">
+          <CommentList postId={articleId} />
+        </section>
       </main>
 
       <RelatedArticles />
