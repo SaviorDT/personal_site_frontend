@@ -9,12 +9,22 @@ export default defineConfig({
     port: 80,
     host: true,
     allowedHosts: [
-      'xn--kss.xn--kpry57d'
+      'localhost',
+      '127.0.0.1'
     ],
     hmr: {
-      protocol: 'wss',
-      host: 'xn--ldrz59fv7cs48a.xn--kss.xn--kpry57d',
-      clientPort: 443
+      protocol: 'ws',
+      host: 'localhost',
+      clientPort: 9000
+    },
+    // 添加代理解決 CORS 問題
+    proxy: {
+      '/api': {
+        target: 'http://backend:80',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path
+      }
     }
   },
   resolve: {
