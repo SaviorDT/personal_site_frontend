@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReactionButtons from '@/Components/Reaction/ReactionButtons';
+import ReactionButtons from '@/components/Reaction/ReactionButtons';
 import './PostCard.css';
 
 const PostCard = ({ post }) => {

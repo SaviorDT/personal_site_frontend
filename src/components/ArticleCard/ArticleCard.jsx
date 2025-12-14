@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import ReactionButtons from '@/Components/Reaction/ReactionButtons';
+import ReactionButtons from '@/components/Reaction/ReactionButtons';
 import './ArticleCard.css';
 
 const ArticleCard = ({ article, onClick }) => {

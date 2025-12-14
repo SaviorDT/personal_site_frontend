@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactionButtons from '@/Components/Reaction/ReactionButtons';
+import ReactionButtons from '@/components/Reaction/ReactionButtons';
 import articleInteractionService from '@/services/articleInteractionService.js';
 import './ArticleActions.css';
 
