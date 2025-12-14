@@ -3,8 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { loadArticleComponent, getArticleMetadata } from '@/data/articles/frontendArticles.js';
 import { ROUTES } from '@/router/index.jsx';
 import ArticleContainer from './ArticleContainer/ArticleContainer';
-
-import CommentList from '@/Components/Comment/CommentList';
+import CommentList from '@/components/Comment/CommentList';
 import './ArticleDetail.css';
 import apiClient from '@/services/apiClient';
 import { isValidId } from '@/utils/idUtils';

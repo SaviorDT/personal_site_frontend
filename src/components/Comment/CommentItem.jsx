@@ -10,6 +10,7 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
 
   const MAX_LEVEL = 5;
   const canNest = level < MAX_LEVEL;
+
   // Normalize fields (Backend sends PascalCase, Frontend expects camelCase/snake_case)
   const content = comment.content || comment.Content;
   const author = comment.author || comment.Author;
