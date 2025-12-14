@@ -128,19 +128,31 @@ const ArticleDetail = () => {
               tags: p.Tags?.map(t => t.Name || t.name) || p.tags?.map(t => t.name) || []
             }));
 
-            // Render Dynamic Content
-            const content = p.Content || p.content || '';
-            setArticleComponent(() => () => (
-              <div className="dynamic-article-content" style={{
-                whiteSpace: 'pre-wrap',
-                color: '#E5E7EB',
-                lineHeight: '1.8',
-                fontSize: '1.1rem',
-                padding: '20px 0'
-              }}>
-                {content}
-              </div>
-            ));
+            // Render Logic: Check if there's a static component first
+            // Even if we found a dynamic post (for ID/Reactions), we might want to use the static component for content
+            // e.g. 'site-history' has a rich static component but also needs a DB entry
+            let staticComponent = null;
+            try {
+              staticComponent = await loadArticleComponent(articleId);
+            } catch (e) { /* ignore */ }
+
+            if (staticComponent) {
+              setArticleComponent(() => staticComponent);
+            } else {
+              // Only if NO static component, use the DB content
+              const content = p.Content || p.content || '';
+              setArticleComponent(() => () => (
+                <div className="dynamic-article-content" style={{
+                  whiteSpace: 'pre-wrap',
+                  color: '#E5E7EB',
+                  lineHeight: '1.8',
+                  fontSize: '1.1rem',
+                  padding: '20px 0'
+                }}>
+                  {content}
+                </div>
+              ));
+            }
             dynamicContentFound = true;
           }
         } catch (apiErr) {
