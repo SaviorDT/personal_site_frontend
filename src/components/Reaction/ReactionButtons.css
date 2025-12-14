@@ -70,6 +70,7 @@
   cursor: not-allowed;
 }
 
+<<<<<<< HEAD
 /* 提交中狀態 */
 .reaction-btn.submitting {
   opacity: 0.6;
@@ -85,6 +86,8 @@
   }
 }
 
+=======
+>>>>>>> upstream/golang-programing-class
 /* 已選中的反應 - 更明顯的漸層 */
 .reaction-btn.active {
   background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%);

@@ -6,7 +6,10 @@ class CommentService {
     try {
       const url = apiConfig.ENDPOINTS.COMMENTS.LIST.replace(':id', postId);
       const response = await apiClient.get(url);
+<<<<<<< HEAD
       console.log('[Debug] select comments:', response.data);
+=======
+>>>>>>> upstream/golang-programing-class
       return { success: true, data: response.data };
     } catch (error) {
       return handleApiError(error, '取得留言失敗');
@@ -16,12 +19,18 @@ class CommentService {
   async createComment(postId, commentData) {
     try {
       const url = apiConfig.ENDPOINTS.COMMENTS.CREATE.replace(':id', postId);
+<<<<<<< HEAD
       console.log('[CommentService] Creating comment:', { postId, url, commentData });
       const response = await apiClient.post(url, commentData);
       console.log('[CommentService] Comment created successfully:', response.data);
       return { success: true, data: response.data, message: commentData.parent_id ? '回覆成功' : '留言成功' };
     } catch (error) {
       console.error('[CommentService] Error creating comment:', { postId, error: error.message, status: error.response?.status, data: error.response?.data });
+=======
+      const response = await apiClient.post(url, commentData);
+      return { success: true, data: response.data, message: commentData.parent_id ? '回覆成功' : '留言成功' };
+    } catch (error) {
+>>>>>>> upstream/golang-programing-class
       return handleApiError(error, '留言失敗');
     }
   }
@@ -56,10 +65,15 @@ class CommentService {
 
     comments.forEach(comment => {
       const commentNode = commentMap.get(comment.ID);
+<<<<<<< HEAD
       const parentId = comment.ParentID || comment.parent_id;
 
       if (parentId) {
         const parent = commentMap.get(parentId);
+=======
+      if (comment.parent_id) {
+        const parent = commentMap.get(comment.parent_id);
+>>>>>>> upstream/golang-programing-class
         if (parent) {
           parent.replies.push(commentNode);
         } else {

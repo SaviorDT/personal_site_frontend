@@ -6,6 +6,7 @@ import './PostCard.css';
 const PostCard = ({ post }) => {
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   // Normalize fields (Backend sends PascalCase, Frontend expects camelCase/snake_case)
   const title = post.title || post.Title;
   const content = post.content || post.Content || '';
@@ -22,6 +23,9 @@ const PostCard = ({ post }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
+=======
+  const formatDate = (dateString) => {
+>>>>>>> upstream/golang-programing-class
     const date = new Date(dateString);
     return date.toLocaleDateString('zh-TW', {
       year: 'numeric',
@@ -31,12 +35,17 @@ const PostCard = ({ post }) => {
   };
 
   const handleClick = () => {
+<<<<<<< HEAD
     navigate(`/posts/${linkId}`);
+=======
+    navigate(`/posts/${post.ID}`);
+>>>>>>> upstream/golang-programing-class
   };
 
   return (
     <article className="post-card">
       <div className="post-card-link" onClick={handleClick}>
+<<<<<<< HEAD
         {coverImage && (
           <div className="post-thumbnail">
             <img src={coverImage} alt={title} />
@@ -76,6 +85,47 @@ const PostCard = ({ post }) => {
               {tags.length > 3 && (
                 <span className="post-tag-more">
                   +{tags.length - 3}
+=======
+        {post.cover_image && (
+          <div className="post-thumbnail">
+            <img src={post.cover_image} alt={post.title} />
+          </div>
+        )}
+        
+        <div className="post-content">
+          <h3 className="post-title">{post.title}</h3>
+          
+          <p className="post-summary">
+            {post.summary || post.content?.substring(0, 150) + '...'}
+          </p>
+          
+          <div className="post-meta">
+            <span className="post-author">
+              👤 {post.author?.nickname || '匿名'}
+            </span>
+            <span className="post-views">
+              👁️ {post.view_count || 0}
+            </span>
+            <span className="post-date">
+              📅 {formatDate(post.CreatedAt || post.created_at)}
+            </span>
+          </div>
+
+          {post.tags && post.tags.length > 0 && (
+            <div className="post-tags">
+              {post.tags.slice(0, 3).map((tag, index) => (
+                <span 
+                  key={tag.ID || index} 
+                  className="post-tag"
+                  style={{ backgroundColor: tag.color || '#6366F1' }}
+                >
+                  #{tag.name}
+                </span>
+              ))}
+              {post.tags.length > 3 && (
+                <span className="post-tag-more">
+                  +{post.tags.length - 3}
+>>>>>>> upstream/golang-programing-class
                 </span>
               )}
             </div>
@@ -87,7 +137,11 @@ const PostCard = ({ post }) => {
         <ReactionButtons
           targetId={post.ID}
           targetType="post"
+<<<<<<< HEAD
           reactions={reactions}
+=======
+          reactions={post.reactions || []}
+>>>>>>> upstream/golang-programing-class
         />
       </div>
     </article>

@@ -3,7 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { loadArticleComponent, getArticleMetadata } from '@/data/articles/frontendArticles.js';
 import { ROUTES } from '@/router/index.jsx';
 import ArticleContainer from './ArticleContainer/ArticleContainer';
+<<<<<<< HEAD
 import ArticleActions from './ArticleActions/ArticleActions';
+=======
+>>>>>>> upstream/golang-programing-class
 import CommentList from '@/Components/Comment/CommentList';
 import './ArticleDetail.css';
 import apiClient from '@/services/apiClient';
@@ -253,10 +256,16 @@ const ArticleDetail = () => {
           <ArticleComponent />
         </ArticleContainer>
 
+<<<<<<< HEAD
 
         {/* 留言系統 */}
         <section className="article-comments-section">
           <CommentList postId={resolvedPostId || articleId} />
+=======
+        {/* 留言系統 */}
+        <section className="article-comments-section">
+          <CommentList postId={articleId} />
+>>>>>>> upstream/golang-programing-class
         </section>
       </main>
 

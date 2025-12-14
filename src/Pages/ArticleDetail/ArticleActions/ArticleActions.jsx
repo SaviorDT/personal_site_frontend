@@ -3,6 +3,7 @@ import ReactionButtons from '@/Components/Reaction/ReactionButtons';
 import articleInteractionService from '@/services/articleInteractionService.js';
 import './ArticleActions.css';
 
+<<<<<<< HEAD
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import postService from '@/services/postService';
@@ -11,6 +12,9 @@ import { ROUTES } from '@/router/index';
 const ArticleActions = ({ articleId, authorId, className = '' }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+=======
+const ArticleActions = ({ articleId, className = '' }) => {
+>>>>>>> upstream/golang-programing-class
 
   // 處理分享按鈕點擊
   const handleShare = async () => {
@@ -73,6 +77,7 @@ const ArticleActions = ({ articleId, authorId, className = '' }) => {
         >
           🔖 收藏
         </button>
+<<<<<<< HEAD
 
         {canDelete && (
           <button
@@ -83,6 +88,8 @@ const ArticleActions = ({ articleId, authorId, className = '' }) => {
             🗑️ 刪除
           </button>
         )}
+=======
+>>>>>>> upstream/golang-programing-class
       </div>
     </div>
   );

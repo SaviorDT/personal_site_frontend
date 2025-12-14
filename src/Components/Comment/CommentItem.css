@@ -126,6 +126,7 @@
     font-size: 0.8rem;
     padding: 5px 12px;
   }
+<<<<<<< HEAD
 }
 
 .btn-toggle-replies {
@@ -147,4 +148,6 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
+=======
+>>>>>>> upstream/golang-programing-class
 }
