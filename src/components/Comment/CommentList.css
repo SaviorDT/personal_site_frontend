@@ -1,0 +1,104 @@
+/* 留言列表容器 */
+.comment-list {
+  margin-top: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(30, 30, 46, 0.6), rgba(24, 24, 37, 0.6));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* 留言標題區 */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.btn-add-comment {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-add-comment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+/* 主留言表單 */
+.main-comment-form {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 留言樹狀結構 */
+.comments-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 空狀態 */
+.comment-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9CA3AF;
+}
+
+.comment-empty p {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+/* 錯誤狀態 - 改為不那麼明顯的樣式 */
+.comment-error {
+  padding: 12px 16px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 8px;
+  color: #FCA5A5;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .comment-list {
+    padding: 16px;
+    margin-top: 24px;
+  }
+
+  .comment-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .btn-add-comment {
+    width: 100%;
+  }
+}

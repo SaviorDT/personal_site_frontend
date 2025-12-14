@@ -1,0 +1,220 @@
+/* 全域 Modal 容器樣式 */
+
+.modal-container-overlay {
+    position: fixed !important;
+    /* 強制固定定位，避免被父級容器影響 */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999 !important;
+    /* 提高 z-index 確保在最上層 */
+    padding: 1rem;
+    box-sizing: border-box;
+    /* 確保不受父級容器的 transform 影響 */
+    transform: none !important;
+}
+
+/* 動畫效果 */
+.modal-container-animated {
+    animation: modalOverlayFadeIn 0.3s ease;
+}
+
+@keyframes modalOverlayFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* 模態視窗容器 */
+.modal-container {
+    background: rgba(12, 12, 12, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 100%;
+}
+
+/* 動畫效果 */
+.modal-container-content-animated {
+    animation: modalContentSlideUp 0.3s ease;
+}
+
+@keyframes modalContentSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 尺寸變體 */
+.modal-container-small {
+    max-width: 400px;
+    padding: 1.5rem;
+}
+
+.modal-container-medium {
+    max-width: 500px;
+    padding: 2rem;
+}
+
+.modal-container-large {
+    max-width: 800px;
+    padding: 2.5rem;
+}
+
+.modal-container-fullscreen {
+    max-width: 95vw;
+    max-height: 95vh;
+    padding: 2rem;
+}
+
+/* 關閉按鈕 */
+.modal-container-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    font-family: inherit;
+    line-height: 1;
+}
+
+.modal-container-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.modal-container-close:active {
+    transform: scale(0.95);
+}
+
+/* 內容區域 */
+.modal-container-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .modal-container-overlay {
+        padding: 0.5rem;
+    }
+
+    .modal-container-small,
+    .modal-container-medium,
+    .modal-container-large {
+        max-width: 100%;
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+
+    .modal-container-close {
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-container-overlay {
+        padding: 0.25rem;
+    }
+
+    .modal-container {
+        border-radius: 8px;
+        max-height: 95vh;
+    }
+
+    .modal-container-small,
+    .modal-container-medium,
+    .modal-container-large {
+        padding: 1rem;
+    }
+}
+
+/* 滾動條樣式 */
+.modal-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.modal-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 輔助功能 */
+.modal-container-overlay[aria-hidden="true"] {
+    display: none;
+}
+
+/* 無動畫版本 */
+@media (prefers-reduced-motion: reduce) {
+
+    .modal-container-animated,
+    .modal-container-content-animated {
+        animation: none;
+    }
+
+    .modal-container-close {
+        transition: none;
+    }
+}
+
+/* 高對比度模式 */
+@media (prefers-contrast: high) {
+    .modal-container {
+        border: 2px solid #fff;
+        background: #000;
+    }
+
+    .modal-container-close {
+        background: #fff;
+        color: #000;
+    }
+}

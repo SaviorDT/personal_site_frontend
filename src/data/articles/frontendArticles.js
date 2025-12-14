@@ -14,7 +14,7 @@ export const frontendArticles = [
 export const loadArticleComponent = async (articleId) => {
   try {
     switch (articleId) {
-      case '網站歷史':
+      case 'site-history':
         const { default: SiteHistory } = await import('./SiteHistory/SiteHistory.jsx');
         return SiteHistory;
 

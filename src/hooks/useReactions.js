@@ -8,6 +8,7 @@ export function useReactions(type = 'post') {
 
   const fetchReactions = useCallback(async (id) => {
     setLoading(true);
+    console.log('[useReactions] Fetching reactions:', { id, type });
 
     try {
       const result = type === 'post'
@@ -15,11 +16,15 @@ export function useReactions(type = 'post') {
         : await reactionService.getCommentReactions(id);
 
       if (result.success) {
+        console.log('[useReactions] Reactions fetched successfully:', result.data);
         setReactions(result.data.reactions || []);
         setUserReaction(result.data.user_reaction || null);
+      } else {
+        // API 返回失敗，記錄錯誤但不拋出異常
+        console.error('[useReactions] Failed to fetch reactions:', result.error);
       }
     } catch (err) {
-      console.error('Failed to fetch reactions:', err);
+      console.error('[useReactions] Exception fetching reactions:', err);
     } finally {
       setLoading(false);
     }
@@ -28,9 +33,12 @@ export function useReactions(type = 'post') {
   const addReaction = useCallback(async (id, reactionType) => {
     const previousReaction = userReaction;
     const previousReactions = [...reactions];
+    let apiCallSucceeded = false;
 
     try {
+      // 立即執行樂觀更新，為用戶提供即時反饋
       if (userReaction?.type === reactionType) {
+        // 如果點同一個反應，取消反應
         setUserReaction(null);
         setReactions(prev =>
           prev.map(r =>
@@ -40,6 +48,7 @@ export function useReactions(type = 'post') {
           )
         );
       } else {
+        // 切換到不同的反應
         if (userReaction) {
           setReactions(prev =>
             prev.map(r =>
@@ -66,21 +75,40 @@ export function useReactions(type = 'post') {
         }
       }
 
+      // 發送 API 請求
       const result = type === 'post'
         ? await reactionService.addReactionToPost(id, reactionType)
         : await reactionService.addReactionToComment(id, reactionType);
 
       if (result.success) {
-        await fetchReactions(id);
+        // API 成功，標記為成功
+        apiCallSucceeded = true;
+        console.log('Reaction API call successful, fetching latest data...');
+        
+        // API 成功後，重新獲取數據以確保與伺服器同步
+        // 但我們需要小心不要丟失樂觀更新
+        try {
+          await fetchReactions(id);
+        } catch (fetchErr) {
+          console.error('Failed to refresh reactions after API success:', fetchErr);
+          // 即使重新獲取失敗，API 呼叫已成功，保留樂觀更新
+        }
       } else {
+        // API 返回錯誤，回滾樂觀更新
+        console.error('API returned error:', result.error);
         setUserReaction(previousReaction);
         setReactions(previousReactions);
-        throw new Error(result.error);
+        throw new Error(result.error || '反應操作失敗');
       }
     } catch (err) {
       console.error('Failed to add reaction:', err);
-      setUserReaction(previousReaction);
-      setReactions(previousReactions);
+      
+      // 只在 API 呼叫失敗時回滾
+      if (!apiCallSucceeded) {
+        setUserReaction(previousReaction);
+        setReactions(previousReactions);
+      }
+      
       throw err;
     }
   }, [type, userReaction, reactions, fetchReactions]);

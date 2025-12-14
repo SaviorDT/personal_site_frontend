@@ -5,8 +5,8 @@ import './ArticleFooter.css';
 const ArticleFooter = ({ articleId, metadata, className = '' }) => {
   return (
     <footer className={`article-footer ${className}`}>
-      <ArticleActions articleId={articleId} />
-      
+      <ArticleActions articleId={articleId} authorId={metadata?.authorId} />
+
       {metadata?.lastModified && (
         <div className="article-meta-bottom">
           <p>最後更新：{metadata.lastModified}</p>

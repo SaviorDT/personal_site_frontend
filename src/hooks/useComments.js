@@ -66,7 +66,11 @@ export function useComments(postId) {
     setError(null);
 
     try {
-      const result = await commentService.updateComment(commentId, { content });
+      // Defensive check: ensure content is a string
+      const payloadContent = typeof content === 'object' && content.content ? content.content : content;
+      console.log('[DEBUG] updateComment payload:', { original: content, processed: payloadContent });
+
+      const result = await commentService.updateComment(commentId, { content: payloadContent });
 
       if (result.success) {
         setComments(prev =>

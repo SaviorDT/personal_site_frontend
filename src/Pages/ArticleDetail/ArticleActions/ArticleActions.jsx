@@ -3,7 +3,14 @@ import ReactionButtons from '@/Components/Reaction/ReactionButtons';
 import articleInteractionService from '@/services/articleInteractionService.js';
 import './ArticleActions.css';
 
-const ArticleActions = ({ articleId, className = '' }) => {
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import postService from '@/services/postService';
+import { ROUTES } from '@/router/index';
+
+const ArticleActions = ({ articleId, authorId, className = '' }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // 處理分享按鈕點擊
   const handleShare = async () => {
@@ -23,6 +30,24 @@ const ArticleActions = ({ articleId, className = '' }) => {
       articleInteractionService.showNotification(error.message, 'error');
     }
   };
+
+  // 處理刪除按鈕點擊
+  const handleDelete = async () => {
+    if (window.confirm('確定要刪除這篇文章嗎？此操作無法復原。')) {
+      try {
+        await postService.deletePost(articleId);
+        window.alert('文章已刪除');
+        window.location.href = ROUTES.ARTICLES;
+      } catch (error) {
+        articleInteractionService.showNotification('刪除失敗：' + error.message, 'error');
+      }
+    }
+  };
+
+  // Check if current user is author or admin
+  const isAuthorString = String(authorId);
+  const userIdString = user ? String(user.ID || user.id) : '';
+  const canDelete = user && (isAuthorString === userIdString || user.role === 'admin' || user.isAdmin);
 
   return (
     <div className={`article-actions ${className}`}>
@@ -48,6 +73,16 @@ const ArticleActions = ({ articleId, className = '' }) => {
         >
           🔖 收藏
         </button>
+
+        {canDelete && (
+          <button
+            className="action-btn delete-btn"
+            onClick={handleDelete}
+            title="刪除文章"
+          >
+            🗑️ 刪除
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,67 @@
+/* 組件模板樣式 */
+.component-template {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.4));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  backdrop-filter: blur(15px);
+  transition: all 0.3s ease;
+}
+
+.component-template.active {
+  border-color: rgba(143, 179, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(143, 179, 255, 0.2);
+}
+
+.component-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.component-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #8fb3ff;
+  margin: 0;
+}
+
+.action-button {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #4a90e2, #5ba0f2);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.action-button:hover {
+  background: linear-gradient(135deg, #357abd, #4a90e2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.component-content {
+  color: #b8c5d6;
+  line-height: 1.6;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .component-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .action-button {
+    align-self: stretch;
+  }
+}
