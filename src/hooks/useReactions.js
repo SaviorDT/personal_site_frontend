@@ -8,10 +8,7 @@ export function useReactions(type = 'post') {
 
   const fetchReactions = useCallback(async (id) => {
     setLoading(true);
-<<<<<<< HEAD
     console.log('[useReactions] Fetching reactions:', { id, type });
-=======
->>>>>>> upstream/golang-programing-class
 
     try {
       const result = type === 'post'
@@ -19,7 +16,6 @@ export function useReactions(type = 'post') {
         : await reactionService.getCommentReactions(id);
 
       if (result.success) {
-<<<<<<< HEAD
         console.log('[useReactions] Reactions fetched successfully:', result.data);
         setReactions(result.data.reactions || []);
         setUserReaction(result.data.user_reaction || null);
@@ -29,13 +25,6 @@ export function useReactions(type = 'post') {
       }
     } catch (err) {
       console.error('[useReactions] Exception fetching reactions:', err);
-=======
-        setReactions(result.data.reactions || []);
-        setUserReaction(result.data.user_reaction || null);
-      }
-    } catch (err) {
-      console.error('Failed to fetch reactions:', err);
->>>>>>> upstream/golang-programing-class
     } finally {
       setLoading(false);
     }
@@ -44,18 +33,12 @@ export function useReactions(type = 'post') {
   const addReaction = useCallback(async (id, reactionType) => {
     const previousReaction = userReaction;
     const previousReactions = [...reactions];
-<<<<<<< HEAD
     let apiCallSucceeded = false;
 
     try {
       // 立即執行樂觀更新，為用戶提供即時反饋
       if (userReaction?.type === reactionType) {
         // 如果點同一個反應，取消反應
-=======
-
-    try {
-      if (userReaction?.type === reactionType) {
->>>>>>> upstream/golang-programing-class
         setUserReaction(null);
         setReactions(prev =>
           prev.map(r =>
@@ -65,10 +48,7 @@ export function useReactions(type = 'post') {
           )
         );
       } else {
-<<<<<<< HEAD
         // 切換到不同的反應
-=======
->>>>>>> upstream/golang-programing-class
         if (userReaction) {
           setReactions(prev =>
             prev.map(r =>
@@ -95,20 +75,16 @@ export function useReactions(type = 'post') {
         }
       }
 
-<<<<<<< HEAD
       // 發送 API 請求
-=======
->>>>>>> upstream/golang-programing-class
       const result = type === 'post'
         ? await reactionService.addReactionToPost(id, reactionType)
         : await reactionService.addReactionToComment(id, reactionType);
 
       if (result.success) {
-<<<<<<< HEAD
         // API 成功，標記為成功
         apiCallSucceeded = true;
         console.log('Reaction API call successful, fetching latest data...');
-        
+
         // API 成功後，重新獲取數據以確保與伺服器同步
         // 但我們需要小心不要丟失樂觀更新
         try {
@@ -126,25 +102,12 @@ export function useReactions(type = 'post') {
       }
     } catch (err) {
       console.error('Failed to add reaction:', err);
-      
+
       // 只在 API 呼叫失敗時回滾
       if (!apiCallSucceeded) {
         setUserReaction(previousReaction);
         setReactions(previousReactions);
       }
-      
-=======
-        await fetchReactions(id);
-      } else {
-        setUserReaction(previousReaction);
-        setReactions(previousReactions);
-        throw new Error(result.error);
-      }
-    } catch (err) {
-      console.error('Failed to add reaction:', err);
-      setUserReaction(previousReaction);
-      setReactions(previousReactions);
->>>>>>> upstream/golang-programing-class
       throw err;
     }
   }, [type, userReaction, reactions, fetchReactions]);

@@ -10,8 +10,6 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
 
   const MAX_LEVEL = 5;
   const canNest = level < MAX_LEVEL;
-<<<<<<< HEAD
-
   // Normalize fields (Backend sends PascalCase, Frontend expects camelCase/snake_case)
   const content = comment.content || comment.Content;
   const author = comment.author || comment.Author;
@@ -24,28 +22,15 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
   const handleReply = async (replyContent) => {
     try {
       await onReply(replyContent, comment.ID);
-=======
-  const hasReplies = comment.replies && comment.replies.length > 0;
-
-  const handleReply = async (content) => {
-    try {
-      await onReply(content, comment.ID);
->>>>>>> upstream/golang-programing-class
       setShowReplyForm(false);
     } catch (err) {
       console.error('回覆失敗:', err);
     }
   };
 
-<<<<<<< HEAD
   const handleUpdate = async (newContent) => {
     try {
       await onUpdate(comment.ID, newContent);
-=======
-  const handleUpdate = async (content) => {
-    try {
-      await onUpdate(comment.ID, { content });
->>>>>>> upstream/golang-programing-class
       setIsEditing(false);
     } catch (err) {
       console.error('更新失敗:', err);
@@ -63,10 +48,7 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
   };
 
   const formatDate = (dateString) => {
-<<<<<<< HEAD
     if (!dateString) return '';
-=======
->>>>>>> upstream/golang-programing-class
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now - date;
@@ -81,64 +63,39 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
     return date.toLocaleDateString('zh-TW');
   };
 
-<<<<<<< HEAD
   console.log('[Debug CommentItem] Comment:', comment);
-=======
->>>>>>> upstream/golang-programing-class
   return (
     <div className={`comment-item level-${Math.min(level, MAX_LEVEL)}`}>
       <div className="comment-content-wrapper">
         <div className="comment-avatar">
-<<<<<<< HEAD
           {authorName ? authorName.charAt(0).toUpperCase() : 'A'}
-=======
-          {comment.author_name ? comment.author_name.charAt(0).toUpperCase() : 'A'}
->>>>>>> upstream/golang-programing-class
         </div>
 
         <div className="comment-main">
           <div className="comment-header-info">
-<<<<<<< HEAD
             <span className="comment-author">{authorName || '匿名使用者'}</span>
             <span className="comment-date">{formatDate(createdAt)}</span>
             {updatedAt !== createdAt && (
-=======
-            <span className="comment-author">{comment.author_name || '匿名使用者'}</span>
-            <span className="comment-date">{formatDate(comment.CreatedAt)}</span>
-            {comment.UpdatedAt !== comment.CreatedAt && (
->>>>>>> upstream/golang-programing-class
               <span className="comment-edited">(已編輯)</span>
             )}
           </div>
 
           {isEditing ? (
             <CommentForm
-<<<<<<< HEAD
               initialContent={content}
-=======
-              initialContent={comment.content}
->>>>>>> upstream/golang-programing-class
               onSubmit={handleUpdate}
               onCancel={() => setIsEditing(false)}
               submitLabel="更新"
             />
           ) : (
-<<<<<<< HEAD
             <p className="comment-content">{content}</p>
-=======
-            <p className="comment-text">{comment.content}</p>
->>>>>>> upstream/golang-programing-class
           )}
 
           <div className="comment-actions">
             <ReactionButtons
               targetId={comment.ID}
               targetType="comment"
-<<<<<<< HEAD
               reactions={comment.reactions || comment.Reactions || []}
-=======
-              reactions={comment.reactions || []}
->>>>>>> upstream/golang-programing-class
             />
 
             <div className="comment-buttons">
@@ -170,11 +127,7 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
               <CommentForm
                 onSubmit={handleReply}
                 onCancel={() => setShowReplyForm(false)}
-<<<<<<< HEAD
                 placeholder={`回覆 @${authorName || '匿名使用者'}...`}
-=======
-                placeholder={`回覆 @${comment.author_name || '匿名使用者'}...`}
->>>>>>> upstream/golang-programing-class
               />
             </div>
           )}
@@ -194,19 +147,11 @@ const CommentItem = ({ comment, onReply, onUpdate, onDelete, level = 0 }) => {
               className="btn-toggle-replies"
               onClick={() => setShowReplies(!showReplies)}
             >
-<<<<<<< HEAD
               {showReplies ? '隱藏' : '顯示'} {replies.length} 則回覆
             </button>
           )}
 
           {showReplies && replies.map(reply => (
-=======
-              {showReplies ? '隱藏' : '顯示'} {comment.replies.length} 則回覆
-            </button>
-          )}
-
-          {showReplies && comment.replies.map(reply => (
->>>>>>> upstream/golang-programing-class
             <CommentItem
               key={reply.ID}
               comment={reply}

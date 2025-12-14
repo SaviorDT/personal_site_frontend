@@ -58,7 +58,6 @@
 .bookmark-btn:hover {
   border-color: #F59E0B;
   background: #92400E;
-<<<<<<< HEAD
   /* 深色模式hover文字顏色 */
 }
 
@@ -71,11 +70,6 @@
   border-color: #DC2626;
   background: #7F1D1D;
   color: #FECACA;
-=======
-  /* 深色模式hover背景 */
-  color: #FCD34D;
-  /* 深色模式hover文字顏色 */
->>>>>>> upstream/golang-programing-class
 }
 
 /* 響應式設計 */
