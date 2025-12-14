@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useReactions } from '@/hooks/useReactions';
+import { useAuth } from '@/contexts/AuthContext';
 import './ReactionButtons.css';
 
 const ReactionButtons = ({
@@ -15,12 +16,19 @@ const ReactionButtons = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const { reactions, loading, fetchReactions, addReaction, hasUserReacted, getReactionCount, REACTION_INFO } = useReactions(actualType);
+  const { user, showAuthModalIfNotVisible } = useAuth();
 
   useEffect(() => {
     if (actualId) fetchReactions(actualId);
   }, [actualId, fetchReactions]);
 
   const handleReaction = async (reactionType) => {
+    // 檢查登入狀態
+    if (!user) {
+      showAuthModalIfNotVisible('login');
+      return;
+    }
+
     if (loading || !actualId) return;
     setErrorMessage(null); // 清除之前的錯誤
     try {
@@ -30,7 +38,7 @@ const ReactionButtons = ({
 
       // 取得錯誤訊息
       const errorMsg = err.message || err.error || String(err);
-      console.log('錯誤訊息:', errorMsg); // Debug 用
+
 
       // 檢查是否為授權錯誤
       if (errorMsg.includes('Authorization') ||

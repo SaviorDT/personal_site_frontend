@@ -22,7 +22,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // 將 /api 開頭的請求代理到後端
-        target: 'http://localhost:9000',  // 本地後端
+        target: 'http://backend:80',  // Docker 內部後端服務
         changeOrigin: true,
         secure: false,
         ws: false,
@@ -58,7 +58,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@/Components': path.resolve(__dirname, './src/components'),
+
     }
   },
   build: {

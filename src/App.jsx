@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import AuthModal from '@/Components/AuthModal/AuthModal';
+import AuthModal from '@/components/AuthModal/AuthModal';
 import { router } from '@/router';
 import './App.css';
 
@@ -17,7 +17,7 @@ const AppContent = () => {
     };
 
     window.addEventListener('show-auth-modal', handleShowAuthModal);
-    
+
     return () => {
       window.removeEventListener('show-auth-modal', handleShowAuthModal);
     };
@@ -27,9 +27,9 @@ const AppContent = () => {
     <>
       {/* React Router 路由 */}
       <RouterProvider router={router} />
-      
+
       {/* 全局 AuthModal */}
-      <AuthModal 
+      <AuthModal
         isOpen={authModalOpen}
         onClose={closeAuthModal}
         initialMode={authMode}

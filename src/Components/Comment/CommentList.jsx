@@ -38,13 +38,8 @@ const CommentList = ({ postId }) => {
         </button>
       </div>
 
-<<<<<<< HEAD
       {/* 只在特定錯誤時顯示 */}
       {error && !error.includes('Failed to fetch') && !error.includes('取得留言失敗') && (
-=======
-      {/* 只在特定錯誤時顯示,且樣式不那麼顯眼 */}
-      {error && !error.includes('Failed to fetch') && (
->>>>>>> upstream/golang-programing-class
         <div className="comment-error">{error}</div>
       )}
 

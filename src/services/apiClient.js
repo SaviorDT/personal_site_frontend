@@ -1,162 +1,116 @@
 import axios from 'axios';
-import apiConfig from '@/config/api';
-import i18n from 'i18next';
 
-<<<<<<< HEAD
-// API 基礎 URL 配置
-// 在開發環境中，Vite 代理會轉發 /api 請求到實際的 API 服務器
-// 在生產環境中，使用絕對 URL
-const getBaseURL = () => {
-    // ✅ 開發環境：始終使用相對路徑，讓 Vite 代理處理轉發
-    if (import.meta.env.DEV) {
-        console.log('[API Client] Development mode: Using relative API path /api (Vite proxy will forward to backend)');
-        return '/api';
-    }
-    
-    // 生產環境：使用完整 API URL
-    if (apiConfig.API_BASE_URL && apiConfig.API_BASE_URL.startsWith('http')) {
-        console.log('[API Client] Production mode: Using full API URL:', apiConfig.API_BASE_URL);
-        return apiConfig.API_BASE_URL;
-    }
-    
-    // 預設使用相對路徑
-    console.log('[API Client] Using relative API path /api');
-=======
-// 確保 baseURL 使用相對路徑或正確的協議
-const getBaseURL = () => {
-    // 在開發環境強制使用相對路徑
-    // 這樣 axios 會相對於當前頁面的 origin 發送請求
-    // 例如: http://localhost:80/api/posts
->>>>>>> upstream/golang-programing-class
-    return '/api';
-};
+// Get base URL from environment variable or fallback to localhost
+// Using VITE_API_URL which is the standard Vite environment variable prefix
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
-const calculatedBaseURL = getBaseURL();
-console.log('[API Client] Base URL:', calculatedBaseURL);
-console.log('[API Client] Window location:', window.location.origin);
-<<<<<<< HEAD
-console.log('[API Client] Config API_BASE_URL:', apiConfig.API_BASE_URL);
-=======
->>>>>>> upstream/golang-programing-class
-
-// 創建全域 axios 實例
 const apiClient = axios.create({
-    baseURL: calculatedBaseURL,
-    timeout: apiConfig.TIMEOUT || 10000,
-    withCredentials: true,
+    baseURL: API_URL,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     },
+    withCredentials: true // Ensure cookies are sent (for Auth)
 });
 
-// 請求攔截器 - 可以添加 token 或其他全域請求處理
+// Request interceptor: add Authorization / X-CSRF-Token
 apiClient.interceptors.request.use(
     (config) => {
-        // Debug: 顯示完整請求 URL
-        const fullUrl = `${config.baseURL || ''}${config.url || ''}`;
-<<<<<<< HEAD
-        console.log('[API Request]', config.method?.toUpperCase(), fullUrl, {
-            params: config.params,
-            withCredentials: config.withCredentials,
-        });
-=======
-        console.log('[API Request]', config.method?.toUpperCase(), fullUrl);
-        console.log('[API Config]', { baseURL: config.baseURL, url: config.url, params: config.params });
->>>>>>> upstream/golang-programing-class
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
 
-        // 可以在這裡添加 Authorization header 或其他全域請求配置
+        // Add CSRF token if available (though usually handled by cookie in Go)
+        const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrf_token='));
+        if (csrfToken) {
+            config.headers['X-CSRF-Token'] = csrfToken.split('=')[1];
+        }
+
         return config;
     },
     (error) => {
-        console.error('[API Request Error]', error);
         return Promise.reject(error);
     }
 );
 
-// 響應攔截器 - 處理錯誤
+// Response interceptor: handle token expiration and standard errors
 apiClient.interceptors.response.use(
     (response) => {
-        console.log('[API Response] Status:', response.status, 'URL:', response.config.url);
         return response;
     },
     (error) => {
-        // 詳細的錯誤日誌
-        const errorInfo = {
-            message: error.message,
-            status: error.response?.status,
-            url: error.config?.url,
-            method: error.config?.method,
-            data: error.response?.data,
-            code: error.code,
+        // Helper to extract detailed error message
+        const getErrorMessage = (err) => {
+            // 1. Backend structured error: { error: "message" }
+            if (err.response?.data?.error) {
+                return err.response.data.error;
+            }
+            // 2. HTTP Status messages
+            if (err.response?.status === 401) {
+                return '請先登入';
+            }
+            if (err.response?.status === 403) {
+                return '權限不足';
+            }
+            if (err.response?.status === 404) {
+                return '找不到資源';
+            }
+            if (err.response?.status === 500) {
+                return '伺服器內部錯誤';
+            }
+            // 3. Fallback
+            return err.message || '發生未知錯誤';
         };
-        console.error('[API Response Error]', errorInfo);
 
-        // 處理 401 錯誤（僅針對需要身份驗證的請求）
-        if (error.response?.status === 401 && error.config?.requiresAuth !== false) {
-            // Token 無效或過期，清除本地用戶信息
-            localStorage.removeItem('user');
+        const friendlyError = getErrorMessage(error);
 
-            // 觸發登出事件來更新 AuthContext
-            window.dispatchEvent(new CustomEvent('auth-logout'));
+        // Log detailed error for debugging
+        console.warn('[ApiClient]', {
+            url: error.config?.url,
+            status: error.response?.status,
+            data: error.response?.data,
+            friendlyError
+        });
 
-            // 觸發顯示 AuthModal 的事件
-            window.dispatchEvent(new CustomEvent('show-auth-modal', {
-                detail: { mode: 'login' }
-            }));
+        // Special handling for 401 (Unauthorized) - potentially redirect to login or clear token
+        if (error.response?.status === 401) {
+            // Optional: clear token if needed, or emit event
+            // localStorage.removeItem('token');
         }
 
-        return Promise.reject(error);
+        // Reject with friendly string or object depending on your app needs
+        // Returning friendly string here for easier UI display
+        return Promise.reject(friendlyError);
     }
 );
 
 /**
- * 標準化錯誤處理函數
- * @param {Error} error - 錯誤對象
- * @param {string} defaultMessage - 默認錯誤信息
- * @returns {Object} 標準化的錯誤響應
+ * 通用的 API 錯誤處理輔助函數
+ * @param {Error} error - Axios 錯誤對象
+ * @param {string} defaultMessage - 默認錯誤訊息
+ * @returns {Object} 統一的錯誤響應格式 { success: false, message: string }
  */
-export const handleApiError = (error, defaultMessage) => {
-    console.error('API Error:', error);
-    console.error('API Error details:', {
-        hasResponse: !!error.response,
-        hasRequest: !!error.request,
-        message: error.message,
-        config: error.config,
-<<<<<<< HEAD
-        statusCode: error.response?.status,
-        responseData: error.response?.data,
-=======
->>>>>>> upstream/golang-programing-class
-    });
+export const handleApiError = (error, defaultMessage = '操作失敗') => {
+    // 優先使用攔截器處理過的錯誤訊息（如果有的話，通常是 string）
+    if (typeof error === 'string') {
+        return {
+            success: false,
+            message: error
+        };
+    }
 
-    let message = defaultMessage;
-    let statusCode = null;
-
-    if (error.response) {
-        // 服務器響應錯誤
-        statusCode = error.response.status;
-        message = error.response.data?.message || error.response.data?.error || defaultMessage;
-        console.error('Response error:', { statusCode, data: error.response.data });
-    } else if (error.request) {
-        // 請求發送但沒有響應
-        console.error('Request sent but no response:', error.request);
-        message = i18n.t('auth.api.network_error', { defaultValue: '網絡錯誤，請檢查網絡連接' });
-    } else if (error.code === 'ECONNABORTED') {
-        // 連線超時
-        console.error('Request timeout');
-        message = '請求超時，請檢查網絡連接';
-    } else {
-        // 其他錯誤
-        console.error('Other error:', error.message);
-        message = error.message || defaultMessage;
+    // 如果攔截器回傳的是 Error 對象 (例如網絡錯誤)
+    if (error?.message) {
+        return {
+            success: false,
+            message: error.message
+        };
     }
 
     return {
         success: false,
-        error: message,
-        statusCode: statusCode,
+        message: defaultMessage
     };
 };
 
-// 導出 apiClient 實例
 export default apiClient;

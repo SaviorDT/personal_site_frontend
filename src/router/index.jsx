@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import Layout from '@/Components/Layout/Layout';
+import Layout from '@/components/Layout/Layout';
 import Home from '@/Pages/Home/Home';
 import Articles from '@/Pages/Articles/Articles';
 import ArticleDetail from '@/Pages/ArticleDetail/ArticleDetail';
