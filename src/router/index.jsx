@@ -31,6 +31,15 @@ export const router = createBrowserRouter([
         path: "文章/:articleId",
         element: <ArticleDetail />
       },
+      // Compatible with PostCard navigation
+      {
+        path: "posts",
+        element: <Navigate to="/文章" replace />
+      },
+      {
+        path: "posts/:articleId",
+        element: <ArticleDetail />
+      },
       {
         path: "關於",
         element: <div className="page-placeholder">關於頁面 - 開發中</div>

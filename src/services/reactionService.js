@@ -25,19 +25,46 @@ class ReactionService {
   async addReactionToPost(postId, type) {
     try {
       const url = apiConfig.ENDPOINTS.REACTIONS.ADD_TO_POST.replace(':id', postId);
+<<<<<<< HEAD
+      console.log('[ReactionService] Adding reaction to post:', { postId, type, url });
+      const response = await apiClient.post(url, { type });
+      
+      console.log('[ReactionService] Response received:', response.data);
+      // 轉換 API 響應格式
+      const data = this._normalizeReactionResponse(response.data);
+      return { success: true, data };
+    } catch (error) {
+      console.error('[ReactionService] Error adding reaction to post:', { postId, type, error: error.message, status: error.response?.status, data: error.response?.data });
+=======
       const response = await apiClient.post(url, { type });
       return { success: true, data: response.data };
     } catch (error) {
+>>>>>>> upstream/golang-programing-class
       return handleApiError(error, '反應失敗');
     }
   }
 
   async addReactionToComment(commentId, type) {
     try {
+<<<<<<< HEAD
+      // 後端路由：/api/comments/:comment_id/reactions
+      // 使用 comment_id 作為參數名
+      const url = apiConfig.ENDPOINTS.REACTIONS.ADD_TO_COMMENT.replace(':id', commentId);
+      console.log('[ReactionService] Adding reaction to comment:', { commentId, type, url });
+      const response = await apiClient.post(url, { type });
+      
+      console.log('[ReactionService] Response received:', response.data);
+      // 轉換 API 響應格式
+      const data = this._normalizeReactionResponse(response.data);
+      return { success: true, data };
+    } catch (error) {
+      console.error('[ReactionService] Error adding reaction to comment:', { commentId, type, error: error.message, status: error.response?.status, data: error.response?.data });
+=======
       const url = apiConfig.ENDPOINTS.REACTIONS.ADD_TO_COMMENT.replace(':id', commentId);
       const response = await apiClient.post(url, { type });
       return { success: true, data: response.data };
     } catch (error) {
+>>>>>>> upstream/golang-programing-class
       return handleApiError(error, '反應失敗');
     }
   }
@@ -45,23 +72,107 @@ class ReactionService {
   async getPostReactions(postId) {
     try {
       const url = apiConfig.ENDPOINTS.REACTIONS.GET_POST_REACTIONS.replace(':id', postId);
+<<<<<<< HEAD
+      console.log('[ReactionService] Fetching post reactions:', { postId, url });
+      const response = await apiClient.get(url);
+      
+      console.log('[ReactionService] Reactions data received:', response.data);
+      // 轉換 API 響應格式
+      const data = this._normalizeReactionResponse(response.data);
+      return { success: true, data };
+    } catch (error) {
+      console.error('[ReactionService] Error fetching post reactions:', { postId, error: error.message, status: error.response?.status, data: error.response?.data });
+=======
       const response = await apiClient.get(url);
       return { success: true, data: response.data };
     } catch (error) {
+>>>>>>> upstream/golang-programing-class
       return handleApiError(error, '取得反應統計失敗');
     }
   }
 
   async getCommentReactions(commentId) {
     try {
+<<<<<<< HEAD
+      // 後端路由：/api/comments/:comment_id/reactions
+      const url = apiConfig.ENDPOINTS.REACTIONS.GET_COMMENT_REACTIONS.replace(':id', commentId);
+      console.log('[ReactionService] Fetching comment reactions:', { commentId, url });
+      const response = await apiClient.get(url);
+      
+      console.log('[ReactionService] Reactions data received:', response.data);
+      // 轉換 API 響應格式
+      const data = this._normalizeReactionResponse(response.data);
+      return { success: true, data };
+    } catch (error) {
+      console.error('[ReactionService] Error fetching comment reactions:', { commentId, error: error.message, status: error.response?.status, data: error.response?.data });
+=======
       const url = apiConfig.ENDPOINTS.REACTIONS.GET_COMMENT_REACTIONS.replace(':id', commentId);
       const response = await apiClient.get(url);
       return { success: true, data: response.data };
     } catch (error) {
+>>>>>>> upstream/golang-programing-class
       return handleApiError(error, '取得反應統計失敗');
     }
   }
 
+<<<<<<< HEAD
+  /**
+   * 標準化 API 響應格式
+   * 將 reactions_summary 對象格式轉換為 reactions 陣列格式
+   * @param {Object} apiData - API 返回的原始數據
+   * @returns {Object} 標準化的數據格式 { reactions: Array, user_reaction: Object|null }
+   */
+  _normalizeReactionResponse(apiData) {
+    console.log('[ReactionService] Normalizing API response:', apiData);
+    
+    if (!apiData) {
+      console.warn('[ReactionService] Null or undefined API data');
+      return { reactions: [], user_reaction: null };
+    }
+
+    // 如果已經是正確格式（reactions 陣列），直接返回
+    if (Array.isArray(apiData.reactions)) {
+      console.log('[ReactionService] Response already in array format');
+      return {
+        reactions: apiData.reactions,
+        user_reaction: apiData.user_reaction || null,
+      };
+    }
+
+    // 如果是 reactions_summary 對象格式，轉換為陣列
+    if (apiData.reactions_summary && typeof apiData.reactions_summary === 'object') {
+      console.log('[ReactionService] Converting reactions_summary to array format');
+      const reactions = Object.entries(apiData.reactions_summary).map(([type, count]) => ({
+        type,
+        count,
+      }));
+
+      // 如果有 reaction 字段表示用戶當前的反應（添加/移除時返回）
+      // 如果有 user_reaction 字段（獲取列表時返回）
+      let userReaction = null;
+      if (apiData.reaction) {
+        userReaction = { type: apiData.reaction.type || apiData.reaction };
+      } else if (apiData.user_reaction) {
+        userReaction = { type: apiData.user_reaction.type || apiData.user_reaction };
+      }
+
+      console.log('[ReactionService] Normalized reactions:', { reactions, userReaction });
+      return {
+        reactions,
+        user_reaction: userReaction,
+      };
+    }
+
+    // 默認返回空響應
+    console.warn('[ReactionService] No recognized format found in API response');
+    return {
+      reactions: [],
+      user_reaction: null,
+    };
+  }
+
+=======
+>>>>>>> upstream/golang-programing-class
   getReactionEmoji(type) {
     const reaction = ReactionService.REACTION_INFO.find(r => r.type === type);
     return reaction ? reaction.emoji : '❓';

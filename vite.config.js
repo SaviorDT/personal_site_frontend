@@ -6,30 +6,59 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 80,
+    port: 9000,
     host: true,
     allowedHosts: [
       'localhost',
-      '127.0.0.1'
+      '127.0.0.1',
+      'xn--kss.xn--kpry57d',
+      'frontend'
     ],
     hmr: {
       protocol: 'ws',
       host: 'localhost',
-      clientPort: 9000
+      port: 9000
     },
-    // 添加代理解決 CORS 問題
     proxy: {
       '/api': {
-        target: 'http://backend:80',
+        // 將 /api 開頭的請求代理到後端
+        target: 'http://localhost:9000',  // 本地後端
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path
+        ws: false,
+        pathRewrite: {
+          '^/api': '/api'  // 保留 /api 在轉發的路徑中
+        },
+        // 重寫請求頭，確保正確的 Origin
+        onProxyReq: (proxyReq, req, res) => {
+          console.log('[Vite Proxy] Forward request:', {
+            method: req.method,
+            url: req.url,
+            target: 'http://localhost:9000',
+            headers: {
+              'origin': proxyReq.getHeader('origin'),
+              'referer': proxyReq.getHeader('referer'),
+            }
+          });
+        },
+        // 日誌記錄回應
+        onProxyRes: (proxyRes, req, res) => {
+          console.log('[Vite Proxy] Response:', {
+            method: req.method,
+            url: req.url,
+            statusCode: proxyRes.statusCode,
+            corsHeaders: {
+              'access-control-allow-origin': proxyRes.getHeader('access-control-allow-origin'),
+            }
+          });
+        }
       }
     }
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@/Components': path.resolve(__dirname, './src/components'),
     }
   },
   build: {

@@ -1,0 +1,62 @@
+/* Layout.css */
+.layout {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  padding-top: 80px; /* 為導航欄留出空間 */
+}
+
+/* 頁面佔位符樣式 */
+.page-placeholder {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #64748B;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* 確保動畫背景覆蓋整個布局 */
+.layout > .animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 70px;
+  }
+  
+  .page-placeholder {
+    font-size: 1.5rem;
+    min-height: calc(100vh - 70px);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 60px;
+  }
+  
+  .page-placeholder {
+    font-size: 1.25rem;
+    padding: 20px;
+    min-height: calc(100vh - 60px);
+  }
+}

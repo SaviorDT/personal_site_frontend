@@ -25,9 +25,18 @@ class PostService {
 
   async createPost(postData) {
     try {
+<<<<<<< HEAD
+      console.log('[PostService] Creating post:', postData);
+      const response = await apiClient.post(apiConfig.ENDPOINTS.POSTS.CREATE, postData);
+      console.log('[PostService] Post created successfully:', response.data);
+      return { success: true, data: response.data, message: '文章建立成功' };
+    } catch (error) {
+      console.error('[PostService] Error creating post:', { error: error.message, status: error.response?.status, data: error.response?.data });
+=======
       const response = await apiClient.post(apiConfig.ENDPOINTS.POSTS.CREATE, postData);
       return { success: true, data: response.data, message: '文章建立成功' };
     } catch (error) {
+>>>>>>> upstream/golang-programing-class
       return handleApiError(error, '建立文章失敗');
     }
   }

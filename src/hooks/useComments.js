@@ -66,7 +66,15 @@ export function useComments(postId) {
     setError(null);
 
     try {
+<<<<<<< HEAD
+      // Defensive check: ensure content is a string
+      const payloadContent = typeof content === 'object' && content.content ? content.content : content;
+      console.log('[DEBUG] updateComment payload:', { original: content, processed: payloadContent });
+
+      const result = await commentService.updateComment(commentId, { content: payloadContent });
+=======
       const result = await commentService.updateComment(commentId, { content });
+>>>>>>> upstream/golang-programing-class
 
       if (result.success) {
         setComments(prev =>

@@ -1,5 +1,5 @@
 export const metadata = {
-    id: '網站歷史',
+    id: 'site-history',
     type: 'about',
     title: '網站發展歷史',
     thumbnail: '/images/articles/site-history-thumbnail.svg',
