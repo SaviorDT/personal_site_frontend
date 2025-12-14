@@ -8,7 +8,6 @@ export function useReactions(type = 'post') {
 
   const fetchReactions = useCallback(async (id) => {
     setLoading(true);
-    setLoading(true);
 
     try {
       const result = type === 'post'
@@ -16,19 +15,18 @@ export function useReactions(type = 'post') {
         : await reactionService.getCommentReactions(id);
 
       if (result.success) {
-        if (result.success) {
-          setReactions(result.data.reactions || []);
-          setUserReaction(result.data.user_reaction || null);
-        } else {
-          // API 返回失敗，記錄錯誤但不拋出異常
-          console.error('[useReactions] Failed to fetch reactions:', result.error);
-        }
-      } catch (err) {
-        console.error('[useReactions] Exception fetching reactions:', err);
-      } finally {
-        setLoading(false);
+        setReactions(result.data.reactions || []);
+        setUserReaction(result.data.user_reaction || null);
+      } else {
+        // API 返回失敗，記錄錯誤但不拋出異常
+        console.error('[useReactions] Failed to fetch reactions:', result.error);
       }
-    }, [type]);
+    } catch (err) {
+      console.error('[useReactions] Exception fetching reactions:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [type]);
 
   const addReaction = useCallback(async (id, reactionType) => {
     const previousReaction = userReaction;
