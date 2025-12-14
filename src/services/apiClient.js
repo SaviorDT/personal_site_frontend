@@ -2,7 +2,6 @@ import axios from 'axios';
 import apiConfig from '@/config/api';
 import i18n from 'i18next';
 
-<<<<<<< HEAD
 // API 基礎 URL 配置
 // 在開發環境中，Vite 代理會轉發 /api 請求到實際的 API 服務器
 // 在生產環境中，使用絕對 URL
@@ -12,32 +11,22 @@ const getBaseURL = () => {
         console.log('[API Client] Development mode: Using relative API path /api (Vite proxy will forward to backend)');
         return '/api';
     }
-    
+
     // 生產環境：使用完整 API URL
     if (apiConfig.API_BASE_URL && apiConfig.API_BASE_URL.startsWith('http')) {
         console.log('[API Client] Production mode: Using full API URL:', apiConfig.API_BASE_URL);
         return apiConfig.API_BASE_URL;
     }
-    
+
     // 預設使用相對路徑
     console.log('[API Client] Using relative API path /api');
-=======
-// 確保 baseURL 使用相對路徑或正確的協議
-const getBaseURL = () => {
-    // 在開發環境強制使用相對路徑
-    // 這樣 axios 會相對於當前頁面的 origin 發送請求
-    // 例如: http://localhost:80/api/posts
->>>>>>> upstream/golang-programing-class
     return '/api';
 };
 
 const calculatedBaseURL = getBaseURL();
 console.log('[API Client] Base URL:', calculatedBaseURL);
 console.log('[API Client] Window location:', window.location.origin);
-<<<<<<< HEAD
 console.log('[API Client] Config API_BASE_URL:', apiConfig.API_BASE_URL);
-=======
->>>>>>> upstream/golang-programing-class
 
 // 創建全域 axios 實例
 const apiClient = axios.create({
@@ -54,15 +43,10 @@ apiClient.interceptors.request.use(
     (config) => {
         // Debug: 顯示完整請求 URL
         const fullUrl = `${config.baseURL || ''}${config.url || ''}`;
-<<<<<<< HEAD
         console.log('[API Request]', config.method?.toUpperCase(), fullUrl, {
             params: config.params,
             withCredentials: config.withCredentials,
         });
-=======
-        console.log('[API Request]', config.method?.toUpperCase(), fullUrl);
-        console.log('[API Config]', { baseURL: config.baseURL, url: config.url, params: config.params });
->>>>>>> upstream/golang-programing-class
 
         // 可以在這裡添加 Authorization header 或其他全域請求配置
         return config;
@@ -122,11 +106,8 @@ export const handleApiError = (error, defaultMessage) => {
         hasRequest: !!error.request,
         message: error.message,
         config: error.config,
-<<<<<<< HEAD
         statusCode: error.response?.status,
         responseData: error.response?.data,
-=======
->>>>>>> upstream/golang-programing-class
     });
 
     let message = defaultMessage;
