@@ -8,7 +8,7 @@ export function useReactions(type = 'post') {
 
   const fetchReactions = useCallback(async (id) => {
     setLoading(true);
-    console.log('[useReactions] Fetching reactions:', { id, type });
+    setLoading(true);
 
     try {
       const result = type === 'post'
@@ -16,19 +16,19 @@ export function useReactions(type = 'post') {
         : await reactionService.getCommentReactions(id);
 
       if (result.success) {
-        console.log('[useReactions] Reactions fetched successfully:', result.data);
-        setReactions(result.data.reactions || []);
-        setUserReaction(result.data.user_reaction || null);
-      } else {
-        // API 返回失敗，記錄錯誤但不拋出異常
-        console.error('[useReactions] Failed to fetch reactions:', result.error);
+        if (result.success) {
+          setReactions(result.data.reactions || []);
+          setUserReaction(result.data.user_reaction || null);
+        } else {
+          // API 返回失敗，記錄錯誤但不拋出異常
+          console.error('[useReactions] Failed to fetch reactions:', result.error);
+        }
+      } catch (err) {
+        console.error('[useReactions] Exception fetching reactions:', err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('[useReactions] Exception fetching reactions:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [type]);
+    }, [type]);
 
   const addReaction = useCallback(async (id, reactionType) => {
     const previousReaction = userReaction;
@@ -83,7 +83,6 @@ export function useReactions(type = 'post') {
       if (result.success) {
         // API 成功，標記為成功
         apiCallSucceeded = true;
-        console.log('Reaction API call successful, fetching latest data...');
 
         // API 成功後，重新獲取數據以確保與伺服器同步
         // 但我們需要小心不要丟失樂觀更新

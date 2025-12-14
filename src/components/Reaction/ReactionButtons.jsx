@@ -38,7 +38,7 @@ const ReactionButtons = ({
 
       // 取得錯誤訊息
       const errorMsg = err.message || err.error || String(err);
-      console.log('錯誤訊息:', errorMsg); // Debug 用
+
 
       // 檢查是否為授權錯誤
       if (errorMsg.includes('Authorization') ||
