@@ -84,4 +84,33 @@ apiClient.interceptors.response.use(
     }
 );
 
+/**
+ * 通用的 API 錯誤處理輔助函數
+ * @param {Error} error - Axios 錯誤對象
+ * @param {string} defaultMessage - 默認錯誤訊息
+ * @returns {Object} 統一的錯誤響應格式 { success: false, message: string }
+ */
+export const handleApiError = (error, defaultMessage = '操作失敗') => {
+    // 優先使用攔截器處理過的錯誤訊息（如果有的話，通常是 string）
+    if (typeof error === 'string') {
+        return {
+            success: false,
+            message: error
+        };
+    }
+
+    // 如果攔截器回傳的是 Error 對象 (例如網絡錯誤)
+    if (error?.message) {
+        return {
+            success: false,
+            message: error.message
+        };
+    }
+
+    return {
+        success: false,
+        message: defaultMessage
+    };
+};
+
 export default apiClient;
