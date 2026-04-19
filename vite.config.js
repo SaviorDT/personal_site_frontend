@@ -9,11 +9,11 @@ export default defineConfig({
     port: 80,
     host: true,
     allowedHosts: [
-      'xn--kss.xn--kpry57d'
+      'tdl.ddns.net'
     ],
     hmr: {
       protocol: 'wss',
-      host: 'xn--ldrz59fv7cs48a.xn--kss.xn--kpry57d',
+      host: 'frontend-dev.tdl.ddns.net',
       clientPort: 443
     }
   },
