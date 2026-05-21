@@ -185,17 +185,20 @@ const BattleCatSearch = () => {
         }
     };
 
-    // 將給定字串中的關鍵詞加上醒目標註（不分大小寫，中文不使用字界）
+    // 將字串以「、」分隔，只比對「（」前段與 keys 完全相符，符合才保留原段落
     const highlightHtml = (input, keys) => {
-        const html = String(input ?? '');
+        const text = String(input ?? '');
         const keywords = (keys || []).map(s => String(s || '').trim()).filter(Boolean);
-        if (!html || keywords.length === 0) return html;
-        // 關鍵字長度由長到短，避免子字串破壞較長匹配
-        const sorted = Array.from(new Set(keywords)).sort((a, b) => b.length - a.length);
-        const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const pattern = sorted.map(escapeRegExp).join('|');
-        const re = new RegExp(`(${pattern})`, 'gi');
-        return html.replace(re, '<span class="bc-highlight">$1</span>');
+        if (!text || keywords.length === 0) return text;
+
+        const keywordSet = new Set(keywords);
+        const parts = text.split('、').map(part => part.trim()).filter(Boolean);
+        const matched = parts.filter(part => {
+            const head = part.split('（')[0].trim();
+            return keywordSet.has(head);
+        });
+
+        return matched.join('、');
     };
 
     return (
@@ -317,7 +320,10 @@ const BattleCatSearch = () => {
                                                                         <span className="lv-name" dangerouslySetInnerHTML={{ __html: lv.name }} />
                                                                     </td>
                                                                     <td className="lv-hp-col">
-                                                                        <span className="lv-hp">HP: {lv.hp}</span>
+                                                                        <span className="lv-hp">統帥力: {lv.hp}</span>
+                                                                    </td>
+                                                                    <td className="lv-time-col">
+                                                                        <span className="lv-time">最短時間: {lv.time}</span>
                                                                     </td>
                                                                     <td className="lv-enemies-col">
                                                                         <span className="lv-enemies" dangerouslySetInnerHTML={{ __html: enemiesHtml }} />

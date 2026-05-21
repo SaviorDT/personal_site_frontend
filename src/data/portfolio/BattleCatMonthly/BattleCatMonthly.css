@@ -214,7 +214,8 @@
 }
 
 .lv-name-col {
-    width: 100%;
+    width: 1%;
+    white-space: nowrap;
     padding-right: .5rem;
 }
 
@@ -222,13 +223,19 @@
     width: 1%;
     white-space: nowrap;
     padding: 0 .5rem;
-    text-align: right;
+}
+
+.lv-time-col {
+    width: 100%;
+    white-space: nowrap;
+    padding: 0 .5rem;
 }
 
 .lv-enemies-col {
     width: 1%;
     white-space: nowrap;
     padding-left: .5rem;
+    text-align: right;
 }
 
 .bc-level-item {
@@ -269,6 +276,14 @@
 }
 
 .lv-hp {
+    color: var(--color-secondary);
+    /* 對齊 HP 欄位，固定寬度並靠右對齊，讓各列對齊一致 */
+    min-width: 88px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.lv-time {
     color: var(--color-secondary);
     /* 對齊 HP 欄位，固定寬度並靠右對齊，讓各列對齊一致 */
     min-width: 88px;
