@@ -1,0 +1,334 @@
+.find-number-game {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: var(--text-primary, #e0e0e0);
+}
+
+/* Header */
+.find-number-game__header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.find-number-game__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-cyan, #4ecdc4);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+}
+
+.find-number-game__subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary, #b0b0b0);
+}
+
+/* Panel */
+.find-number-game__panel {
+    background: rgba(30, 30, 50, 0.6);
+    border: 1px solid rgba(78, 205, 196, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Info bar */
+.find-number-game__info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(78, 205, 196, 0.2);
+    flex-wrap: wrap;
+}
+
+.find-number-game__info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.find-number-game__info-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #b0b0b0);
+}
+
+.find-number-game__info-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-lavender, #b794f6);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Board */
+.find-number-game__board-wrapper {
+    position: relative;
+}
+
+.find-number-game__board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+}
+
+.find-number-game__cell {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 20, 40, 0.6);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    border-radius: 8px;
+    color: var(--text-primary, #e0e0e0);
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.find-number-game__cell:hover:not(:disabled) {
+    border-color: var(--accent-cyan, #4ecdc4);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+    transform: translateY(-2px);
+}
+
+.find-number-game__cell:disabled {
+    cursor: not-allowed;
+}
+
+.find-number-game__cell--clicked {
+    background: rgba(78, 205, 196, 0.15);
+    border-color: rgba(78, 205, 196, 0.4);
+    color: var(--accent-cyan, #4ecdc4);
+    opacity: 0.5;
+}
+
+.find-number-game__cell--wrong {
+    background: rgba(255, 107, 107, 0.25);
+    border-color: #ff6b6b;
+    animation: shake 0.4s ease;
+}
+
+/* Overlay (idle / countdown) */
+.find-number-game__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(12, 12, 20, 0.8);
+    border-radius: 12px;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+}
+
+.find-number-game__countdown {
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--accent-cyan, #4ecdc4);
+    text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+    animation: countdownPulse 1s ease;
+}
+
+/* Buttons */
+.find-number-game__btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.find-number-game__btn--primary {
+    background: linear-gradient(135deg, var(--accent-cyan, #4ecdc4), var(--accent-lavender, #b794f6));
+    color: #fff;
+}
+
+.find-number-game__btn--primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+}
+
+.find-number-game__btn--secondary {
+    background: rgba(78, 205, 196, 0.1);
+    color: var(--accent-cyan, #4ecdc4);
+    border: 1px solid var(--accent-cyan, #4ecdc4);
+}
+
+.find-number-game__btn--secondary:hover:not(:disabled) {
+    background: rgba(78, 205, 196, 0.2);
+}
+
+.find-number-game__btn--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.find-number-game__btn--large {
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+}
+
+/* Modal */
+.find-number-game__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+}
+
+.find-number-game__modal {
+    background: rgba(30, 30, 50, 0.95);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+}
+
+.find-number-game__modal-header {
+    margin-bottom: 1rem;
+}
+
+.find-number-game__modal-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-lavender, #b794f6);
+}
+
+.find-number-game__modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.find-number-game__modal-record {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f5b942;
+    margin-bottom: 0.75rem;
+}
+
+.find-number-game__modal-time {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.find-number-game__modal-time strong {
+    color: var(--accent-cyan, #4ecdc4);
+}
+
+.find-number-game__modal-best {
+    font-size: 0.95rem;
+    color: var(--text-secondary, #b0b0b0);
+}
+
+.find-number-game__modal-actions {
+    display: flex;
+    justify-content: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes countdownPulse {
+    from {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-6px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(6px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .find-number-game {
+        padding: 1rem;
+    }
+
+    .find-number-game__title {
+        font-size: 2rem;
+    }
+
+    .find-number-game__panel {
+        padding: 1.25rem;
+    }
+
+    .find-number-game__board {
+        gap: 0.5rem;
+    }
+
+    .find-number-game__cell {
+        font-size: 1.1rem;
+        border-radius: 6px;
+    }
+
+    .find-number-game__countdown {
+        font-size: 3.5rem;
+    }
+
+    .find-number-game__info-bar {
+        gap: 1.25rem;
+    }
+}
