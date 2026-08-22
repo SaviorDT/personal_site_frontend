@@ -9,11 +9,11 @@ export default defineConfig({
     port: 80,
     host: true,
     allowedHosts: [
-      'deeelol.dedyn.io'
+      'dltsai.com'
     ],
     hmr: {
       protocol: 'wss',
-      host: 'frontend-dev.deeelol.dedyn.io',
+      host: 'frontend-dev.dltsai.com',
       clientPort: 443
     }
   },
