@@ -9,6 +9,7 @@ import {
 import FolderItem from './FolderItem';
 import FileItem from './FileItem';
 import UploadQueueItem from './UploadQueueItem';
+import ShareModal from './ShareModal';
 import { metadata } from './FileSystemMetadata';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -28,6 +29,7 @@ const FileSystem = () => {
     const [newFolderName, setNewFolderName] = useState('');
     const [newFileName, setNewFileName] = useState('');
     const [previewEntry, setPreviewEntry] = useState(null); // { type, name, ..., isNew? }
+    const [sharingEntry, setSharingEntry] = useState(null); // { type: 'file', name } | null，僅檔案分享
     const [textDraft, setTextDraft] = useState('');
     const [saving, setSaving] = useState(false);
     const uploadRef = useRef(null);
@@ -269,6 +271,8 @@ const FileSystem = () => {
             setError(e.message || String(e));
         }
     };
+
+    const onShare = (entry) => setSharingEntry(entry);
 
     const isSubPath = (a, b) => {
         // a 是否為 b 的子路徑（含等於） a/b 皆為陣列
@@ -540,6 +544,7 @@ const FileSystem = () => {
                                     onRename={() => onRename({ type: 'file', name: entry.name })}
                                     onDownload={() => onDownload(entry)}
                                     onMove={() => onMove({ type: 'file', name: entry.name })}
+                                    onShare={() => onShare({ type: 'file', name: entry.name })}
                                 />
                             )
                         ))
@@ -592,6 +597,15 @@ const FileSystem = () => {
                             )}
                         </div>
                     </div>
+                )}
+
+                {sharingEntry && (
+                    <ShareModal
+                        entry={sharingEntry}
+                        path={path}
+                        isAuthenticated={isAuthenticated}
+                        onClose={() => setSharingEntry(null)}
+                    />
                 )}
             </div>
         </>

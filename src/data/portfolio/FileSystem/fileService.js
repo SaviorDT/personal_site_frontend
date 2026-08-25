@@ -472,3 +472,22 @@ export const moveFolder = async (fromPathArr, name, toPathArr) => {
         raiseStorageError(error, 'fileSystem.errors.moveFolder', '移動資料夾失敗');
     }
 };
+
+// ---- 分享（目前僅支援檔案，資料夾分享邏輯留待之後） ----
+
+// 建立分享連結：expiresInSeconds 為正整數秒數（呼叫端負責換算與範圍檢查，後端上限 1 年）。
+// 回傳後端 data 物件：{ code, owner_id, path, type, expires_at, use_count, disabled, created_at, updated_at }
+export const createShareCode = async (pathArr, name, expiresInSeconds) => {
+    const url = buildUrl(EP.SHARE.CREATE_CODE, pathArr, name);
+    try {
+        const res = await apiClient.get(url, { params: { expires_in: expiresInSeconds } });
+        return res.data?.data || res.data;
+    } catch (error) {
+        raiseStorageError(error, 'fileSystem.errors.createShare', '建立分享連結失敗');
+    }
+};
+
+// 由 share code 組出可直接訪問（下載）該檔案的完整後端網址，供未縮短時直接複製使用
+export const getShareFileUrl = (code) => {
+    return apiConfig.API_BASE_URL + `${EP.SHARE.DOWNLOAD_FILE}/${encodeURIComponent(code)}`;
+};

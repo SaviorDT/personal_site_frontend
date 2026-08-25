@@ -241,7 +241,28 @@ const resources = {
           move: "移動",
           delete: "刪除",
           open: "開啟",
+          share: "分享",
           folderLabel: "資料夾"
+        },
+        share: {
+          title: "分享檔案",
+          expiresLabel: "期限",
+          duration: {
+            "1h": "1 小時",
+            "12h": "12 小時",
+            "1d": "1 天",
+            "7d": "7 天",
+            "30d": "30 天",
+            "365d": "365 天"
+          },
+          shortenLabel: "縮短網址",
+          loginRequired: "登入後才能縮短網址",
+          generate: "產生連結",
+          generating: "產生中…",
+          copy: "複製",
+          copySuccess: "已複製到剪貼簿！",
+          copyFailed: "複製失敗，請手動複製",
+          shortenFailedFallback: "縮短網址失敗，已改用原始連結"
         },
         errors: {
           listDirectory: "無法取得目錄內容",
@@ -250,6 +271,7 @@ const resources = {
           deleteFolder: "刪除資料夾失敗",
           createSession: "無法建立上傳工作階段",
           createEmptyFile: "建立空檔案失敗",
+          createShare: "建立分享連結失敗",
           uploadRetryExhausted: "檔案上傳失敗，已達重試上限",
           cancelUpload: "取消上傳失敗",
           renameFile: "重新命名檔案失敗",
@@ -502,7 +524,28 @@ const resources = {
           move: "Move",
           delete: "Delete",
           open: "Open",
+          share: "Share",
           folderLabel: "Folder"
+        },
+        share: {
+          title: "Share file",
+          expiresLabel: "Expires in",
+          duration: {
+            "1h": "1 hour",
+            "12h": "12 hours",
+            "1d": "1 day",
+            "7d": "7 days",
+            "30d": "30 days",
+            "365d": "365 days"
+          },
+          shortenLabel: "Shorten the URL",
+          loginRequired: "Log in to shorten the URL",
+          generate: "Generate link",
+          generating: "Generating…",
+          copy: "Copy",
+          copySuccess: "Copied to clipboard!",
+          copyFailed: "Copy failed, please copy it manually",
+          shortenFailedFallback: "Failed to shorten the URL, using the original link instead"
         },
         errors: {
           listDirectory: "Failed to load directory contents",
@@ -511,6 +554,7 @@ const resources = {
           deleteFolder: "Failed to delete folder",
           createSession: "Failed to start an upload session",
           createEmptyFile: "Failed to create empty file",
+          createShare: "Failed to create share link",
           uploadRetryExhausted: "File upload failed, retry limit reached",
           cancelUpload: "Failed to cancel upload",
           renameFile: "Failed to rename file",

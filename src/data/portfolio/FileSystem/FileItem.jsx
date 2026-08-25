@@ -20,7 +20,7 @@ const kindEmoji = (kind) => {
     }
 };
 
-const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, onMove, kind }) => {
+const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, onMove, onShare, kind }) => {
     const { t } = useTranslation();
     return (
         <div className="fs-item" role="button" tabIndex={0} onDoubleClick={onOpen} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
@@ -34,6 +34,7 @@ const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, onMove, 
                 <button className="fs-link" onClick={onDownload}>{t('fileSystem.item.download', '下載')}</button>
                 {onRename && <button className="fs-link" onClick={onRename}>{t('fileSystem.item.rename', '重新命名')}</button>}
                 {onMove && <button className="fs-link" onClick={onMove}>{t('fileSystem.item.move', '移動')}</button>}
+                {onShare && <button className="fs-link" onClick={onShare}>{t('fileSystem.item.share', '分享')}</button>}
                 <button className="fs-link danger" onClick={onDelete}>{t('fileSystem.item.delete', '刪除')}</button>
             </div>
         </div>

@@ -46,7 +46,16 @@ const apiConfig = {
         DELETE: '/storage/file',
         // GET    /storage/file/*file_path   下載/串流；responseType: blob
         DOWNLOAD: '/storage/file',
-      }
+      },
+      SHARE: {
+        // GET /storage/share_code/*file_or_folder_path?expires_in=<秒數>
+        // 建立分享連結；expires_in 為秒數（預設 604800=7天，上限 31536000=1年）
+        // 回傳 { data: { code, path, type, expires_at, ... } }。
+        // 目前前端只用於檔案分享（type 會是 "file"）。
+        CREATE_CODE: '/storage/share_code',
+        // GET /storage/share_file/:share_code  公開下載端點，不需登入
+        DOWNLOAD_FILE: '/storage/share_file',
+      },
     },
     // 短網址管理相關端點
     URL_SHORTENER: {
