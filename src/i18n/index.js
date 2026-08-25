@@ -210,6 +210,8 @@ const resources = {
         },
         upload: {
           summary: "上傳進度：{{done}} / {{total}} 個檔案（{{doneBytes}} / {{totalBytes}}）",
+          collapse: "收合",
+          expand: "展開",
           cancelAll: "全部取消",
           clearCompleted: "清除已完成",
           cancel: "取消",
@@ -469,6 +471,8 @@ const resources = {
         },
         upload: {
           summary: "Upload progress: {{done}} / {{total}} files ({{doneBytes}} / {{totalBytes}})",
+          collapse: "Collapse",
+          expand: "Expand",
           cancelAll: "Cancel all",
           clearCompleted: "Clear completed",
           cancel: "Cancel",

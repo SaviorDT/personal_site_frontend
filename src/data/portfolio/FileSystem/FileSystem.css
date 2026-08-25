@@ -363,6 +363,24 @@
     gap: 8px;
 }
 
+/* 收合/展開整個上傳佇列列表的按鈕，跟彙總文字共用同一列，本身也是彙總文字的容器 */
+.fs-upload-collapse-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+}
+
+.fs-upload-collapse-toggle:hover {
+    opacity: 0.85;
+}
+
 .fs-upload-list {
     display: flex;
     flex-direction: column;

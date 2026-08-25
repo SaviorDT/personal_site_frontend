@@ -35,6 +35,8 @@ const FileSystem = () => {
 
     // 上傳佇列：每個檔案一筆，狀態獨立（uploading/success/failed/cancelled）
     const [uploadEntries, setUploadEntries] = useState([]);
+    // 整個上傳佇列面板是否收合：只收合列表本身，彙總列（完成數/位元組）仍然常駐顯示
+    const [uploadListCollapsed, setUploadListCollapsed] = useState(false);
     // 常駐的 upload queue：整個元件生命週期只建立一次，之後每次觸發上傳都塞進同一份，
     // 讓還在跑的批次跟新加入的批次共用同一份 16 檔/100MB 的併發預算，而不是各自重新起算。
     const uploadQueueRef = useRef(null);
@@ -455,14 +457,22 @@ const FileSystem = () => {
                 {uploadSummary && (
                     <div className="fs-upload-queue">
                         <div className="fs-upload-summary">
-                            <span>
-                                {t('fileSystem.upload.summary', '上傳進度：{{done}} / {{total}} 個檔案（{{doneBytes}} / {{totalBytes}}）', {
-                                    done: uploadSummary.doneFiles,
-                                    total: uploadSummary.totalFiles,
-                                    doneBytes: formatBytes(uploadSummary.doneBytes),
-                                    totalBytes: formatBytes(uploadSummary.totalBytes),
-                                })}
-                            </span>
+                            <button
+                                className="fs-upload-collapse-toggle"
+                                onClick={() => setUploadListCollapsed((v) => !v)}
+                                aria-expanded={!uploadListCollapsed}
+                                title={uploadListCollapsed ? t('fileSystem.upload.expand', '展開') : t('fileSystem.upload.collapse', '收合')}
+                            >
+                                <span aria-hidden="true">{uploadListCollapsed ? '▸' : '▾'}</span>
+                                <span>
+                                    {t('fileSystem.upload.summary', '上傳進度：{{done}} / {{total}} 個檔案（{{doneBytes}} / {{totalBytes}}）', {
+                                        done: uploadSummary.doneFiles,
+                                        total: uploadSummary.totalFiles,
+                                        doneBytes: formatBytes(uploadSummary.doneBytes),
+                                        totalBytes: formatBytes(uploadSummary.totalBytes),
+                                    })}
+                                </span>
+                            </button>
                             <div className="fs-upload-summary-actions">
                                 {uploadSummary.hasActive && (
                                     <button className="fs-btn" onClick={onCancelAllUploads}>{t('fileSystem.upload.cancelAll', '全部取消')}</button>
@@ -472,17 +482,19 @@ const FileSystem = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="fs-upload-list">
-                            {uploadEntries.map((entry) => (
-                                <UploadQueueItem
-                                    key={entry.id}
-                                    entry={entry}
-                                    onCancel={() => onCancelUploadEntry(entry)}
-                                    onRetry={() => onRetryUploadEntry(entry)}
-                                    onDismiss={() => onDismissUploadEntry(entry.id)}
-                                />
-                            ))}
-                        </div>
+                        {!uploadListCollapsed && (
+                            <div className="fs-upload-list">
+                                {uploadEntries.map((entry) => (
+                                    <UploadQueueItem
+                                        key={entry.id}
+                                        entry={entry}
+                                        onCancel={() => onCancelUploadEntry(entry)}
+                                        onRetry={() => onRetryUploadEntry(entry)}
+                                        onDismiss={() => onDismissUploadEntry(entry.id)}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
 
