@@ -26,23 +26,25 @@ const apiConfig = {
     },
     FILE_SYSTEM: {
       FOLDERS: {
-        // GET    LIST   ?path=<folderPath>
+        // GET    /storage/folder/*folder_path   列出目錄內容（無此路徑時回 200 + {}）
         LIST: '/storage/folder',
-        // POST   CREATE body: { path, name }
+        // POST   /storage/folder/*folder_path   建立資料夾，無 request body
         CREATE: '/storage/folder',
-        // PATCH  RENAME body: { path, oldName, newName }
+        // PATCH  /storage/folder/*folder_path   body: { path: 新路徑 }（rename/move 共用）
         RENAME: '/storage/folder',
-        // DELETE DELETE params: { path, name }
+        // DELETE /storage/folder/*folder_path   遞迴刪除資料夾與其內容
         DELETE: '/storage/folder',
       },
       FILES: {
-        // POST   UPLOAD multipart/form-data: { path, file }
+        // 可續傳上傳（session-based，見 fileService.js 的 runResumableUpload）：
+        // POST /storage/file/*file_path  body: { size } → { session_id }
+        // PUT  /storage/file/*file_path?session_id=&offset=  body: raw binary
         UPLOAD: '/storage/file',
-        // PATCH  RENAME body: { path, oldName, newName }
+        // PATCH  /storage/file/*file_path   body: { path: 新路徑 }（rename/move 共用）
         RENAME: '/storage/file',
-        // DELETE DELETE params: { path, name }
+        // DELETE /storage/file/*file_path   刪除已完成的檔案；帶 ?session_id= 則改為取消進行中的上傳
         DELETE: '/storage/file',
-        // GET    DOWNLOAD ?path=&name=  responseType: blob
+        // GET    /storage/file/*file_path   下載/串流；responseType: blob
         DOWNLOAD: '/storage/file',
       }
     },

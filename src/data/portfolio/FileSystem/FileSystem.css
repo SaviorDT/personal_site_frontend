@@ -328,6 +328,124 @@
     overflow-x: hidden;
 }
 
+/* 訪客共用儲存空間提示 */
+.fs-guest-notice {
+    font-size: 13px;
+    color: #c8d6f0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin: 0 16px;
+    opacity: 0.9;
+}
+
+/* 上傳佇列：彙總列 + 每檔獨立進度列（可捲動，避免大量檔案撐爆頁面） */
+.fs-upload-queue {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 16px;
+}
+
+.fs-upload-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #c8d6f0;
+}
+
+.fs-upload-summary-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.fs-upload-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.fs-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.fs-upload-row--failed {
+    background: rgba(255, 107, 107, 0.06);
+}
+
+.fs-upload-row--cancelled {
+    opacity: 0.7;
+}
+
+.fs-upload-row-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fs-upload-row-name {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fs-upload-row-meta {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 12px;
+    opacity: 0.75;
+    flex-wrap: wrap;
+}
+
+.fs-upload-status {
+    font-weight: 600;
+}
+
+.fs-upload-status--success {
+    color: #4ade80;
+}
+
+.fs-upload-status--failed {
+    color: #ff8585;
+}
+
+.fs-upload-status--cancelled {
+    color: #c8d6f0;
+}
+
+.fs-upload-error {
+    color: #ff8585;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 240px;
+}
+
+.fs-upload-row-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 .fs-item {
     display: flex;
     align-items: center;
@@ -463,7 +581,8 @@
 .fs-header,
 .fs-toolbar,
 .fs-preview,
-.fs-container {
+.fs-container,
+.fs-upload-queue {
     padding-left: 16px;
     padding-right: 16px;
 }
@@ -483,9 +602,20 @@
     .fs-header,
     .fs-toolbar,
     .fs-preview,
-    .fs-container {
+    .fs-container,
+    .fs-upload-queue {
         padding-left: 12px;
         padding-right: 12px;
+    }
+
+    .fs-upload-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .fs-upload-row-actions {
+        flex-basis: 100%;
+        justify-content: flex-start;
     }
 
     .fs-item {

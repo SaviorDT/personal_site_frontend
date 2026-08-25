@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 function formatBytes(bytes) {
     if (bytes === 0 || bytes == null) return '-';
@@ -20,6 +21,7 @@ const kindEmoji = (kind) => {
 };
 
 const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, onMove, kind }) => {
+    const { t } = useTranslation();
     return (
         <div className="fs-item" role="button" tabIndex={0} onDoubleClick={onOpen} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
             <div className="fs-item-icon">{kindEmoji(kind)}</div>
@@ -28,11 +30,11 @@ const FileItem = ({ name, size, onOpen, onDelete, onDownload, onRename, onMove, 
                 <div className="fs-item-meta">{formatBytes(size)}</div>
             </div>
             <div className="fs-item-actions">
-                <button className="fs-link" onClick={onOpen}>預覽</button>
-                <button className="fs-link" onClick={onDownload}>下載</button>
-                {onRename && <button className="fs-link" onClick={onRename}>重新命名</button>}
-                {onMove && <button className="fs-link" onClick={onMove}>移動</button>}
-                <button className="fs-link danger" onClick={onDelete}>刪除</button>
+                <button className="fs-link" onClick={onOpen}>{t('fileSystem.item.preview', '預覽')}</button>
+                <button className="fs-link" onClick={onDownload}>{t('fileSystem.item.download', '下載')}</button>
+                {onRename && <button className="fs-link" onClick={onRename}>{t('fileSystem.item.rename', '重新命名')}</button>}
+                {onMove && <button className="fs-link" onClick={onMove}>{t('fileSystem.item.move', '移動')}</button>}
+                <button className="fs-link danger" onClick={onDelete}>{t('fileSystem.item.delete', '刪除')}</button>
             </div>
         </div>
     );

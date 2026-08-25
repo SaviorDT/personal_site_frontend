@@ -171,6 +171,95 @@ const resources = {
           noTarget: "短網址配置錯誤，無法獲取目標網址",
           network: "網絡連接錯誤，請檢查您的網絡"
         }
+      },
+      // 簡易儲存倉庫（FileSystem 元件）
+      fileSystem: {
+        guestNotice: "目前以訪客身分使用共用儲存空間，所有未登入的使用者共用同一份檔案，且管理員可以看到這裡的所有內容——請不要上傳不想被看到的東西。",
+        breadcrumb: {
+          root: "根目錄"
+        },
+        actions: {
+          goRoot: "回到根目錄",
+          goUp: "上一層",
+          upload: "上傳",
+          uploadFilesTitle: "上傳檔案",
+          uploadFolder: "上傳資料夾",
+          refresh: "重新整理"
+        },
+        toolbar: {
+          newFolderPlaceholder: "新資料夾名稱",
+          createFolder: "新增資料夾",
+          newFilePlaceholder: "新檔案名稱（例如 notes.txt）",
+          createFile: "新增檔案"
+        },
+        validation: {
+          invalidFileName: "檔名不可包含 / 或 \\"
+        },
+        confirm: {
+          deleteEntry: "確定要刪除「{{name}}」嗎？",
+          renamePrompt: "重新命名為：",
+          movePrompt: "移動到目標資料夾路徑（例如 / 或 /相簿/日本）",
+          cannotMoveIntoSelf: "不可將資料夾移動到自己或其子路徑"
+        },
+        list: {
+          loading: "讀取中…",
+          empty: "這裡還沒有檔案或資料夾"
+        },
+        download: {
+          previewLoading: "下載預覽…"
+        },
+        upload: {
+          summary: "上傳進度：{{done}} / {{total}} 個檔案（{{doneBytes}} / {{totalBytes}}）",
+          cancelAll: "全部取消",
+          clearCompleted: "清除已完成",
+          cancel: "取消",
+          retry: "重試",
+          dismiss: "移除此列",
+          status: {
+            uploading: "上傳中",
+            success: "完成",
+            failed: "失敗",
+            cancelled: "已取消"
+          }
+        },
+        preview: {
+          titleNew: "新增檔案（尚未儲存）：",
+          titleExisting: "預覽：",
+          close: "關閉",
+          download: "下載",
+          pdfFallback: "PDF 無法預覽，請下載",
+          saving: "儲存中…",
+          save: "儲存",
+          unsupported: "無法預覽此檔案，請下載查看。"
+        },
+        item: {
+          preview: "預覽",
+          download: "下載",
+          rename: "重新命名",
+          move: "移動",
+          delete: "刪除",
+          open: "開啟",
+          folderLabel: "資料夾"
+        },
+        errors: {
+          listDirectory: "無法取得目錄內容",
+          createFolder: "建立資料夾失敗",
+          renameFolder: "重新命名資料夾失敗",
+          deleteFolder: "刪除資料夾失敗",
+          createSession: "無法建立上傳工作階段",
+          createEmptyFile: "建立空檔案失敗",
+          uploadRetryExhausted: "檔案上傳失敗，已達重試上限",
+          cancelUpload: "取消上傳失敗",
+          renameFile: "重新命名檔案失敗",
+          deleteFile: "刪除檔案失敗",
+          getFile: "無法取得檔案",
+          notTextFile: "非文字檔案",
+          moveFile: "移動檔案失敗",
+          moveFolder: "移動資料夾失敗",
+          locked: "此檔案正在上傳中，請稍後再試",
+          conflict: "這段內容與已寫入的資料重疊，請重新整理後再試",
+          staleSession: "上傳工作階段已過期或不正確，請重新開始上傳"
+        }
       }
     }
   },
@@ -340,6 +429,95 @@ const resources = {
         error: {
           noTarget: "Short URL configuration error, unable to get target URL",
           network: "Network connection error, please check your network"
+        }
+      },
+      // Simple Storage Vault (FileSystem component)
+      fileSystem: {
+        guestNotice: "You're using the shared guest storage — everyone who isn't logged in shares the same files, and admins can see everything here. Please don't upload anything you don't want seen.",
+        breadcrumb: {
+          root: "Root"
+        },
+        actions: {
+          goRoot: "Go to root",
+          goUp: "Up one level",
+          upload: "Upload",
+          uploadFilesTitle: "Upload files",
+          uploadFolder: "Upload folder",
+          refresh: "Refresh"
+        },
+        toolbar: {
+          newFolderPlaceholder: "New folder name",
+          createFolder: "New folder",
+          newFilePlaceholder: "New file name (e.g. notes.txt)",
+          createFile: "New file"
+        },
+        validation: {
+          invalidFileName: "File name cannot contain / or \\"
+        },
+        confirm: {
+          deleteEntry: "Are you sure you want to delete \"{{name}}\"?",
+          renamePrompt: "Rename to:",
+          movePrompt: "Move to target folder path (e.g. / or /Albums/Japan)",
+          cannotMoveIntoSelf: "A folder cannot be moved into itself or its own subfolder"
+        },
+        list: {
+          loading: "Loading…",
+          empty: "No files or folders here yet"
+        },
+        download: {
+          previewLoading: "Downloading preview…"
+        },
+        upload: {
+          summary: "Upload progress: {{done}} / {{total}} files ({{doneBytes}} / {{totalBytes}})",
+          cancelAll: "Cancel all",
+          clearCompleted: "Clear completed",
+          cancel: "Cancel",
+          retry: "Retry",
+          dismiss: "Remove this row",
+          status: {
+            uploading: "Uploading",
+            success: "Done",
+            failed: "Failed",
+            cancelled: "Cancelled"
+          }
+        },
+        preview: {
+          titleNew: "New file (not saved yet): ",
+          titleExisting: "Preview: ",
+          close: "Close",
+          download: "Download",
+          pdfFallback: "Can't preview this PDF, please download it",
+          saving: "Saving…",
+          save: "Save",
+          unsupported: "Can't preview this file, please download it to view."
+        },
+        item: {
+          preview: "Preview",
+          download: "Download",
+          rename: "Rename",
+          move: "Move",
+          delete: "Delete",
+          open: "Open",
+          folderLabel: "Folder"
+        },
+        errors: {
+          listDirectory: "Failed to load directory contents",
+          createFolder: "Failed to create folder",
+          renameFolder: "Failed to rename folder",
+          deleteFolder: "Failed to delete folder",
+          createSession: "Failed to start an upload session",
+          createEmptyFile: "Failed to create empty file",
+          uploadRetryExhausted: "File upload failed, retry limit reached",
+          cancelUpload: "Failed to cancel upload",
+          renameFile: "Failed to rename file",
+          deleteFile: "Failed to delete file",
+          getFile: "Failed to load file",
+          notTextFile: "Not a text file",
+          moveFile: "Failed to move file",
+          moveFolder: "Failed to move folder",
+          locked: "This file is currently being uploaded, please try again later",
+          conflict: "This range overlaps data that was already written, please refresh and try again",
+          staleSession: "The upload session has expired or is invalid, please start the upload again"
         }
       }
     }
