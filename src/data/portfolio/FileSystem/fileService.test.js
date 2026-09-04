@@ -93,3 +93,53 @@ test('resumeOffset 帶進非整數時，第一個 PUT 的 offset 被向下取整
     expect(offsets[0]).toBe(1048576);
     offsets.forEach((o) => expect(Number.isInteger(o)).toBe(true));
 });
+
+const httpError = (status) => Object.assign(new Error(`HTTP ${status}`), { response: { status } });
+
+test.each([403, 409])('續傳時 PUT 收到 %i：丟掉舊 session，重開新 session 從 offset 0 重來', async (status) => {
+    let putCount = 0;
+    apiClient.put.mockImplementation(async (url, body, config) => {
+        putCount += 1;
+        // 續傳的第一個 PUT（offset 1MB、用 sess-x）失敗
+        if (putCount === 1) throw httpError(status);
+        return { data: { status: 'in_progress' } };
+    });
+
+    await uploadFile(['/'], makeFile(3 * 1024 * 1024), {
+        resumeSessionId: 'sess-x',
+        resumeOffset: 1 * 1024 * 1024,
+    });
+
+    // fallback 會 POST 一個全新的 session
+    expect(apiClient.post).toHaveBeenCalledTimes(1);
+
+    const calls = apiClient.put.mock.calls;
+    // 第一次失敗那個 PUT 用舊 session、offset 1MB
+    expect(calls[0][2].params).toMatchObject({ session_id: 'sess-x', offset: 1 * 1024 * 1024 });
+    // fallback 之後：offset 歸零、改用新 session
+    expect(calls[1][2].params.offset).toBe(0);
+    expect(calls[1][2].params.session_id).toBe('sess-1');
+
+    // 續傳後的 offset 依然整數、嚴格連續、總和等於檔案大小
+    let expected = 0;
+    for (const [, b, cfg] of calls.slice(1)) {
+        expect(Number.isInteger(cfg.params.offset)).toBe(true);
+        expect(cfg.params.offset).toBe(expected);
+        expected += b.size;
+    }
+    expect(expected).toBe(3 * 1024 * 1024);
+});
+
+test('fallback 之後又失敗：錯誤照常往外拋（不會無限重開 session）', async () => {
+    apiClient.put.mockImplementation(async () => { throw httpError(403); });
+
+    await expect(
+        uploadFile(['/'], makeFile(2 * 1024 * 1024), {
+            resumeSessionId: 'sess-x',
+            resumeOffset: 512 * 1024,
+        })
+    ).rejects.toThrow();
+
+    // 只重開一次 session（fallback 只做一次）
+    expect(apiClient.post).toHaveBeenCalledTimes(1);
+});

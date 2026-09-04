@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import './FileSystem.css';
 import {
-    listDirectory, createFolder, createUploadQueue, prepareFolderUploadTasks, uploadFile, cancelFileUpload,
+    listDirectory, createFolder, createStorageUploadQueue, prepareFolderUploadTasks,
     deleteFile, deleteFolder, renameFile, renameFolder, downloadFile, getFileEntry,
     getTextContent, saveTextContent, pathToString, stringToPath, moveFile, moveFolder, getDownloadUrl,
 } from './fileService';
+import { selectSummary } from './uploadQueueState';
 import FolderItem from './FolderItem';
 import FileItem from './FileItem';
 import UploadQueueItem from './UploadQueueItem';
@@ -13,7 +14,6 @@ import ShareModal from './ShareModal';
 import { metadata } from './FileSystemMetadata';
 import { useAuth } from '@/contexts/AuthContext';
 
-const isAbortLike = (error) => error?.name === 'CanceledError' || error?.name === 'AbortError';
 const makeUploadId = () => (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
 const FileSystem = () => {
@@ -35,14 +35,15 @@ const FileSystem = () => {
     const uploadRef = useRef(null);
     const folderUploadRef = useRef(null);
 
-    // 上傳佇列：每個檔案一筆，狀態獨立（uploading/success/failed/cancelled）
-    const [uploadEntries, setUploadEntries] = useState([]);
     // 整個上傳佇列面板是否收合：只收合列表本身，彙總列（完成數/位元組）仍然常駐顯示
     const [uploadListCollapsed, setUploadListCollapsed] = useState(false);
-    // 常駐的 upload queue：整個元件生命週期只建立一次，之後每次觸發上傳都塞進同一份，
-    // 讓還在跑的批次跟新加入的批次共用同一份 16 檔/100MB 的併發預算，而不是各自重新起算。
-    const uploadQueueRef = useRef(null);
-    if (!uploadQueueRef.current) uploadQueueRef.current = createUploadQueue();
+    // 常駐的 upload queue（單一權威狀態來源）：整個元件生命週期只建立一次，之後每次觸發上傳
+    // 都塞進同一份，讓還在跑的批次跟新加入的批次共用同一份 16 檔/100MB 的併發預算。
+    const queueRef = useRef(null);
+    if (!queueRef.current) queueRef.current = createStorageUploadQueue();
+    const queue = queueRef.current;
+    const queueState = useSyncExternalStore(queue.subscribe, queue.getState);
+    const uploadEntries = queueState.entries;
 
     // 下載進度（預覽用）
     const [downloading, setDownloading] = useState(false);
@@ -100,64 +101,31 @@ const FileSystem = () => {
     };
 
     // ---- 上傳佇列 ----
-
-    const updateUploadEntry = (id, patch) => {
-        setUploadEntries((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)));
-    };
+    // 佇列本身是單一權威狀態來源；元件只負責：把選到的檔案算出目的地路徑後 enqueue，
+    // 以及在有檔案「新完成」時 debounce 刷新目錄列表（唯一留在元件裡的 state→side-effect）。
 
     const startUploadBatch = async (destPathArr, fileList, { isFolder }) => {
         const files = Array.from(fileList || []);
         if (!files.length) return;
 
-        const newEntries = files.map((file) => ({
+        let tasks;
+        try {
+            // 資料夾上傳：先把子資料夾建好，並「事先」算出每個檔案正確的目的地 pathArr
+            tasks = isFolder
+                ? await prepareFolderUploadTasks(destPathArr, files)
+                : files.map((file) => ({ pathArr: destPathArr, file }));
+        } catch (batchError) {
+            setError(batchError.message || String(batchError));
+            return;
+        }
+
+        queue.enqueue(tasks.map(({ pathArr, file }) => ({
             id: makeUploadId(),
-            pathArr: destPathArr, // 資料夾上傳時，onFileStart 會依實際子路徑覆寫成正確的目的地
+            pathArr,
             file,
             name: file.webkitRelativePath || file.name,
             size: file.size || 0,
-            status: 'uploading',
-            uploadedBytes: 0,
-            sessionId: null,
-            error: null,
-            controller: null,
-        }));
-        setUploadEntries((prev) => [...prev, ...newEntries]);
-
-        try {
-            const tasks = isFolder
-                ? await prepareFolderUploadTasks(destPathArr, files)
-                : files.map((file) => ({ pathArr: destPathArr, file }));
-
-            await uploadQueueRef.current.enqueue(tasks, {
-                onFileStart: (task, index, controller) => {
-                    updateUploadEntry(newEntries[index].id, { controller, pathArr: task.pathArr });
-                },
-                onFileSessionStart: (task, index, sessionId) => {
-                    updateUploadEntry(newEntries[index].id, { sessionId });
-                },
-                onFileProgress: (task, index, progress) => {
-                    updateUploadEntry(newEntries[index].id, { uploadedBytes: progress.uploadedBytes });
-                },
-                onFileSettled: (result, index) => {
-                    const id = newEntries[index].id;
-                    if (result.success) {
-                        updateUploadEntry(id, { status: 'success', uploadedBytes: newEntries[index].size });
-                    } else if (isAbortLike(result.error)) {
-                        updateUploadEntry(id, { status: 'cancelled' });
-                    } else {
-                        updateUploadEntry(id, { status: 'failed', error: result.error?.message || String(result.error) });
-                    }
-                },
-            });
-        } catch (batchError) {
-            // 例如資料夾建立本身就失敗，整批還沒進入排程就中止；把還沒開始跑的行標記失敗
-            setUploadEntries((prev) => prev.map((e) => (
-                newEntries.some((ne) => ne.id === e.id) && e.status === 'uploading'
-                    ? { ...e, status: 'failed', error: batchError.message || String(batchError) }
-                    : e
-            )));
-        }
-        await refresh();
+        })));
     };
 
     const onPickFiles = (ev) => {
@@ -172,67 +140,24 @@ const FileSystem = () => {
         startUploadBatch(path, files, { isFolder: true });
     };
 
-    // 取消單一檔案：中止 client 端請求，並在已知 session_id 時呼叫伺服器端取消釋放預留空間
-    const onCancelUploadEntry = async (entry) => {
-        entry.controller?.abort();
-        if (entry.sessionId) {
-            try {
-                await cancelFileUpload(entry.pathArr, entry.file.name, entry.sessionId);
-            } catch (_) {
-                // 盡力而為：取消端點本身失敗不影響前端已中止的狀態
-            }
+    const uploadSummary = useMemo(() => selectSummary(queueState), [queueState]);
+
+    // 目錄刷新：偵測到有 entry 新轉為 success 就刷新，debounce ~300ms 讓一連串完成只刷一次
+    const refreshTimerRef = useRef(null);
+    const seenSuccessRef = useRef(new Set());
+    useEffect(() => {
+        const successIds = uploadEntries.filter((e) => e.status === 'success').map((e) => e.id);
+        const seen = seenSuccessRef.current;
+        const hasNew = successIds.some((id) => !seen.has(id));
+        seenSuccessRef.current = new Set(successIds);
+        if (hasNew) {
+            clearTimeout(refreshTimerRef.current);
+            refreshTimerRef.current = setTimeout(() => { refresh(); }, 300);
         }
-    };
-
-    const onCancelAllUploads = () => {
-        uploadEntries.filter((e) => e.status === 'uploading').forEach(onCancelUploadEntry);
-    };
-
-    // 重試：重用已知的 session_id（若有）與已上傳的位元組續傳，重試時估算器會自動從 1MB 重新開始
-    const onRetryUploadEntry = (entry) => {
-        const controller = new AbortController();
-        updateUploadEntry(entry.id, { status: 'uploading', error: null, controller });
-        uploadFile(entry.pathArr, entry.file, {
-            signal: controller.signal,
-            resumeSessionId: entry.sessionId || undefined,
-            resumeOffset: entry.uploadedBytes || 0,
-            onSessionStart: (sessionId) => updateUploadEntry(entry.id, { sessionId }),
-            onProgress: (progress) => updateUploadEntry(entry.id, { uploadedBytes: progress.uploadedBytes }),
-        }).then(() => {
-            updateUploadEntry(entry.id, { status: 'success', uploadedBytes: entry.size });
-            refresh();
-        }).catch((err) => {
-            if (isAbortLike(err)) {
-                updateUploadEntry(entry.id, { status: 'cancelled' });
-            } else {
-                updateUploadEntry(entry.id, {
-                    status: 'failed',
-                    error: err.message || String(err),
-                    sessionId: err.sessionId ?? entry.sessionId,
-                    uploadedBytes: err.uploadedBytes ?? entry.uploadedBytes,
-                });
-            }
-        });
-    };
-
-    const onDismissUploadEntry = (id) => {
-        setUploadEntries((prev) => prev.filter((e) => e.id !== id));
-    };
-
-    const onClearCompletedUploads = () => {
-        setUploadEntries((prev) => prev.filter((e) => e.status !== 'success'));
-    };
-
-    const uploadSummary = useMemo(() => {
-        if (uploadEntries.length === 0) return null;
-        const totalFiles = uploadEntries.length;
-        const doneFiles = uploadEntries.filter((e) => e.status !== 'uploading').length;
-        const totalBytes = uploadEntries.reduce((sum, e) => sum + (e.size || 0), 0);
-        const doneBytes = uploadEntries.reduce((sum, e) => sum + (e.status === 'success' ? e.size : (e.uploadedBytes || 0)), 0);
-        const hasActive = uploadEntries.some((e) => e.status === 'uploading');
-        const hasSuccess = uploadEntries.some((e) => e.status === 'success');
-        return { totalFiles, doneFiles, totalBytes, doneBytes, hasActive, hasSuccess };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [uploadEntries]);
+
+    useEffect(() => () => clearTimeout(refreshTimerRef.current), []);
 
     const onDelete = async (entry) => {
         if (!confirm(t('fileSystem.confirm.deleteEntry', '確定要刪除「{{name}}」嗎？', { name: entry.name }))) return;
@@ -479,10 +404,13 @@ const FileSystem = () => {
                             </button>
                             <div className="fs-upload-summary-actions">
                                 {uploadSummary.hasActive && (
-                                    <button className="fs-btn" onClick={onCancelAllUploads}>{t('fileSystem.upload.cancelAll', '全部取消')}</button>
+                                    <button className="fs-btn" onClick={() => queue.cancelAll()}>{t('fileSystem.upload.cancelAll', '全部取消')}</button>
+                                )}
+                                {uploadSummary.hasFailed && (
+                                    <button className="fs-btn" onClick={() => queue.retryAll()}>{t('fileSystem.upload.retryAll', '全部重試')}</button>
                                 )}
                                 {uploadSummary.hasSuccess && (
-                                    <button className="fs-btn" onClick={onClearCompletedUploads}>{t('fileSystem.upload.clearCompleted', '清除已完成')}</button>
+                                    <button className="fs-btn" onClick={() => queue.clearSucceeded()}>{t('fileSystem.upload.clearCompleted', '清除已完成')}</button>
                                 )}
                             </div>
                         </div>
@@ -492,9 +420,9 @@ const FileSystem = () => {
                                     <UploadQueueItem
                                         key={entry.id}
                                         entry={entry}
-                                        onCancel={() => onCancelUploadEntry(entry)}
-                                        onRetry={() => onRetryUploadEntry(entry)}
-                                        onDismiss={() => onDismissUploadEntry(entry.id)}
+                                        onCancel={() => queue.cancel(entry.id)}
+                                        onRetry={() => queue.retry(entry.id)}
+                                        onDismiss={() => queue.remove(entry.id)}
                                     />
                                 ))}
                             </div>

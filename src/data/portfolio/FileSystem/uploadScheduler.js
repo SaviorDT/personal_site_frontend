@@ -1,6 +1,7 @@
-// 上傳排程純邏輯（無 axios、無 React、無真實 timer；時間/速率一律以參數傳入）
-// - 單檔案 chunk-size 規劃器：依上一段的傳輸速率線性外插下一段目標大小
-// - 跨檔案 admission controller：以「整檔宣告大小」為保留單位，控制同時上傳的檔案數與總位元組
+// 單檔案 chunk-size 規劃器：依上一段的傳輸速率線性外插下一段目標大小。
+// 純邏輯（無 axios、無 React、無真實 timer；時間/速率一律以參數傳入）。
+// 契約：對外回傳的 chunkSize 恆為 [MIN, MAX] 範圍內的整數。
+// 跨檔案的併發准入已拆到 uploadAdmission.js。
 
 export const MIN_CHUNK_SIZE = 100 * 1024; // 100KB 下限
 export const INIT_CHUNK_SIZE = 1024 * 1024; // 1MB 初始值
@@ -8,9 +9,6 @@ export const MAX_CHUNK_SIZE = 100 * 1024 * 1024; // 100MB 上限
 export const TARGET_WINDOW_MS = 3000; // 以 3 秒為預估窗口
 export const TIMEOUT_SHRINK_DIVISOR = 20; // timeout 後下一個目標除以此值
 export const MAX_SEGMENT_ATTEMPTS = 3; // 同一段最多重試次數（含 timeout）
-
-export const MAX_PARALLEL_FILES = 16; // 同時上傳的檔案數上限
-export const MAX_PARALLEL_SIZE = 100 * 1024 * 1024; // 同時上傳的累計保留位元組上限（100MB）
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -46,23 +44,3 @@ export const recordChunkFailure = (state, { isTimeout = false } = {}) => {
         : Math.floor(state.chunkSize); // 契約：對外的 chunkSize 恆為整數（即使非 timeout 只是原樣沿用）
     return { chunkSize, attempts, status: 'pending' };
 };
-
-// 跨檔案 admission controller：保留單位是「整檔宣告大小」，開始上傳時保留、完全結束才釋放
-export const createAdmissionState = () => ({ activeCount: 0, activeBytes: 0 });
-
-// 是否允許把 fileSize 這個新檔案加入目前正在上傳的集合
-// - 檔案數上限（16）任何時候都適用
-// - 只要目前還沒超過上限就可以加入新的檔案
-export const canAdmitFile = (state) => {
-    return state.activeBytes <= MAX_PARALLEL_SIZE && state.activeCount < MAX_PARALLEL_FILES;
-};
-
-export const admitFile = (state, fileSize) => ({
-    activeCount: state.activeCount + 1,
-    activeBytes: state.activeBytes + fileSize,
-});
-
-export const releaseFile = (state, fileSize) => ({
-    activeCount: Math.max(0, state.activeCount - 1),
-    activeBytes: Math.max(0, state.activeBytes - fileSize),
-});

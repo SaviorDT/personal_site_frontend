@@ -1,7 +1,6 @@
 import {
     createSegmentState, recordChunkSuccess, recordChunkFailure,
-    createAdmissionState, canAdmitFile, admitFile, releaseFile,
-    MIN_CHUNK_SIZE, INIT_CHUNK_SIZE, MAX_CHUNK_SIZE, MAX_PARALLEL_FILES, MAX_PARALLEL_SIZE,
+    MIN_CHUNK_SIZE, INIT_CHUNK_SIZE, MAX_CHUNK_SIZE,
 } from './uploadScheduler';
 
 test('第一個 chunk 固定為 1MB（初始值，與一般下限無關）', () => {
@@ -102,49 +101,4 @@ test('該段最終成功後，重試計數重置為 0，進入下一段', () => 
     state = recordChunkSuccess(state, { chunkBytes: 1 * 1024 * 1024, elapsedMs: 500 });
     expect(state.attempts).toBe(0);
     expect(state.status).toBe('pending');
-});
-
-test('沒有任何檔案在上傳時，一定會被接受', () => {
-    const state = createAdmissionState();
-    expect(canAdmitFile(state)).toBe(true);
-});
-
-test('admission 只看目前已保留的位元組是否已超過上限，不會把即將加入的新檔案大小算進去', () => {
-    // 已保留 90MB（1 個檔案在傳），還沒超過 100MB 上限 → 即使接下來要加入的檔案本身很大，仍判定可接受
-    let state = createAdmissionState();
-    state = admitFile(state, 90 * 1024 * 1024);
-    expect(canAdmitFile(state)).toBe(true); // 90MB <= 100MB，尚未超標
-});
-
-test('一旦已保留位元組超過上限，才會拒絕新檔案', () => {
-    let state = createAdmissionState();
-    state = admitFile(state, 60 * 1024 * 1024);
-    state = admitFile(state, 50 * 1024 * 1024); // 累計 110MB，已超過 100MB 上限
-    expect(canAdmitFile(state)).toBe(false);
-});
-
-test('已保留位元組剛好等於上限時仍允許（邊界）', () => {
-    let state = createAdmissionState();
-    state = admitFile(state, MAX_PARALLEL_SIZE);
-    expect(canAdmitFile(state)).toBe(true);
-});
-
-test('releaseFile 釋放後，被保留的位元組與檔案數會減少，超標狀態也會恢復', () => {
-    let state = createAdmissionState();
-    state = admitFile(state, 60 * 1024 * 1024);
-    state = admitFile(state, 50 * 1024 * 1024); // 累計 110MB，超標
-    expect(canAdmitFile(state)).toBe(false);
-    state = releaseFile(state, 60 * 1024 * 1024); // 釋放其中一個，剩 50MB
-    expect(state.activeCount).toBe(1);
-    expect(state.activeBytes).toBe(50 * 1024 * 1024);
-    expect(canAdmitFile(state)).toBe(true);
-});
-
-test('檔案數達到 16 上限時，即使位元組預算充足也拒絕', () => {
-    let state = createAdmissionState();
-    for (let i = 0; i < MAX_PARALLEL_FILES; i++) {
-        state = admitFile(state, 1024); // 每個都很小，不會觸發位元組上限
-    }
-    expect(state.activeCount).toBe(MAX_PARALLEL_FILES);
-    expect(canAdmitFile(state)).toBe(false);
 });

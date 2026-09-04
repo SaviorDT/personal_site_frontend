@@ -9,16 +9,20 @@ function formatBytes(bytes) {
     return `${val.toFixed(val >= 100 || idx === 0 ? 0 : 1)} ${units[idx]}`;
 }
 
-// 單一檔案的上傳進度列：uploading 時顯示取消，failed/cancelled 時顯示重試，
-// 非 uploading 一律可移除（success 也可以單獨移除，不用等「清除已完成」）
+// 單一檔案的上傳進度列：
+// - queued / uploading 時顯示取消（可取消尚未開始的檔案）
+// - 只有 failed 顯示重試（cancelled 為終態，不提供重試——要再傳就重新選檔）
+// - 非 queued/uploading 一律可移除（success 也可以單獨移除，不用等「清除已完成」）
 const UploadQueueItem = ({ entry, onCancel, onRetry, onDismiss }) => {
     const { t } = useTranslation();
     const statusLabel = {
+        queued: t('fileSystem.upload.status.queued', '等待中'),
         uploading: t('fileSystem.upload.status.uploading', '上傳中'),
         success: t('fileSystem.upload.status.success', '完成'),
         failed: t('fileSystem.upload.status.failed', '失敗'),
         cancelled: t('fileSystem.upload.status.cancelled', '已取消'),
     };
+    const inFlight = entry.status === 'queued' || entry.status === 'uploading';
     const percent = entry.size > 0
         ? Math.min(100, (entry.uploadedBytes / entry.size) * 100)
         : (entry.status === 'success' ? 100 : 0);
@@ -37,9 +41,9 @@ const UploadQueueItem = ({ entry, onCancel, onRetry, onDismiss }) => {
                 </div>
             </div>
             <div className="fs-upload-row-actions">
-                {entry.status === 'uploading' && <button className="fs-link" onClick={onCancel}>{t('fileSystem.upload.cancel', '取消')}</button>}
-                {(entry.status === 'failed' || entry.status === 'cancelled') && <button className="fs-link" onClick={onRetry}>{t('fileSystem.upload.retry', '重試')}</button>}
-                {entry.status !== 'uploading' && (
+                {inFlight && <button className="fs-link fs-upload-cancel" onClick={onCancel}>{t('fileSystem.upload.cancel', '取消')}</button>}
+                {entry.status === 'failed' && <button className="fs-link fs-upload-retry" onClick={onRetry}>{t('fileSystem.upload.retry', '重試')}</button>}
+                {!inFlight && (
                     <button className="fs-link" onClick={onDismiss} aria-label={t('fileSystem.upload.dismiss', '移除此列')} title={t('fileSystem.upload.dismiss', '移除此列')}>✕</button>
                 )}
             </div>

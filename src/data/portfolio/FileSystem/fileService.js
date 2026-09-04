@@ -1,15 +1,14 @@
 // 檔案系統服務（Storage API 客戶端）
 // - 路徑使用陣列表示，會轉為後端期望的字串 path
 // - 檔案上傳一律走可續傳的 session 流程：POST 開 session，序列送出 PUT segment，
-//   由 uploadScheduler.js 決定每段大小（單檔內完全序列）與跨檔案的併發准入
+//   由 uploadScheduler.js 決定每段大小（單檔內完全序列），
+//   跨檔案的併發排程由 uploadQueueState.js 的 runner 負責
 
 import apiClient, { handleApiError } from '@/services/apiClient';
 import apiConfig from '@/config/api';
 import i18n from 'i18next';
-import {
-    createSegmentState, recordChunkSuccess, recordChunkFailure,
-    createAdmissionState, canAdmitFile, admitFile, releaseFile,
-} from './uploadScheduler';
+import { createSegmentState, recordChunkSuccess, recordChunkFailure } from './uploadScheduler';
+import { createUploadQueueStore, createUploadQueue } from './uploadQueueState';
 
 const EP = apiConfig.ENDPOINTS.FILE_SYSTEM;
 const SEGMENT_TIMEOUT_MS = 60 * 1000; // 每個 PUT segment 的個別 timeout，覆寫 apiClient 全域 10s 預設
@@ -109,6 +108,7 @@ const raiseStorageError = (error, defaultMessageKey, defaultMessageFallback, ext
 
 const isAbortError = (error) => error?.name === 'CanceledError' || error?.name === 'AbortError';
 const isTimeoutError = (error) => error?.code === 'ECONNABORTED' || /timeout/i.test(error?.message || '');
+const statusOf = (error) => error?.response?.status ?? error?.statusCode;
 
 const now = () => (globalThis.performance?.now?.() || Date.now());
 
@@ -171,6 +171,17 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
     const totalBytes = blobLike.size;
     const url = buildUrl(EP.FILES.UPLOAD, pathArr, name);
 
+    // 開一個新的可續傳 session（POST /size），回傳 session_id
+    const openSession = async () => {
+        try {
+            const res = await apiClient.post(url, { size: totalBytes }, { signal });
+            return res.data.session_id;
+        } catch (error) {
+            if (isAbortError(error)) throw error;
+            raiseStorageError(error, 'fileSystem.errors.createSession', '無法建立上傳工作階段');
+        }
+    };
+
     let sessionId = resumeSessionId;
     // resumeOffset 是外部輸入（可能來自舊資料或呼叫端算錯），offset 必須是整數 → 向下取整
     let uploadedBytes = resumeSessionId ? Math.floor(resumeOffset) : 0;
@@ -179,16 +190,8 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
     // 假設說明（未跟後端驗證過）：因為單檔上傳完全序列，呼叫端在失敗當下就知道自己連續
     // 成功寫入到哪個 offset（resumeOffset），所以續傳只需要從該 offset 繼續送，不需要
     // 「查詢已寫入範圍」這種新 API 沒有提供的端點。若 session 其實已在伺服器端過期
-    // （超過 1 小時無 PUT 被自動清除），後續 PUT 會收到 403，交由呼叫端捕捉後決定重新上傳。
-    if (!sessionId) {
-        try {
-            const res = await apiClient.post(url, { size: totalBytes }, { signal });
-            sessionId = res.data.session_id;
-        } catch (error) {
-            if (isAbortError(error)) throw error;
-            raiseStorageError(error, 'fileSystem.errors.createSession', '無法建立上傳工作階段');
-        }
-    }
+    // （超過 1 小時無 PUT 被自動清除），後續 PUT 會收到 403，交由下方 fallback 重新上傳。
+    if (!sessionId) sessionId = await openSession();
     onSessionStart?.(sessionId);
 
     // 空檔案：新 API 沒有專門的建立空檔案端點。防禦性做法（未跟後端驗證過的假設）：
@@ -210,6 +213,10 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
     }
 
     let segmentState = createSegmentState();
+    // resume-or-restart fallback：帶了 resumeSessionId 進來續傳，卻在 PUT 收到 403（session 過期／
+    // 不正確）或 409（offset 重疊，代表續傳假設錯了）時，丟掉舊 session、重開一個新的、offset 歸零、
+    // 整檔重來。只做一次；之後任何錯誤都走一般的段內重試迴圈。呼叫端不需要知道續傳到底成不成功。
+    let resumeFallbackUsed = false;
 
     while (uploadedBytes < totalBytes) {
         const remaining = totalBytes - uploadedBytes;
@@ -235,6 +242,17 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
             onProgress?.({ chunkBytes: sentBytes, uploadedBytes, totalBytes, sessionId });
         } catch (error) {
             if (isAbortError(error)) throw error;
+
+            const status = statusOf(error);
+            if (resumeSessionId && !resumeFallbackUsed && (status === 403 || status === 409)) {
+                resumeFallbackUsed = true;
+                sessionId = await openSession();
+                onSessionStart?.(sessionId);
+                uploadedBytes = 0;
+                segmentState = createSegmentState();
+                continue; // 從頭重送
+            }
+
             segmentState = recordChunkFailure(segmentState, { isTimeout: isTimeoutError(error) });
             if (segmentState.status === 'failed') {
                 raiseStorageError(error, 'fileSystem.errors.uploadRetryExhausted', '檔案上傳失敗，已達重試上限', { sessionId, uploadedBytes });
@@ -261,74 +279,17 @@ export const cancelFileUpload = async (pathArr, name, sessionId) => {
     }
 };
 
-// ---- 跨檔案併發：以 uploadScheduler 的 admission controller 排程多檔上傳 ----
-// 各檔案獨立成功/失敗（partial batch failure：一個檔案失敗不影響其他檔案），
-// 且各自擁有獨立的 AbortController，讓呼叫端可以做到「每檔獨立取消」。
+// ---- 跨檔案併發：常駐的上傳佇列 ----
+// 把 uploadQueueState.js 的 store 與 runner 接上真實的 uploadFile / cancelFileUpload。
+// 佇列是常駐的：同一個實例可重複 enqueue()，後加入的檔案跟仍在跑的檔案共用同一份
+// 16 檔 / 100MB 併發預算（由 selector 即時從 entries 推導），而非每批重新起算。
+// 呼叫端（UI）只建立一次這個實例（例如放在 useRef），之後每次觸發上傳都呼叫同一個實例。
 //
-// 佇列是常駐的：同一個 createUploadQueue() 回傳的實例可以重複呼叫 enqueue()，
-// 後面加入的檔案會跟仍在跑的檔案共用同一份 admission state（累計保留位元組、檔案數），
-// 而不是每次呼叫都重新起算一份新的 16 檔/100MB 預算。呼叫端（例如 UI）應該只建立一次
-// 這個實例（例如放在 useRef），之後每次使用者觸發新的上傳都呼叫同一個實例的 enqueue()。
-//
-// enqueue(tasks, hooks) 的 hooks（tasks: [{ pathArr, file }]）：
-// - onFileStart(task, index, controller)：檔案實際開始上傳前呼叫，controller 供呼叫端保存以便日後取消
-// - onFileSessionStart(task, index, sessionId)：拿到 session_id 後呼叫
-// - onFileProgress(task, index, { chunkBytes, uploadedBytes, totalBytes })：每段成功後呼叫
-// - onFileSettled(result, index)：該檔案結束（成功/失敗/取消）後呼叫，result: { file, pathArr, success, error? }
-// index 是這次 enqueue() 呼叫內的位置（從 0 開始），不是跨批次的全域序號。
-// 回傳 Promise，於「這次 enqueue 加入的檔案」全部結束（成功/失敗/取消）時 resolve 成 results 陣列；
-// 不代表整個佇列（含其他批次）都已經跑完。
-export const createUploadQueue = () => {
-    let admission = createAdmissionState();
-    const pending = []; // [{ task, hooks, resolve }]，尚未被 admission 放行開始跑的工作
-
-    const runOne = async (task, hooks) => {
-        const controller = new AbortController();
-        hooks.onStart(controller);
-        try {
-            await uploadFile(task.pathArr, task.file, {
-                signal: controller.signal,
-                onSessionStart: hooks.onSessionStart,
-                onProgress: hooks.onProgress,
-            });
-            return { file: task.file, pathArr: task.pathArr, success: true };
-        } catch (error) {
-            return { file: task.file, pathArr: task.pathArr, success: false, error };
-        }
-    };
-
-    // 同步地把目前 admission 允許的工作都放行；每個工作結束釋放預算後會再呼叫自己一次，
-    // 讓佇列裡排隊中的下一個工作有機會被放行——不管它是這次呼叫加入的，還是更早的批次留下的。
-    const pump = () => {
-        while (pending.length > 0 && canAdmitFile(admission)) {
-            const { task, hooks, resolve } = pending.shift();
-            admission = admitFile(admission, task.file.size || 0);
-            runOne(task, hooks).then((result) => {
-                admission = releaseFile(admission, task.file.size || 0);
-                resolve(result);
-                pump();
-            });
-        }
-    };
-
-    const enqueue = (tasks, hooks = {}) => {
-        const promises = tasks.map((task, index) => new Promise((resolve) => {
-            pending.push({
-                task,
-                hooks: {
-                    onStart: (controller) => hooks.onFileStart?.(task, index, controller),
-                    onSessionStart: (sessionId) => hooks.onFileSessionStart?.(task, index, sessionId),
-                    onProgress: (progress) => hooks.onFileProgress?.(task, index, progress),
-                },
-                resolve: (result) => { hooks.onFileSettled?.(result, index); resolve(result); },
-            });
-        }));
-        pump();
-        return Promise.all(promises);
-    };
-
-    return { enqueue };
-};
+// 回傳的 facade：getState / subscribe / enqueue(tasks) / cancel(id) / cancelAll() /
+//                retry(id) / retryAll() / remove(id) / clearSucceeded()
+// enqueue 的 tasks：[{ id, name, pathArr, file, size }]（id 由呼叫端產生，作為 entry 的識別）
+export const createStorageUploadQueue = () =>
+    createUploadQueue(createUploadQueueStore(), { uploadFile, cancelFileUpload });
 
 // 建立資料夾上傳所需的所有子資料夾，並回傳攤平後的上傳工作清單（[{ pathArr, file }]）。
 // 只負責建資料夾與計算目的地路徑，不會實際開始上傳——實際上傳交給呼叫端自己的 upload queue。
