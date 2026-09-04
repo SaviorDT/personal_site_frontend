@@ -172,7 +172,8 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
     const url = buildUrl(EP.FILES.UPLOAD, pathArr, name);
 
     let sessionId = resumeSessionId;
-    let uploadedBytes = resumeSessionId ? resumeOffset : 0;
+    // resumeOffset 是外部輸入（可能來自舊資料或呼叫端算錯），offset 必須是整數 → 向下取整
+    let uploadedBytes = resumeSessionId ? Math.floor(resumeOffset) : 0;
 
     // 重試時重用未過期的 session_id，直接從已知的連續進度續傳，不重新 POST。
     // 假設說明（未跟後端驗證過）：因為單檔上傳完全序列，呼叫端在失敗當下就知道自己連續
@@ -212,7 +213,8 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
 
     while (uploadedBytes < totalBytes) {
         const remaining = totalBytes - uploadedBytes;
-        const chunkSize = Math.min(segmentState.chunkSize, remaining);
+        // segmentState.chunkSize 依契約已是整數，這裡再 floor 一次做為 consumer 端防線
+        const chunkSize = Math.floor(Math.min(segmentState.chunkSize, remaining));
         const offset = uploadedBytes;
         const slice = blobLike.slice(offset, offset + chunkSize);
 
@@ -225,9 +227,12 @@ const runResumableUpload = async (pathArr, name, blobLike, options = {}) => {
                 signal,
             });
             const elapsedMs = now() - t0;
-            uploadedBytes += chunkSize;
-            segmentState = recordChunkSuccess(segmentState, { chunkBytes: chunkSize, elapsedMs });
-            onProgress?.({ chunkBytes: chunkSize, uploadedBytes, totalBytes, sessionId });
+            // 以「實際切出並送出的位元組數」記帳，offset 因此恆等於已成功 PUT 的位元組總數，
+            // 完全不依賴 segmentState.chunkSize 的正確性（slice.size 必為整數）
+            const sentBytes = slice.size;
+            uploadedBytes += sentBytes;
+            segmentState = recordChunkSuccess(segmentState, { chunkBytes: sentBytes, elapsedMs });
+            onProgress?.({ chunkBytes: sentBytes, uploadedBytes, totalBytes, sessionId });
         } catch (error) {
             if (isAbortError(error)) throw error;
             segmentState = recordChunkFailure(segmentState, { isTimeout: isTimeoutError(error) });

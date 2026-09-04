@@ -24,8 +24,10 @@ export const createSegmentState = () => ({
 export const recordChunkSuccess = (state, { chunkBytes, elapsedMs }) => {
     const rate = chunkBytes / elapsedMs; // bytes/ms
     const target = rate * TARGET_WINDOW_MS;
+    // chunkSize 是「位元組數」，必須是整數：先夾在 [MIN, MAX]，再向下取整
+    // （用 floor 不用 round，確保永遠不會因進位而超過 MAX 或當段的 remaining）
     return {
-        chunkSize: clamp(target, MIN_CHUNK_SIZE, MAX_CHUNK_SIZE),
+        chunkSize: Math.floor(clamp(target, MIN_CHUNK_SIZE, MAX_CHUNK_SIZE)),
         attempts: 0,
         status: 'pending',
     };
@@ -41,7 +43,7 @@ export const recordChunkFailure = (state, { isTimeout = false } = {}) => {
     }
     const chunkSize = isTimeout
         ? Math.max(MIN_CHUNK_SIZE, Math.floor(state.chunkSize / TIMEOUT_SHRINK_DIVISOR))
-        : state.chunkSize;
+        : Math.floor(state.chunkSize); // 契約：對外的 chunkSize 恆為整數（即使非 timeout 只是原樣沿用）
     return { chunkSize, attempts, status: 'pending' };
 };
 
